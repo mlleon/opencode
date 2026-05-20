@@ -1,0 +1,41 @@
+{
+  "skill_name": "document-parser",
+  "evals": [
+    {
+      "name": "parse_pdf_url",
+      "input": "帮我解析这个 PDF：https://example.com/document.pdf"
+    },
+    {
+      "name": "parse_pdf_local",
+      "input": "帮我解析这个本地 PDF：/path/to/document.pdf"
+    },
+    {
+      "name": "parse_office_docx",
+      "input": "帮我解析这个 Word 文档并转成 Markdown：/path/to/resume.docx"
+    },
+    {
+      "name": "batch_parse_two_files",
+      "input": "批量解析这两个文件并把结果都输出到同一个目录：/path/to/a.pdf /path/to/b.pdf"
+    },
+    {
+      "name": "parse_image_ocr",
+      "input": "这个图片里的文字能识别出来吗？我上传了一张截图。"
+    },
+    {
+      "name": "fallback_on_quota",
+      "input": "解析这个 PDF（如果 MinerU 今日额度用尽请自动回退 PaddleOCR）：https://example.com/quota-case.pdf"
+    },
+    {
+      "name": "negative_code_explain",
+      "input": "解释这段 Python 代码是什么意思：print('hello')"
+    },
+    {
+      "name": "negative_not_a_document",
+      "input": "帮我总结一下今天的会议要点"
+    },
+    {
+      "name": "negative_template_request",
+      "input": "帮我写一份劳动合同模板"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-openagent.schema.json",
+  "auto_update": true,
+  "runtime_fallback": {
+    "enabled": true,
+    "retry_on_errors": [400, 401, 403, 429, 500, 502, 503, 504, 529, 402],
+    "max_fallback_attempts": 3,
+    "cooldown_seconds": 60,
+    "timeout_seconds": 30,
+    "notify_on_fallback": true
+  },
+  "agents": {
+    "sisyphus": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/moonshotai/kimi-k2.6",
+        "modelscope/ZhipuAI/GLM-5.1"
+      ]
+    },
+    "hephaestus": {
+      "model": "rcode-plus/gpt-5.2",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.2",
+          "variant": "medium"
+        }
+      ]
+    },
+    "oracle": {
+      "model": "modelscope/ZhipuAI/GLM-5.1",
+      "fallback_models": [
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+          "variant": "max"
+        },
+        {
+          "model": "rcode-plus/gpt-5.4",
+          "variant": "medium"
+        },
+        {
+          "model": "fox-gemini/gemini-3.1-pro",
+          "variant": "high"
+        }
+      ]
+    },
+    "librarian": {
+      "model": "nvidia/minimaxai/minimax-m2.7",
+      "fallback_models": [
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+          "variant": "max"
+        },
+        {
+          "model": "nvidia/stepfun-ai/step-3.5-flash",
+          "variant": "high"
+        }
+      ]
+    },
+    "explore": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/minimaxai/minimax-m2.7",
+        {
+          "model": "nvidia/stepfun-ai/step-3.5-flash",
+          "variant": "high"
+        }
+      ]
+    },
+    "multimodal-looker": {
+      "model": "nvidia/moonshotai/kimi-k2.6"
+    },
+    "prometheus": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/moonshotai/kimi-k2.6",
+        "modelscope/ZhipuAI/GLM-5.1"
+      ]
+    },
+    "metis": {
+      "model": "modelscope/ZhipuAI/GLM-5",
+      "fallback_models": [
+        "rcode-plus/gpt-5.4-high",
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "high"
+        }
+      ]
+    },
+    "momus": {
+      "model": "modelscope/ZhipuAI/GLM-5.1",
+      "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
+        }
+      ]
+    },
+    "atlas": {
+      "model": "nvidia/moonshotai/kimi-k2.6",
+      "fallback_models": [
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+          "variant": "max"
+        },
+        "modelscope/MiniMax/MiniMax-M2.7"
+      ]
+    },
+    "sisyphus-junior": {
+      "model": "nvidia/moonshotai/kimi-k2.6",
+      "fallback_models": [
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+          "variant": "max"
+        },
+        "nvidia/z-ai/glm4.7"
+      ]
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "nvidia/moonshotai/kimi-k2.6",
+      "fallback_models": [
+        "modelscope/moonshotai/Kimi-K2.5"
+      ]
+    },
+    "ultrabrain": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/moonshotai/kimi-k2.6",
+        "modelscope/moonshotai/Kimi-K2.5"
+      ]
+    },
+    "deep": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/moonshotai/kimi-k2.6",
+        "modelscope/moonshotai/Kimi-K2.5"
+      ]
+    },
+    "artistry": {
+      "model": "nvidia/moonshotai/kimi-k2.6",
+      "fallback_models": [
+        "modelscope/moonshotai/Kimi-K2.5",
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+          "variant": "max"
+        }
+      ]
+    },
+    "quick": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/minimaxai/minimax-m2.7"
+      ]
+    },
+    "unspecified-low": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/minimaxai/minimax-m2.7"
+      ]
+    },
+    "unspecified-high": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/moonshotai/kimi-k2.6"
+      ]
+    },
+    "writing": {
+      "model": "nvidia/minimaxai/minimax-m2.7",
+      "variant": "high",
+      "fallback_models": [  
+        "modelscope/MiniMax/MiniMax-M2.7",
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+          "variant": "max"
+        }
+      ]
+    }
+  }
+}

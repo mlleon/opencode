@@ -1,0 +1,232 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
+  "auto_update": true,
+  "runtime_fallback": {
+    "enabled": true,
+    "retry_on_errors": [400, 401, 403, 429, 500, 502, 503, 504, 529, 402],
+    "max_fallback_attempts": 3,
+    "cooldown_seconds": 60,
+    "timeout_seconds": 30,
+    "notify_on_fallback": true
+  },
+  "agents": {
+    "sisyphus": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "medium"
+        },
+        {
+          "model": "fox-ultra/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "hephaestus": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "medium"
+        }
+      ]
+    },
+    "oracle": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "high"
+        },
+        {
+          "model": "fox-gemini/gemini-3.1-pro",
+          "variant": "high"
+        }
+      ]
+    },
+    "librarian": {
+      "model": "nvidia/minimaxai/minimax-m2.7",
+      "fallback_models": [
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+          "variant": "max"
+        },
+        {
+          "model": "nvidia/stepfun-ai/step-3.5-flash",
+          "variant": "high"
+        }
+      ]
+    },
+    "explore": {
+      "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+      "variant": "max",
+      "fallback_models": [
+        "nvidia/minimaxai/minimax-m2.7",
+        {
+          "model": "nvidia/stepfun-ai/step-3.5-flash",
+          "variant": "high"
+        }
+      ]
+    },
+    "multimodal-looker": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "medium"
+        }
+      ]
+    },
+    "prometheus": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "high"
+        },
+        {
+          "model": "fox-ultra/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "metis": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "high"
+        },
+        {
+          "model": "fox-ultra/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "momus": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "fox-ultra/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "atlas": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "medium"
+        },
+        {
+          "model": "fox-ultra/claude-sonnet-4-6",
+          "variant": "medium"
+        }
+      ]
+    },
+    "sisyphus-junior": {
+      "model": "rcode-plus/gpt-5.3-codex",
+      "variant": "medium"
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "fox-gemini/gemini-3.1-pro",
+      "fallback_models": [
+        {
+          "model": "fox-ultra/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "ultrabrain": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "fox-gemini/gemini-3.1-pro",
+          "variant": "high"
+        }
+      ]
+    },
+    "deep": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "medium"
+        }
+      ]
+    },
+    "artistry": {
+      "model": "fox-gemini/gemini-3.1-pro",
+      "variant":"high",
+      "fallback_models": [
+        {
+          "model": "fox-ultra/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "quick": {
+      "model": "rcode-plus/gpt-5.4-mini",
+      "fallback_models": [
+        "fox-gemini/gemini-3-flash",
+        "fox-ultra/claude-haiku-4-5-20251001"
+      ]
+    },
+    "unspecified-low": {
+      "model": "rcode-plus/gpt-5.3-codex",
+      "variant": "medium",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.3-codex",
+          "variant": "medium"
+        },
+        {
+          "model": "fox-ultra/claude-sonnet-4-6",
+          "variant": "medium"
+        }
+      ]
+    },
+    "unspecified-high": {
+      "model": "rcode-plus/gpt-5.4",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "high"
+        },
+        {
+          "model": "fox-ultra/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "writing": {
+      "model": "rcode-plus/gpt-5.4-mini",
+      "fallback_models": [
+        "fox-gemini/gemini-3-flash"
+      ]
+    }
+  }
+}
