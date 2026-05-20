@@ -20,6 +20,24 @@
         }
       }
     },
+    "google": {
+      "npm": "@ai-sdk/google",
+      "name": "Google AI Studio",
+      "options": {
+        "baseURL": "https://generativelanguage.googleapis.com/v1beta",
+        "apiKey": "{file:~/.config/opencode/keys/google.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gemma-4-31b-it": {
+          "name": "Gemma 4 31B IT"
+        },
+        "gemini-3.1-flash-lite": {
+          "name": "Gemini 3.1 Flash Lite"
+        }
+      }
+    },
     "zenmux": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "ZenMux",

@@ -6,21 +6,19 @@
     "retry_on_errors": [400, 401, 403, 429, 500, 502, 503, 504, 529, 402],
     "max_fallback_attempts": 3,
     "cooldown_seconds": 120,
-    "timeout_seconds": 30,
+    "timeout_seconds": 60,
     "notify_on_fallback": true
   },
   "agents": {
     "sisyphus": {
-      "model": "opencode/qwen3.6-plus-free",
+      "model": "zenmux/google/gemini-3.5-flash-free",
       "fallback_models": [
-        "zenmux/google/gemini-3.5-flash-free",
         {
           "model": "openrouter/deepseek/deepseek-v4-flash:free",
           "variant": "max"
         },
         "modelscope/moonshotai/Kimi-K2.5",
-        "nvidia/moonshotai/kimi-k2.6",
-        "kilo/inclusionai/ling-2.6-1t:free"
+        "nvidia/moonshotai/kimi-k2.6"
       ]
     },
     "hephaestus": {
