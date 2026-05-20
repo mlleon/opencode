@@ -4,8 +4,8 @@
   "runtime_fallback": {
     "enabled": true,
     "retry_on_errors": [400, 401, 403, 429, 500, 502, 503, 504, 529, 402],
-    "max_fallback_attempts": 6,
-    "cooldown_seconds": 60,
+    "max_fallback_attempts": 5,
+    "cooldown_seconds": 120,
     "timeout_seconds": 30,
     "notify_on_fallback": true
   },
@@ -14,18 +14,8 @@
       "model": "modelscope/moonshotai/Kimi-K2.5",
       "fallback_models": [
         "nvidia/moonshotai/kimi-k2.6",
-        "modelscope/ZhipuAI/GLM-5.1",
         {
-          "model": "nvidia/deepseek-ai/deepseek-v4-pro",
-          "variant": "max"
-        },
-        {
-          "model": "modelscope/deepseek-ai/DeepSeek-V4-Pro",
-          "variant": "max"
-        },
-        "modelscope/ZhipuAI/GLM-5",
-        {
-          "model": "deepseek-anthropic/deepseek-v4-pro",
+          "model": "openrouter/deepseek/deepseek-v4-flash:free",
           "variant": "max"
         }
       ]

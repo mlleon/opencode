@@ -767,7 +767,7 @@
             }
           }
         },
-        "deepseek/deepseek-v4-flash:free": {
+        "inclusionai/ling-2.6-1t:free": {
           "name": "DeepSeek: DeepSeek V4 Flash (free)",
           "variants": {
             "high": {

@@ -1,0 +1,8 @@
+# 先忽略所有文件和目录
+*
+# 但保留特定目录和文件
+!/.gitignore
+!/bakeup/
+!/skills/
+!/oh-my-openagent.json
+!/opencode.json
