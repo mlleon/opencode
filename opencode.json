@@ -30,35 +30,8 @@
         "setCacheKey": true
       },
       "models": {
-        "deepseek/deepseek-v4-pro-free": {
-          "name": "DeepSeek-V4-Pro",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "max",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "deepseek/deepseek-v4-flash-free": {
-          "name": "DeepSeek-V4-Flash",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "max",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
+        "google/gemini-3.5-flash-free": {
+          "name": "Gemini 3.5 Flash Free"
         }
       }
     },
@@ -768,7 +741,7 @@
           }
         },
         "inclusionai/ling-2.6-1t:free": {
-          "name": "DeepSeek: DeepSeek V4 Flash (free)",
+          "name": "Ling-2.6-1T (free)",
           "variants": {
             "high": {
               "reasoningEffort": "high",
@@ -776,7 +749,7 @@
               "reasoningSummary": "auto"
             },
             "max": {
-              "reasoningEffort": "max",
+              "reasoningEffort": "medium",
               "textVerbosity": "medium",
               "reasoningSummary": "auto"
             }
