@@ -20,10 +20,14 @@
 # 2. 逐步解禁特定目录和文件（白名单）
 !/.gitignore
 !/bakeup/
+!/bakeup/**
 !/skills/
+!/skills/**
 !/oh-my-openagent.json
 !/opencode.json
 ```
+
+> **⚠️ 重要说明**：仅用 `!/bakeup/` 解禁目录本身是不够的，还必须加上 `!/bakeup/**` 才能解禁**目录内所有层级**的子文件和子目录。`*` 规则会递归匹配所有路径，没有 `**` 后缀则目录内的文件依然被忽略。
 
 * **原理**：处于 `*` 范围内的本地敏感文件（如 `/keys/`、私有临时文件等）在 Git 树中是 `Untracked` 且被忽略的状态。Git 在执行拉取、重置等更新操作时，默认**绝对不会修改或删除未追踪的文件**。
 
@@ -86,9 +90,28 @@ git reset --hard origin/master
 
 ## 四、 常见问题与防错指南
 
-1. **同名文件冲突**：
+1. **同名文件冲突（最常见）**：
    * **场景**：主设备（设备 A）在 GitHub 仓库新提交了一个文件（如 `config.key`），而另一台设备（设备 B）本地恰好也有一个同名但未被追踪的 `config.key`。
    * **现象**：执行 `git pull` 会报 *The following untracked working tree files would be overwritten by merge...*。
    * **解决办法**：设备 B 需先临时将本地的 `config.key` 重命名（如 `config_local.key`），拉取完毕后再重新处理或改回。
-2. **全局忽略同步**：
+   ```
+   mv bakeup/git-sync-guide.md bakeup/git-sync-guide.md.bak
+   git pull
+   ```
+
+2. **白名单解禁后远程拉取失败**：
+   * **场景**：设备 A 更新了 `.gitignore` 白名单（如添加了 `!/bakeup/**`），使之前被忽略的文件变为可追踪，并推送了这些文件。设备 B 本地原本就有这些文件（处于忽略/未追踪状态）。
+   * **现象**：设备 B 执行 `git pull` 时，报 *The following untracked working tree files would be overwritten by merge...*。
+   * **原因**：Git 的合并操作不允许覆盖本地已有的未追踪文件，即使该文件内容与远程一致。
+   * **解决办法**：设备 B 先将本地的冲突文件备份或删除，再拉取：
+   ```bash
+   # 备份本地同名的未追踪文件
+   mv bakeup/git-sync-guide.md bakeup/git-sync-guide.md.bak
+   # 拉取远程最新更新
+   git pull
+   # 确认拉取成功后删除备份（内容通常一致，无需保留）
+   rm bakeup/git-sync-guide.md.bak
+   ```
+
+3. **全局忽略同步**：
    * 确保两端使用相同的 `.gitignore` 配置。任何一端对 `.gitignore` 的白名单解禁改动，在通过 Git 推送/拉取后，都会立即在对方设备上同步生效，从而统一排除规则。
