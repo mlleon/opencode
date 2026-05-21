@@ -2,21 +2,34 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate":false,
   "provider": {
-    "mapleleaf": {
+    "litellm": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "MapleLeaf",
+      "name": "LiteLLM",
       "options": {
-        "baseURL": "https://ai.071129.xyz/v1",
-        "apiKey": "{file:~/.config/opencode/keys/mapleleaf.key}",
+        "baseURL": "http://localhost:4000",
+        "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
+        "stream": true,
         "enableMeta": true,
         "setCacheKey": true
       },
       "models": {
-        "Qwen3.6-Max-Preview": {
-          "name": "Qwen3.6-Max"
+        "gpt-5.4-xhigh": {
+          "name": "gpt-5.4-xhigh"
         },
-        "Qwen3.6-Plus": {
-          "name": "Qwen3.6-Plus"
+        "gpt-5.4-medium": {
+          "name": "gpt-5.4-medium"
+        },
+        "gpt-5.2-xhigh": {
+          "name": "gpt-5.2-xhigh"
+        },
+        "gpt-5.2-high": {
+          "name": "gpt-5.2-high"
+        },
+        "gpt-5.2-medium": {
+          "name": "gpt-5.2-medium"
+        },
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
         }
       }
     },
