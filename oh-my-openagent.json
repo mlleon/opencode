@@ -16,6 +16,7 @@
         "litellm/gpt-5.4-xhigh",
         "litellm/gpt-5.2-xhigh",
         "litellm/gpt-5.2-high",
+        "zenmux/google/gemini-3.5-flash-free",
         "modelscope/moonshotai/Kimi-K2.5",
         {
           "model": "openrouter/deepseek/deepseek-v4-flash:free",
