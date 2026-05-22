@@ -13,23 +13,23 @@
         "setCacheKey": true
       },
       "models": {
-        "gpt-5.4-xhigh": {
-          "name": "gpt-5.4-xhigh"
+        "glm-5.1-xhigh": {
+          "name": "glm-5.1-xhigh"
         },
-        "gpt-5.4-medium": {
-          "name": "gpt-5.4-medium"
+        "glm-5.1-medium": {
+          "name": "glm-5.1-medium"
         },
-        "gpt-5.2-xhigh": {
-          "name": "gpt-5.2-xhigh"
+        "glm-5-xhigh": {
+          "name": "glm-5-xhigh"
         },
-        "gpt-5.2-high": {
-          "name": "gpt-5.2-high"
+        "glm-5-high": {
+          "name": "glm-5-high"
         },
-        "gpt-5.2-medium": {
-          "name": "gpt-5.2-medium"
+        "glm-5-medium": {
+          "name": "glm-5-medium"
         },
-        "gpt-5.4-mini": {
-          "name": "gpt-5.4-mini"
+        "glm-5-low": {
+          "name": "glm-5-low"
         }
       }
     },

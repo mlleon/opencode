@@ -11,11 +11,11 @@
   },
   "agents": {
     "sisyphus": {
-      "model": "litellm/gpt-5.4-medium",
+      "model": "litellm/glm-5.1-medium",
       "fallback_models": [
-        "litellm/gpt-5.4-xhigh",
-        "litellm/gpt-5.2-xhigh",
-        "litellm/gpt-5.2-high",
+        "litellm/glm-5.1-xhigh",
+        "litellm/glm-5-xhigh",
+        "litellm/glm-5-high",
         "zenmux/google/gemini-3.5-flash-free",
         "modelscope/moonshotai/Kimi-K2.5",
         {
