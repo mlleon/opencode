@@ -74,22 +74,34 @@ description: |
 
 ## 4. 推荐执行方式
 
-### Agent 推荐入口
+### 4.1 Runtime 约定
 
-不要要求用户切到 skill 目录后再手动跑命令。Agent 应在工具调用时把 `workdir` 设置为 skill 目录，然后用模块方式执行：
+本 skill 是本地 Python CLI skill，优先使用 `skills/` 级 uv 工程运行：
+
+- uv project：`$HOME/.config/opencode/skills`
+- uv group：`document-parser`
+- workdir：`$HOME/.config/opencode/skills/document-parser`
+- Python 版本：`>=3.12`
+
+注意：`skills/pyproject.toml` 只服务需要本地依赖的 CLI 型 skill；纯提示词、纯文档或纯 Agent workflow skill 不需要接入 uv。
+
+### 4.2 Agent 推荐入口
+
+不要要求用户切到 skill 目录后再手动跑命令。Agent 应在工具调用时把 `workdir` 设置为 skill 目录，然后通过共享 uv project 和本 skill 的 dependency group 执行：
 
 ```bash
-python3 -m scripts.document_parser dry-run --project-root "<project-root>"
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser dry-run --project-root "<project-root>"
 ```
 
 工具调用建议：
 
 ```text
 workdir = $HOME/.config/opencode/skills/document-parser
-command = python3 -m scripts.document_parser ...
+command = uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser ...
 ```
 
-如果确实需要从任意 shell 目录直接执行，则显式设置 `PYTHONPATH`：
+如果 `uv` 不可用，才允许临时回退到系统 `python3`；回退时必须在最终回复中说明原因，并显式设置 `PYTHONPATH`：
 
 ```bash
 SKILL_DIR="$HOME/.config/opencode/skills/document-parser"
@@ -105,7 +117,8 @@ PYTHONPATH="$SKILL_DIR" python3 -m scripts.document_parser dry-run --project-roo
 先检查项目结构与路径策略：
 
 ```bash
-python3 -m scripts.document_parser dry-run \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser dry-run \
   --project-root "<project-root>"
 ```
 
@@ -123,7 +136,8 @@ dry-run 只检查：
 解析到项目级 staging：
 
 ```bash
-python3 -m scripts.document_parser parse \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
   --project-root "<project-root>" \
   --input "<input-file-or-url>"
 ```
@@ -141,7 +155,8 @@ parse 的输出写入：
 把 staging 整理成最终 `memory-source/` 结构：
 
 ```bash
-python3 -m scripts.document_parser postprocess \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
   --project-root "<project-root>" \
   --source-kind "<book|article|paper|web>" \
   --staging-doc-root "<staging-doc-root>"
@@ -154,7 +169,8 @@ python3 -m scripts.document_parser postprocess \
 最后做终态校验：
 
 ```bash
-python3 -m scripts.document_parser validate \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser validate \
   --project-root "<project-root>"
 ```
 

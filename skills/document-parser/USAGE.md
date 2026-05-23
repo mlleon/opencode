@@ -115,21 +115,26 @@ document_parser_output/<stem>/
 
 ## 5. 命令总览
 
-当前 CLI 支持 5 类入口：
+当前 CLI 支持 5 类入口。正常调试时从 skill 目录执行，并通过 `skills/` 级共享 uv project 加载 `document-parser` dependency group：
 
 ```bash
-python3 -m scripts.document_parser <inputs...> [--output-dir <dir>]
-python3 -m scripts.document_parser parse --project-root <project> --input <file-or-url>
-python3 -m scripts.document_parser dry-run --project-root <project>
-python3 -m scripts.document_parser postprocess --project-root <project> --source-kind <kind> (--input <file> | --staging-doc-root <dir>) [--sha12 <sha12>]
-python3 -m scripts.document_parser validate --project-root <project>
+cd "$HOME/.config/opencode/skills/document-parser"
+
+uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser <inputs...> [--output-dir <dir>]
+uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser parse --project-root <project> --input <file-or-url>
+uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser dry-run --project-root <project>
+uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser postprocess --project-root <project> --source-kind <kind> (--input <file> | --staging-doc-root <dir>) [--sha12 <sha12>]
+uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser validate --project-root <project>
 ```
 
-手动调试时，建议进入 skill 目录后再执行模块命令：
+运行环境约定：
 
-```bash
-cd ~/.config/opencode/skills/document-parser
-```
+- uv project：`$HOME/.config/opencode/skills`
+- uv group：`document-parser`
+- workdir：`$HOME/.config/opencode/skills/document-parser`
+- Python 版本：`>=3.12`
+
+如果 `uv` 不可用，才临时回退到系统 `python3`，并显式设置 `PYTHONPATH`；正常 `/document-parser` 调用由 Agent 自动执行，不要求用户手动操作 CLI。
 
 ## 6. 旧式批量解析模式
 
@@ -138,19 +143,22 @@ cd ~/.config/opencode/skills/document-parser
 ### 6.1 解析一个本地文件
 
 ```bash
-python3 -m scripts.document_parser /path/to/file.pdf
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser /path/to/file.pdf
 ```
 
 ### 6.2 解析多个本地文件
 
 ```bash
-python3 -m scripts.document_parser /path/to/a.pdf /path/to/b.pdf
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser /path/to/a.pdf /path/to/b.pdf
 ```
 
 ### 6.3 指定输出目录
 
 ```bash
-python3 -m scripts.document_parser /path/to/file.pdf --output-dir /path/to/output
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser /path/to/file.pdf --output-dir /path/to/output
 ```
 
 ### 6.4 规则
@@ -175,7 +183,8 @@ python3 -m scripts.document_parser /path/to/file.pdf --output-dir /path/to/outpu
 ### 7.2 示例
 
 ```bash
-python3 -m scripts.document_parser parse \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
   --project-root /home/mleon/workspace/culture-system \
   --input /path/to/book.pdf
 ```
@@ -217,7 +226,8 @@ python3 -m scripts.document_parser parse \
 ### 8.2 示例
 
 ```bash
-python3 -m scripts.document_parser dry-run \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser dry-run \
   --project-root /home/mleon/workspace/culture-system
 ```
 
@@ -265,7 +275,8 @@ python3 -m scripts.document_parser dry-run \
 ### 9.2 使用 `--input`
 
 ```bash
-python3 -m scripts.document_parser postprocess \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind book \
   --input /path/to/book.pdf
@@ -282,7 +293,8 @@ python3 -m scripts.document_parser postprocess \
 ### 9.3 使用 `--staging-doc-root`
 
 ```bash
-python3 -m scripts.document_parser postprocess \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind article \
   --staging-doc-root /home/mleon/workspace/culture-system/.cache/document-parser/document_parser_output/example
@@ -291,7 +303,8 @@ python3 -m scripts.document_parser postprocess \
 ### 9.4 指定 sha12
 
 ```bash
-python3 -m scripts.document_parser postprocess \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind web \
   --staging-doc-root /path/to/staging/doc-root \
@@ -429,7 +442,8 @@ ch-02.md
 ### 11.2 示例
 
 ```bash
-python3 -m scripts.document_parser validate \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser validate \
   --project-root /home/mleon/workspace/culture-system
 ```
 
@@ -516,35 +530,45 @@ SUMMARY ok=<0|1> errors=<int>
 ### 12.1 项目级标准流程
 
 ```bash
-cd ~/.config/opencode/skills/document-parser
+cd "$HOME/.config/opencode/skills/document-parser"
 
-python3 -m scripts.document_parser dry-run \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser dry-run \
   --project-root /home/mleon/workspace/culture-system
 
-python3 -m scripts.document_parser parse \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
   --project-root /home/mleon/workspace/culture-system \
-  --input /path/to/source.pdf
+  --input /path/to/source.pdf \
+  > /tmp/document-parser-normalized-path.txt
 
-python3 -m scripts.document_parser postprocess \
+normalizedMarkdownPath="$(cat /tmp/document-parser-normalized-path.txt)"
+stagingDocRoot="$(dirname "$(dirname "$normalizedMarkdownPath")")"
+
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind book \
-  --input /path/to/source.pdf
+  --staging-doc-root "$stagingDocRoot"
 
-python3 -m scripts.document_parser validate \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser validate \
   --project-root /home/mleon/workspace/culture-system
 ```
 
 ### 12.2 已有 staging 的流程
 
 ```bash
-cd ~/.config/opencode/skills/document-parser
+cd "$HOME/.config/opencode/skills/document-parser"
 
-python3 -m scripts.document_parser postprocess \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind article \
   --staging-doc-root /path/to/document_parser_output/<stem>
 
-python3 -m scripts.document_parser validate \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser validate \
   --project-root /home/mleon/workspace/culture-system
 ```
 
@@ -598,27 +622,35 @@ Markdown 通过 Obsidian embed 引用这些图片。
 ### 14.1 解析并整理一本书
 
 ```bash
-cd ~/.config/opencode/skills/document-parser
+cd "$HOME/.config/opencode/skills/document-parser"
 
-python3 -m scripts.document_parser parse \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
   --project-root /home/mleon/workspace/culture-system \
-  --input /home/mleon/bookfiles/example.pdf
+  --input /home/mleon/bookfiles/example.pdf \
+  > /tmp/document-parser-normalized-path.txt
 
-python3 -m scripts.document_parser postprocess \
+normalizedMarkdownPath="$(cat /tmp/document-parser-normalized-path.txt)"
+stagingDocRoot="$(dirname "$(dirname "$normalizedMarkdownPath")")"
+
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind book \
-  --input /home/mleon/bookfiles/example.pdf
+  --staging-doc-root "$stagingDocRoot"
 
-python3 -m scripts.document_parser validate \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser validate \
   --project-root /home/mleon/workspace/culture-system
 ```
 
 ### 14.2 只检查项目路径策略
 
 ```bash
-cd ~/.config/opencode/skills/document-parser
+cd "$HOME/.config/opencode/skills/document-parser"
 
-python3 -m scripts.document_parser dry-run \
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser dry-run \
   --project-root /home/mleon/workspace/culture-system
 ```
 
