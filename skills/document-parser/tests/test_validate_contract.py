@@ -12,10 +12,12 @@ _SKILL_ROOT = _HERE.parent
 
 def _makeTmpProject(tmpDir: str) -> Path:
   projectRoot = Path(tmpDir) / "project"
+  projectRoot.mkdir(parents=True, exist_ok=True)
+  (projectRoot / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
   vaultRoot = projectRoot / "memory-source"
   (vaultRoot / "raw").mkdir(parents=True, exist_ok=True)
   (vaultRoot / "assets").mkdir(parents=True, exist_ok=True)
-  (vaultRoot / "CLAUDE.md").write_text("# CLAUDE\n", encoding="utf-8")
+  (vaultRoot / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
   return projectRoot
 
 
@@ -32,6 +34,37 @@ def _runCli(*args: str) -> subprocess.CompletedProcess:
 
 
 class ValidateContractNegativeCasesTests(unittest.TestCase):
+  def test_validate_requires_project_level_agent_instruction_v003(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = Path(tmp) / "project"
+      vaultRoot = projectRoot / "memory-source"
+      (vaultRoot / "raw").mkdir(parents=True, exist_ok=True)
+      (vaultRoot / "assets").mkdir(parents=True, exist_ok=True)
+      (vaultRoot / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
+
+      result = _runCli("validate", "--project-root", str(projectRoot))
+
+      self.assertEqual(result.returncode, 3)
+      self.assertEqual(result.stdout, "")
+      self.assertIn("ERROR_CODE:V003", result.stderr)
+      self.assertIn("projectRoot 下缺少 CLAUDE.md 或 AGENTS.md", result.stderr)
+
+  def test_validate_requires_memory_source_agent_instruction_v003(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = Path(tmp) / "project"
+      projectRoot.mkdir(parents=True, exist_ok=True)
+      (projectRoot / "CLAUDE.md").write_text("# CLAUDE\n", encoding="utf-8")
+      vaultRoot = projectRoot / "memory-source"
+      (vaultRoot / "raw").mkdir(parents=True, exist_ok=True)
+      (vaultRoot / "assets").mkdir(parents=True, exist_ok=True)
+
+      result = _runCli("validate", "--project-root", str(projectRoot))
+
+      self.assertEqual(result.returncode, 3)
+      self.assertEqual(result.stdout, "")
+      self.assertIn("ERROR_CODE:V003", result.stderr)
+      self.assertIn("memory-source 下缺少 CLAUDE.md 或 AGENTS.md", result.stderr)
+
   def test_validate_catches_forbidden_binaries_v004(self):
     with tempfile.TemporaryDirectory() as tmp:
       projectRoot = _makeTmpProject(tmp)

@@ -18,6 +18,8 @@ _FIXTURES_ROOT = _HERE / "fixtures" / "staging-book" / "document_parser_output"
 
 def _makeTmpProject(tmpDir: str) -> Path:
   projectRoot = Path(tmpDir) / "project"
+  projectRoot.mkdir(parents=True, exist_ok=True)
+  (projectRoot / "CLAUDE.md").write_text("# CLAUDE\n", encoding="utf-8")
   vaultRoot = projectRoot / "memory-source"
   (vaultRoot / "raw").mkdir(parents=True, exist_ok=True)
   (vaultRoot / "assets").mkdir(parents=True, exist_ok=True)

@@ -25,6 +25,10 @@ def _isHexSha12(text: str) -> bool:
   return bool(re.fullmatch(r"[0-9a-f]{12}", text))
 
 
+def _hasAgentInstructionFile(root: Path) -> bool:
+  return (root / "CLAUDE.md").exists() or (root / "AGENTS.md").exists()
+
+
 def _sha256HexFromBytes(data: bytes) -> str:
   return hashlib.sha256(data).hexdigest()
 
@@ -673,8 +677,10 @@ def _postprocessBook(
   _ensureInside(vaultRoot, rawRoot)
   _ensureInside(vaultRoot, assetsRoot)
 
-  if not (vaultRoot / "CLAUDE.md").exists():
-    raise ValueError("projectRoot 下缺少 memory-source/CLAUDE.md，疑似不是目标工程")
+  if not _hasAgentInstructionFile(projectRoot):
+    raise ValueError("projectRoot 下缺少 CLAUDE.md 或 AGENTS.md，疑似不是目标工程")
+  if not _hasAgentInstructionFile(vaultRoot):
+    raise ValueError("projectRoot 下缺少 memory-source/CLAUDE.md 或 AGENTS.md，疑似不是目标工程")
 
   stagingNormalizedDir = stagingDocRoot / "normalized"
   stagingMarkdownPath = stagingNormalizedDir / "document.md"
@@ -1059,8 +1065,11 @@ def _runPostprocess(argv: List[str]) -> int:
   if not vaultRoot.exists():
     print("ERROR: projectRoot 下缺少 memory-source/", file=sys.stderr)
     return 3
-  if not (vaultRoot / "CLAUDE.md").exists():
-    print("ERROR: memory-source/CLAUDE.md 不存在", file=sys.stderr)
+  if not _hasAgentInstructionFile(projectRoot):
+    print("ERROR: projectRoot 下缺少 CLAUDE.md 或 AGENTS.md", file=sys.stderr)
+    return 3
+  if not _hasAgentInstructionFile(vaultRoot):
+    print("ERROR: memory-source 下缺少 CLAUDE.md 或 AGENTS.md", file=sys.stderr)
     return 3
   rawRoot = vaultRoot / "raw"
   assetsRoot = vaultRoot / "assets"
@@ -1226,8 +1235,12 @@ def _runValidate(argv: List[str]) -> int:
     _emitError("V003", message="projectRoot 下缺少 memory-source/", path=vaultRoot)
     print("SUMMARY ok=0 errors=1", file=sys.stderr)
     return 3
-  if not (vaultRoot / "CLAUDE.md").exists():
-    _emitError("V003", message="memory-source/CLAUDE.md 不存在", path=(vaultRoot / "CLAUDE.md"))
+  if not _hasAgentInstructionFile(projectRoot):
+    _emitError("V003", message="projectRoot 下缺少 CLAUDE.md 或 AGENTS.md", path=projectRoot)
+    print("SUMMARY ok=0 errors=1", file=sys.stderr)
+    return 3
+  if not _hasAgentInstructionFile(vaultRoot):
+    _emitError("V003", message="memory-source 下缺少 CLAUDE.md 或 AGENTS.md", path=vaultRoot)
     print("SUMMARY ok=0 errors=1", file=sys.stderr)
     return 3
 
@@ -1489,8 +1502,11 @@ def _runDryRun(argv: List[str]) -> int:
   if not vaultRoot.exists():
     print("ERROR: projectRoot 下缺少 memory-source/", file=sys.stderr)
     return 3
-  if not (vaultRoot / "CLAUDE.md").exists():
-    print("ERROR: memory-source/CLAUDE.md 不存在", file=sys.stderr)
+  if not _hasAgentInstructionFile(projectRoot):
+    print("ERROR: projectRoot 下缺少 CLAUDE.md 或 AGENTS.md", file=sys.stderr)
+    return 3
+  if not _hasAgentInstructionFile(vaultRoot):
+    print("ERROR: memory-source 下缺少 CLAUDE.md 或 AGENTS.md", file=sys.stderr)
     return 3
   if not rawRoot.exists() or not assetsRoot.exists():
     print("ERROR: memory-source/raw 或 memory-source/assets 不存在", file=sys.stderr)

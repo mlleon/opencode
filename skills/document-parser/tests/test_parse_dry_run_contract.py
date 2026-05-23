@@ -45,10 +45,12 @@ class ParseDryRunContractTests(unittest.TestCase):
   def test_dry_run_success_stdout_schema(self):
     with tempfile.TemporaryDirectory() as tmp:
       projectRoot = Path(tmp) / "project"
+      (projectRoot / "AGENTS.md").parent.mkdir(parents=True, exist_ok=True)
+      (projectRoot / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
       vaultRoot = projectRoot / "memory-source"
       (vaultRoot / "raw").mkdir(parents=True, exist_ok=True)
       (vaultRoot / "assets").mkdir(parents=True, exist_ok=True)
-      (vaultRoot / "CLAUDE.md").write_text("# CLAUDE\n", encoding="utf-8")
+      (vaultRoot / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
 
       result = _runCli("dry-run", "--project-root", str(projectRoot))
 
@@ -107,6 +109,7 @@ class ParseDryRunContractTests(unittest.TestCase):
     with tempfile.TemporaryDirectory() as tmp:
       projectRoot = Path(tmp) / "project"
       projectRoot.mkdir(parents=True, exist_ok=True)
+      (projectRoot / "CLAUDE.md").write_text("# CLAUDE\n", encoding="utf-8")
       # 仅创建 memory-source/ 但不创建 raw/assets/，触发路径校验失败。
       vaultRoot = projectRoot / "memory-source"
       vaultRoot.mkdir(parents=True, exist_ok=True)
@@ -120,6 +123,35 @@ class ParseDryRunContractTests(unittest.TestCase):
         result.stderr.startswith("ERROR:"),
         msg=f"dry-run 路径校验失败时 stderr 必须以 ERROR: 开头\nstderr=\n{result.stderr}\n",
       )
+
+  def test_dry_run_requires_project_level_agent_instruction(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = Path(tmp) / "project"
+      vaultRoot = projectRoot / "memory-source"
+      (vaultRoot / "raw").mkdir(parents=True, exist_ok=True)
+      (vaultRoot / "assets").mkdir(parents=True, exist_ok=True)
+      (vaultRoot / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
+
+      result = _runCli("dry-run", "--project-root", str(projectRoot))
+
+      self.assertEqual(result.returncode, 3)
+      self.assertEqual(result.stdout, "")
+      self.assertIn("projectRoot 下缺少 CLAUDE.md 或 AGENTS.md", result.stderr)
+
+  def test_dry_run_requires_memory_source_agent_instruction(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = Path(tmp) / "project"
+      projectRoot.mkdir(parents=True, exist_ok=True)
+      (projectRoot / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
+      vaultRoot = projectRoot / "memory-source"
+      (vaultRoot / "raw").mkdir(parents=True, exist_ok=True)
+      (vaultRoot / "assets").mkdir(parents=True, exist_ok=True)
+
+      result = _runCli("dry-run", "--project-root", str(projectRoot))
+
+      self.assertEqual(result.returncode, 3)
+      self.assertEqual(result.stdout, "")
+      self.assertIn("memory-source 下缺少 CLAUDE.md 或 AGENTS.md", result.stderr)
 
   def test_parse_missing_project_root_hard_fail(self):
     # 只验证 project-root 必填（避免触发 orchestrator 网络请求）。
