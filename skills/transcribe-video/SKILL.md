@@ -9,28 +9,33 @@ description: Extract transcript or subtitles from a local video file. Use this s
 
 ## 推荐入口（从任意目录运行）
 
-强烈建议使用 `uv --directory` 固定到 skill 目录，以确保复用该 skill 目录下的 `.venv`（即 `~/.config/opencode/skills/transcribe-video/.venv`），不受当前工作目录或外部虚拟环境影响。
+强烈建议使用 `skills/` 级共享 uv 工程固定依赖来源，以确保 `document-parser` 与 `transcribe-video` 复用同一个 Python runtime，并通过 dependency group 隔离各自依赖。
 
-首次使用如果遇到依赖缺失/无法导入模块等问题，请先看下方「环境准备（只需一次）」执行 `uv sync`。
+本 skill 使用：
+
+- uv project：`$HOME/.config/opencode/skills`
+- uv group：`transcribe-video`
+- skill root：`$HOME/.config/opencode/skills/transcribe-video`
+- Python 版本：`>=3.12`
 
 ```bash
 # 一键：字幕优先（若存在）→ 否则 ASR → 输出 txt/json/md
-uv run --directory "$HOME/.config/opencode/skills/transcribe-video" -- \
-  python3 scripts/run.py "<video_path>" zh-CN
+uv run --project "$HOME/.config/opencode/skills" --group transcribe-video -- \
+  python "$HOME/.config/opencode/skills/transcribe-video/scripts/run.py" "<video_path>" zh-CN
 ```
 
 ### 仅转录（输出 txt/json，不生成 md）
 
 ```bash
-uv run --directory "$HOME/.config/opencode/skills/transcribe-video" -- \
-  python3 scripts/transcribe.py "<video_path>" zh-CN
+uv run --project "$HOME/.config/opencode/skills" --group transcribe-video -- \
+  python "$HOME/.config/opencode/skills/transcribe-video/scripts/transcribe.py" "<video_path>" zh-CN
 ```
 
 ### 仅结构化（json → md）
 
 ```bash
-uv run --directory "$HOME/.config/opencode/skills/transcribe-video" -- \
-  python3 scripts/structure.py "<name>/<name>.json"
+uv run --project "$HOME/.config/opencode/skills" --group transcribe-video -- \
+  python "$HOME/.config/opencode/skills/transcribe-video/scripts/structure.py" "<name>/<name>.json"
 ```
 
 ## 行为说明（字幕优先策略）
@@ -67,12 +72,9 @@ ffprobe -v quiet -select_streams s -show_entries stream=index,codec_name:stream_
 
 ## 环境准备（只需一次）
 
-进入 skill 目录并安装依赖：
+共享 runtime 已由 `skills/pyproject.toml` 管理，不再需要在 skill 目录单独维护 `pyproject.toml` 或 `uv.lock`。
 
-```bash
-cd ~/.config/opencode/skills/transcribe-video
-uv sync
-```
+首次运行如遇依赖解析问题，先检查 `skills/uv.lock` 是否最新，再重新执行对应 `uv run` 命令。
 
 ## API Key 配置
 
