@@ -7,6 +7,11 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+try:
+  from taxonomy import Taxonomy, load_taxonomy
+except ImportError:
+  from .taxonomy import Taxonomy, load_taxonomy
+
 
 @dataclass(frozen=True)
 class Segment:
@@ -203,6 +208,198 @@ def structure_transcript_json(transcript_json_path: Path, output_md_path: Path) 
   segments = load_segments_from_json(transcript_json_path)
   markdown = build_markdown_note(source=source, language=language, segments=segments)
   output_md_path.write_text(markdown, encoding="utf-8")
+
+
+def _format_frontmatter_list(values: list[str]) -> list[str]:
+  if not values:
+    return ["[]"]
+  return [""] + [f"  - {value}" for value in values]
+
+
+def _load_json(path: Path) -> dict[str, object]:
+  data = json.loads(path.read_text(encoding="utf-8"))
+  if not isinstance(data, dict):
+    raise ValueError(f"JSON 必须是对象: {path}")
+  return data
+
+
+def build_memory_source_markdown(
+  normalized_payload: dict[str, object],
+  segments_payload: dict[str, object],
+  classification_payload: dict[str, object],
+  assist_payload: dict[str, object] | None = None,
+  taxonomy: Taxonomy | None = None,
+  structure_mode: str = "deterministic",
+  llm_error: str = "",
+) -> str:
+  actual_taxonomy = taxonomy or load_taxonomy()
+  primary = str(classification_payload.get("primaryCategory") or classification_payload.get("primaryDomain", "generic"))
+  raw_secondary = classification_payload.get("secondaryCategories") or classification_payload.get("secondaryDomains")
+  secondary = [str(value) for value in raw_secondary if isinstance(value, str)] if isinstance(raw_secondary, list) else []
+  source = str(normalized_payload.get("source", ""))
+  language = str(normalized_payload.get("language", "zh-CN"))
+  source_type = str(normalized_payload.get("sourceType", "unknown"))
+  llm_used = bool(assist_payload)
+
+  frontmatter = [
+    "---",
+    "source_type: transcript",
+    "media_type: video",
+    f"source_file: \"{source}\"",
+    f"language: {language}",
+    f"transcript_source: \"{source_type}\"",
+    f"structure_mode: {structure_mode}",
+    f"llm_used: {str(llm_used).lower()}",
+    f"primary_category: {primary}",
+    f"primary_domain: {primary}",
+    "secondary_categories:" + ("" if secondary else " []"),
+  ]
+  if secondary:
+    frontmatter.extend([f"  - {domain_id}" for domain_id in secondary])
+  frontmatter.append("secondary_domains:" + ("" if secondary else " []"))
+  if secondary:
+    frontmatter.extend([f"  - {domain_id}" for domain_id in secondary])
+  frontmatter.extend([
+    f"taxonomy_version: {classification_payload.get('taxonomyVersion', actual_taxonomy.version)}",
+    "review_status: pending",
+    f"created: {date.today().isoformat()}",
+  ])
+  if llm_error:
+    frontmatter.append(f"llm_error: \"{llm_error.replace(chr(34), '')}\"")
+  frontmatter.extend(["---", ""])
+
+  title = Path(source).stem if source else "未命名转录"
+  lines = frontmatter + [
+    f"# 视频转录：{title}",
+    "",
+    "## 资料说明",
+    "",
+    "- 本文档为视频/音频转录资料入库稿，所有结构化内容均为候选，默认需要人工复核。",
+    "- 最终 Markdown 应归档到 `memory-source/raw/03-transcripts/`。",
+    "- 原始 TXT/JSON/SRT 等支撑材料应保存在 `memory-source/assets/raw/transcripts/` 下。",
+    "",
+    "## 分类结果",
+    "",
+    f"- 一级分类：{actual_taxonomy.domains.get(primary, actual_taxonomy.domains['generic']).name} (`{primary}`)",
+  ]
+  if secondary:
+    lines.append("- 二级标签：" + "、".join(f"`{value}`" for value in secondary))
+  lines.extend([
+    f"- 置信度：{classification_payload.get('confidence', 'low')}",
+    "- 状态：待人工确认",
+    "",
+    "## 主题结构",
+    "",
+  ])
+
+  blocks = segments_payload.get("blocks", [])
+  rendered_topics = False
+  topics = assist_payload.get("topics") if assist_payload else []
+  if isinstance(topics, list):
+    for item in topics:
+      if isinstance(item, dict):
+        lines.append(f"- {item.get('name', '未命名主题')}")
+        rendered_topics = True
+  if not rendered_topics:
+    lines.append("- [ ] 候选主题待人工确认")
+  lines.extend(["", "## 关键观点", ""])
+  rendered_points = False
+  key_points = assist_payload.get("keyPoints") if assist_payload else []
+  if isinstance(key_points, list):
+    for item in key_points:
+      if isinstance(item, dict):
+        lines.append(f"- {item.get('point', '未命名观点')}")
+        rendered_points = True
+  if not rendered_points:
+    lines.append("- [ ] 候选观点待人工确认")
+  lines.extend(["", "## 概念 / 术语", ""])
+  rendered_concepts = False
+  concepts = assist_payload.get("concepts") if assist_payload else []
+  if isinstance(concepts, list):
+    for item in concepts:
+      if isinstance(item, dict):
+        lines.append(f"- {item.get('name', '未命名概念')}：{item.get('definitionCandidate', '')}")
+        rendered_concepts = True
+  if not rendered_concepts:
+    lines.append("- [ ] 候选概念待人工确认")
+  lines.extend(["", "## 重要原文摘录", ""])
+  if isinstance(blocks, list):
+    for block in blocks:
+      if isinstance(block, dict):
+        lines.append(f"- {format_timestamp(float(block.get('start', 0.0)))}-{format_timestamp(float(block.get('end', 0.0)))} {str(block.get('text', '')).splitlines()[0][:80]}")
+  lines.extend(["", "## 可行动洞察候选", ""])
+  rendered_actions = False
+  actionable_insights = assist_payload.get("actionableInsights") if assist_payload else []
+  if isinstance(actionable_insights, list):
+    for item in actionable_insights:
+      if isinstance(item, dict):
+        lines.append(f"- [ ] {item.get('action', '未命名行动候选')}")
+        rendered_actions = True
+  if not rendered_actions:
+    lines.append("- [ ] 无明确行动候选")
+  lines.extend(["", "## 待确认问题", ""])
+  rendered_questions = False
+  open_questions = assist_payload.get("openQuestions") if assist_payload else []
+  if isinstance(open_questions, list):
+    for item in open_questions:
+      if isinstance(item, dict):
+        lines.append(f"- {item.get('question', '未命名问题')}")
+        rendered_questions = True
+  if not rendered_questions:
+    lines.append("- [ ] 核对转录准确性")
+
+  if assist_payload:
+    lines.extend(["## 大模型辅助候选", ""])
+    assist_blocks = assist_payload.get("blocks", [])
+    if isinstance(assist_blocks, list):
+      for block in assist_blocks:
+        if not isinstance(block, dict):
+          continue
+        lines.extend([f"### {block.get('title', block.get('blockId', '未命名片段'))}", ""])
+        evidence = block.get("evidence", [])
+        if isinstance(evidence, list):
+          for item in evidence:
+            if isinstance(item, dict):
+              lines.append(f"- {format_timestamp(float(item.get('start', 0.0)))}-{format_timestamp(float(item.get('end', 0.0)))}：{item.get('text', '')}")
+        lines.append("")
+
+  lines.extend(["", "## 原文转录", ""])
+  raw_segments = normalized_payload.get("segments", [])
+  if isinstance(raw_segments, list):
+    for item in raw_segments:
+      if isinstance(item, dict):
+        lines.append(f"### {format_timestamp(float(item.get('start', 0.0)))}")
+        lines.append(str(item.get("text", "")))
+        lines.append("")
+
+  lines.extend(["## 处理警告", "", "- [ ] 如有 LLM 或分类警告，请结合支撑材料人工复核。", ""])
+  return "\n".join(lines)
+
+
+def structure_pipeline_outputs(
+  normalized_json_path: Path,
+  segments_json_path: Path,
+  classification_json_path: Path,
+  output_md_path: Path,
+  assist_json_path: Path | None = None,
+  structure_mode: str = "deterministic",
+  llm_error: str = "",
+) -> str:
+  normalized_payload = _load_json(normalized_json_path)
+  segments_payload = _load_json(segments_json_path)
+  classification_payload = _load_json(classification_json_path)
+  assist_payload = _load_json(assist_json_path) if assist_json_path and assist_json_path.exists() else None
+  markdown = build_memory_source_markdown(
+    normalized_payload=normalized_payload,
+    segments_payload=segments_payload,
+    classification_payload=classification_payload,
+    assist_payload=assist_payload,
+    structure_mode=structure_mode,
+    llm_error=llm_error,
+  )
+  output_md_path.parent.mkdir(parents=True, exist_ok=True)
+  output_md_path.write_text(markdown, encoding="utf-8")
+  return markdown
 
 
 def main() -> None:
