@@ -1,0 +1,60 @@
+{
+  "version": 2,
+  "creatorProfile": {
+    "focus": "中国传统文化与生活美学结合",
+    "vision": "通过东方文化和生活美学，帮助现代人找回生命力、呼吸感和精神空间",
+    "tone": ["温柔", "优雅", "松弛", "从容", "向上"],
+    "avoid": ["无证据拔高", "过度鸡汤", "自动文学化改写"]
+  },
+  "primaryCategories": {
+    "culture_life_aesthetics": {
+      "name": "东方文化与生活美学",
+      "priority": "primary_focus",
+      "description": "古诗词、茶文化、器物之美、书写之美、茶室空间、绿植空间、东方审美、生命力、呼吸感、精神空间等内容。",
+      "keywords": ["诗", "诗词", "苏轼", "苏东坡", "茶", "茶席", "茶器", "汝瓷", "器物", "毛笔", "书法", "茶室", "绿植", "东方", "传统文化", "宋代", "美学", "审美", "松弛", "生命力", "呼吸感", "精神空间"],
+      "secondaryHints": ["poetry", "su_dongpo", "classical_chinese_poetry", "tea_culture", "object_aesthetics", "ru_porcelain", "calligraphy", "tea_room", "green_plant_space", "song_lifestyle", "eastern_aesthetics", "life_aesthetics", "gentle_living", "spiritual_space", "vitality", "breathing_room"]
+    },
+    "general_reflection": {
+      "name": "人生思考",
+      "description": "人生选择、心境变化、困境、成长、自我理解、生命状态等内容。",
+      "keywords": ["人生", "心境", "选择", "困境", "成长", "命运", "视角", "重新出发", "从容"],
+      "secondaryHints": ["life_reflection", "mindset", "resilience", "self_growth", "perspective_shift"]
+    },
+    "ai_technology": {
+      "name": "AI / IT / 技术",
+      "description": "AI Agent、LLM、软件工程、IT 技术、工具链、自动化、RAG、模型评测等内容。",
+      "keywords": ["AI", "Agent", "LLM", "RAG", "API", "模型", "自动化", "软件", "工程", "Skill", "prompt", "eval", "上下文", "context", "engineering"],
+      "secondaryHints": ["ai_agents", "agent_skill_design", "prompt_engineering", "rag", "software_engineering", "llm_evaluation", "automation"]
+    },
+    "business_marketing": {
+      "name": "商业 / 品牌 / 营销",
+      "description": "品牌定位、内容营销、增长、用户洞察、商业模式、产品表达等内容。",
+      "keywords": ["品牌", "营销", "增长", "用户", "定位", "商业模式", "内容营销", "转化", "产品"],
+      "secondaryHints": ["brand_strategy", "content_marketing", "growth", "positioning", "user_insight", "business_model"]
+    },
+    "data_analysis": {
+      "name": "数据分析",
+      "description": "数据指标、分析方法、BI、SQL、数据洞察、实验分析等内容。",
+      "keywords": ["数据", "指标", "SQL", "BI", "分析", "看板", "实验", "洞察"],
+      "secondaryHints": ["metrics", "sql", "bi", "data_insight", "experiment_analysis", "dashboard"]
+    },
+    "knowledge_workflow": {
+      "name": "知识管理 / 方法论 / 工作流",
+      "description": "知识管理、学习方法、Agent Skill、流程设计、工作流优化等内容。",
+      "keywords": ["知识", "方法论", "工作流", "流程", "笔记", "复盘", "评测", "negative examples"],
+      "secondaryHints": ["knowledge_management", "workflow_design", "skill_design", "methodology", "evaluation", "negative_examples"]
+    },
+    "content_creation": {
+      "name": "内容创作",
+      "description": "自媒体、短视频、选题、脚本、表达方式、内容策略等内容。",
+      "keywords": ["自媒体", "短视频", "选题", "脚本", "表达", "内容", "账号", "创作者"],
+      "secondaryHints": ["short_video", "script_writing", "topic_selection", "creator_strategy", "storytelling"]
+    },
+    "generic": {
+      "name": "通用素材",
+      "description": "暂时无法稳定归类的通用内容。",
+      "keywords": [],
+      "secondaryHints": []
+    }
+  }
+}

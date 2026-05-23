@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "required": ["titleCandidate", "primaryCategory", "secondaryCategories", "contentType", "confidence", "topics", "keyPoints", "concepts", "quotes", "actionableInsights", "openQuestions", "warnings", "reviewRequired"],
+  "properties": {
+    "titleCandidate": {"type": "string"},
+    "primaryCategory": {"type": "string"},
+    "secondaryCategories": {"type": "array", "items": {"type": "string"}},
+    "contentType": {"type": "string"},
+    "confidence": {"type": "number"},
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "evidence"],
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "evidence": {"type": "array"}
+        }
+      }
+    },
+    "keyPoints": {"type": "array"},
+    "concepts": {"type": "array"},
+    "quotes": {"type": "array"},
+    "actionableInsights": {"type": "array"},
+    "openQuestions": {"type": "array"},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "reviewRequired": {"type": "boolean"}
+  }
+}

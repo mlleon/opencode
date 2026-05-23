@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "defaultMode": "assisted",
+  "models": {
+    "assisted": {
+      "provider": "nvidia",
+      "baseUrl": "https://integrate.api.nvidia.com/v1",
+      "apiKeyFile": "~/.config/opencode/keys/nvidia.key",
+      "model": "moonshotai/kimi-k2.6",
+      "temperature": 0.2,
+      "timeoutSec": 90
+    },
+    "premiumReview": {
+      "provider": "pqapi",
+      "baseUrl": "https://www.pqapi.store/v1",
+      "apiKeyFile": "~/.config/opencode/keys/pqapi.key",
+      "model": "gpt-5.5",
+      "temperature": 0.1,
+      "timeoutSec": 120,
+      "enabledByDefault": false
+    },
+    "fallback": {
+      "provider": "litellm",
+      "baseUrl": "http://localhost:4000",
+      "apiKeyFile": "~/.config/opencode/keys/litellm.key",
+      "model": "glm-5.1-xhigh",
+      "temperature": 0.2,
+      "timeoutSec": 90
+    }
+  },
+  "assist": {
+    "requireEvidence": true,
+    "requireTimestamp": true,
+    "outputSchema": "config/llm_schema.json",
+    "tasks": [
+      "block_titles",
+      "domain_suggestions",
+      "aesthetic_expression_candidates",
+      "culture_reference_candidates",
+      "brand_expression_candidates"
+    ]
+  }
+}
