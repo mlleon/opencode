@@ -1,0 +1,16 @@
+[project]
+name = "opencode-skills-runtime"
+version = "0.1.0"
+description = "Shared Python runtime for local OpenCode CLI skills"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = []
+document-parser = [
+  "requests>=2.31.0",
+]
+transcribe-video = [
+  "nvidia-riva-client>=2.0.0",
+  "python-dotenv>=1.0.0",
+]

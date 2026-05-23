@@ -9,3 +9,7 @@
 !/skills/**
 !/oh-my-openagent.json
 !/opencode.json
+
+# Python/uv 虚拟环境只保留在本机，不进入仓库
+/skills/.venv/
+/skills/*/.venv/
