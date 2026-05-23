@@ -25,9 +25,13 @@
       ]
     },
     "hephaestus": {
-      "model": "rcode-plus/gpt-5.2",
-      "variant": "medium",
+      "model": "pqapi/gpt-5.5",
+      "variant": "xhigh",
       "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.2",
+          "variant": "medium"
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "medium"
@@ -39,9 +43,13 @@
       ]
     },
     "oracle": {
-      "model": "rcode-plus/gpt-5.2",
-      "variant": "high",
+      "model": "pqapi/gpt-5.5",
+      "variant": "xhigh",
       "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.2",
+          "variant": "high"
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "high"
@@ -89,9 +97,13 @@
       ]
     },
     "prometheus": {
-      "model": "rcode-plus/gpt-5.2",
-      "variant": "high",
+      "model": "pqapi/gpt-5.5",
+      "variant": "xhigh",
       "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.2",
+          "variant": "high"
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "high"
@@ -111,9 +123,13 @@
       ]
     },
     "metis": {
-      "model": "rcode-plus/gpt-5.2",
+      "model": "pqapi/gpt-5.5",
       "variant": "high",
       "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.2",
+          "variant": "high"
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "high"
@@ -129,9 +145,13 @@
       ]
     },
     "momus": {
-      "model": "rcode-plus/gpt-5.2",
+      "model": "pqapi/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.2",
+          "variant": "xhigh"
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -147,9 +167,13 @@
       ]
     },
     "atlas": {
-      "model": "rcode-plus/gpt-5.2",
+      "model": "pqapi/gpt-5.5",
       "variant": "medium",
       "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.2",
+          "variant": "medium"
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "medium"

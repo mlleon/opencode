@@ -2,6 +2,21 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate":false,
   "provider": {
+    "pqapi": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "PQAPI",
+      "options": {
+        "baseURL": "https://www.pqapi.store/v1",
+        "apiKey": "{file:~/.config/opencode/keys/pqapi.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-5.5": {
+          "name": "gpt-5.5"
+        }
+      }
+    },
     "litellm": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "LiteLLM",
