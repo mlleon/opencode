@@ -12,8 +12,109 @@
         "setCacheKey": true
       },
       "models": {
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
+        },
+        "gpt-5.2": {
+          "name": "gpt-5.2",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.3-codex": {
+          "name": "gpt-5.3-codex",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
         "gpt-5.5": {
-          "name": "gpt-5.5"
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "dmxapi": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DMXAPI",
+      "options": {
+        "baseURL": "https://www.dmxapi.cn/v1",
+        "apiKey": "{file:~/.config/opencode/keys/dmxapi.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "MiniMax-M2.7-free": {
+          "name": "MiniMax-M2.7-free"
+        },
+        "kimi-k2.5-free": {
+          "name": "Kimi-K2.5-free"
+        },
+        "glm-5-free": {
+          "name": "GLM-5-free"
         }
       }
     },
@@ -28,41 +129,17 @@
         "setCacheKey": true
       },
       "models": {
-        "glm-5.1-xhigh": {
-          "name": "glm-5.1-xhigh"
-        },
-        "glm-5.1-medium": {
-          "name": "glm-5.1-medium"
-        },
-        "glm-5-xhigh": {
-          "name": "glm-5-xhigh"
-        },
-        "glm-5-high": {
-          "name": "glm-5-high"
-        },
-        "glm-5-medium": {
-          "name": "glm-5-medium"
-        },
-        "glm-5-low": {
-          "name": "glm-5-low"
-        }
-      }
-    },
-    "google": {
-      "npm": "@ai-sdk/google",
-      "name": "Google AI Studio",
-      "options": {
-        "baseURL": "https://generativelanguage.googleapis.com/v1beta",
-        "apiKey": "{file:~/.config/opencode/keys/google.key}",
-        "enableMeta": true,
-        "setCacheKey": true
-      },
-      "models": {
-        "gemma-4-31b-it": {
-          "name": "Gemma 4 31B IT"
-        },
-        "gemini-3.1-flash-lite": {
-          "name": "Gemini 3.1 Flash Lite"
+        "kimi-k2.6": {
+          "name": "Kimi-K2.6",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
         }
       }
     },
@@ -239,7 +316,7 @@
           }
         },
         "gpt-5.5": {
-          "name": "gpt-5.4-xhigh",
+          "name": "gpt-5.5",
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -334,7 +411,7 @@
           }
         },
         "gpt-5.5": {
-          "name": "gpt-5.4-xhigh",
+          "name": "gpt-5.5",
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -660,6 +737,18 @@
         },
         "stepfun-ai/step-3.5-flash": {
           "name": "Step 3.5 Flash"
+        },
+        "stepfun-ai/step-3.7-flash": {
+          "name": "Step 3.7 Flash",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
         }
       }
     },
@@ -731,22 +820,16 @@
         "minimax/minimax-m2.5:free": {
           "name": "MiniMax M2.5 Free"
         },
-        "inclusionai/ring-2.6-1t:free": {
-          "name": "Ring-2.6-1T (free)"
-        },
-        "deepseek/deepseek-v4-flash:free": {
-          "name": "DeepSeek V4 Flash (free)",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "max",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
+        "moonshotai/kimi-k2.6:free": {
+          "name": "Kimi K2.6 Free",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
           }
         },
         "@preset/kimi-k2-5": {
@@ -785,21 +868,6 @@
               "reasoningSummary": "auto"
             }
           }
-        },
-        "inclusionai/ling-2.6-1t:free": {
-          "name": "Ling-2.6-1T (free)",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
         }
       }
     },
@@ -811,12 +879,6 @@
         "apiKey": "{file:~/.config/opencode/keys/opencode.key}"
       },
       "models": {
-        "qwen3.6-plus-free": {
-          "name": "Qwen3.6 Plus Free"
-        },
-        "minimax-m2.5-free": {
-          "name": "MiniMax M2.5 Free"
-        },
         "deepseek-v4-flash-free": {
           "name": "DeepSeek V4 Flash Free"
         }
