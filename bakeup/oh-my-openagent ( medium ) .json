@@ -11,12 +11,16 @@
   },
   "agents": {
     "sisyphus": {
-      "model": "litellm/glm-5.1-medium",
+      "model": "litellm/kimi-k2.6",
       "fallback_models": [
-        "litellm/glm-5.1-xhigh",
-        "litellm/glm-5-xhigh",
-        "litellm/glm-5-high",
-        "modelscope/moonshotai/Kimi-K2.5"
+        {
+          "model": "pqapi/gpt-5.5",
+          "variant": "high"
+        },
+        {
+          "model": "pqapi/gpt-5.4",
+          "variant": "high"
+        }
       ]
     },
     "hephaestus": {
@@ -254,14 +258,15 @@
       ]
     },
     "quick": {
-      "model": "pqapi/gpt-5.4-mini",
+      "model": "pqapi/gpt-5.4",
+      "variant": "medium",
       "fallback_models": [
         "rcode-plus/gpt-5.4-mini",
         "fox-aws/claude-sonnet-4-5-20250929-thinking"
       ]
     },
     "unspecified-low": {
-      "model": "pqapi/gpt-5.3-codex",
+      "model": "pqapi/gpt-5.4",
       "variant": "medium",
       "fallback_models": [
         {
