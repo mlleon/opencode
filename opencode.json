@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate":false,
+  "autoupdate":true,
   "provider": {
     "pqapi": {
       "npm": "@ai-sdk/openai-compatible",
