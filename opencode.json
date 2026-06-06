@@ -15,46 +15,6 @@
         "gpt-5.4-mini": {
           "name": "gpt-5.4-mini"
         },
-        "gpt-5.2": {
-          "name": "gpt-5.2",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "gpt-5.3-codex": {
-          "name": "gpt-5.3-codex",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
         "gpt-5.4": {
           "name": "gpt-5.4",
           "variants": {
@@ -97,6 +57,38 @@
         }
       }
     },
+    "litellm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteLLM",
+      "options": {
+        "baseURL": "http://localhost:4000",
+        "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-model": {
+          "name": "GPT Model"
+        },
+        "gkd-model": {
+          "name": "GKD Model"
+        },
+        "nim-model": {
+          "name": "NIM Model",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "max"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        }
+      }
+    },
     "dmxapi": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "DMXAPI",
@@ -118,31 +110,6 @@
         }
       }
     },
-    "litellm": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "LiteLLM",
-      "options": {
-        "baseURL": "http://localhost:4000",
-        "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
-        "stream": true,
-        "enableMeta": true,
-        "setCacheKey": true
-      },
-      "models": {
-        "kimi-k2.6": {
-          "name": "Kimi-K2.6",
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        }
-      }
-    },
     "zenmux": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "ZenMux",
@@ -155,6 +122,30 @@
       "models": {
         "google/gemini-3.5-flash-free": {
           "name": "Gemini 3.5 Flash Free"
+        }
+      }
+    },
+    "hcnsec": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "HcnSec",
+      "options": {
+        "baseURL": "https://api.iamhc.cn/v1",
+        "apiKey": "{file:~/.config/opencode/keys/hcnsec.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "glm-5": {
+          "name": "GLM 5"
+        },
+        "glm-5.1": {
+          "name": "GLM 5.1"
+        },
+        "Kimi-K2.5": {
+          "name": "Kimi K2.5"
+        },
+        "x": {
+          "name": "Kimi K2.6"
         }
       }
     },
@@ -255,46 +246,6 @@
         "gpt-5.4-mini": {
           "name": "gpt-5.4-mini"
         },
-        "gpt-5.2": {
-          "name": "gpt-5.2",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "gpt-5.3-codex": {
-          "name": "gpt-5.3-codex",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
         "gpt-5.4": {
           "name": "gpt-5.4",
           "variants": {
@@ -349,46 +300,6 @@
       "models": {
         "gpt-5.4-mini": {
           "name": "gpt-5.4-mini"
-        },
-        "gpt-5.2": {
-          "name": "gpt-5.2",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "gpt-5.3-codex": {
-          "name": "gpt-5.3-codex",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
         },
         "gpt-5.4": {
           "name": "gpt-5.4",
@@ -466,7 +377,7 @@
           }
         },
         "claude-opus-4-6": {
-          "name": "gpt-5.4",
+          "name": "claude-opus-4-6",
           "variants": {
             "medium": {
               "reasoningEffort": "medium",
@@ -584,7 +495,6 @@
       "models": {
         "gpt-5.4": {
           "name": "gpt-5.4",
-          "store": true,
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -603,30 +513,8 @@
             }
           }
         },
-        "gpt-5.3-codex": {
-          "name": "gpt-5.3-codex",
-          "store": true,
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "gpt-5.2": {
-          "name": "gpt-5.2",
-          "store": true,
+        "gpt-5.5": {
+          "name": "gpt-5.5",
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -736,10 +624,34 @@
           }
         },
         "stepfun-ai/step-3.5-flash": {
-          "name": "Step 3.5 Flash"
+          "name": "Step 3.5 Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
         },
         "stepfun-ai/step-3.7-flash": {
           "name": "Step 3.7 Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          },
           "modalities": {
             "input": [
               "text",

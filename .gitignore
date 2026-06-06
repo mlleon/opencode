@@ -1,15 +1,100 @@
+# .gitignore
+
+```gitignore
 # 先忽略所有文件和目录
 *
 
-# 但保留特定目录和文件
+# =========================
+# 保留需要进入仓库的内容
+# =========================
+
 !/.gitignore
-!/bakeup/
-!/bakeup/**
-!/skills/
-!/skills/**
 !/oh-my-openagent.json
 !/opencode.json
 
-# Python/uv 虚拟环境只保留在本机，不进入仓库
+!/bakeup/
+!/bakeup/**
+
+!/skills/
+!/skills/**
+
+# =========================
+# Python 虚拟环境
+# =========================
+
 /skills/.venv/
 /skills/*/.venv/
+**/.venv/
+
+# =========================
+# Python 缓存文件
+# =========================
+
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# =========================
+# 常见编辑器缓存
+# =========================
+
+**/.DS_Store
+**/Thumbs.db
+
+# VSCode
+**/.vscode/
+
+# JetBrains
+**/.idea/
+
+# =========================
+# Python 构建产物
+# =========================
+
+**/build/
+**/dist/
+**/*.egg-info/
+
+# pytest
+**/.pytest_cache/
+
+# mypy
+**/.mypy_cache/
+
+# Ruff
+**/.ruff_cache/
+
+# uv
+**/.uv/
+
+# Coverage
+**/.coverage
+**/htmlcov/
+```
+
+## 如果这些文件已经被 Git 跟踪
+
+修改 `.gitignore` 后，需要清理 Git 索引：
+
+```bash
+git rm -r --cached .
+git add .
+git status
+```
+
+确认无误后提交：
+
+```bash
+git commit -m "fix gitignore rules"
+```
+
+## 验证规则是否生效
+
+查看某个文件是否被忽略：
+
+```bash
+git check-ignore -v skills/transcribe-video/scripts/__pycache__/analyze.cpython-312.pyc
+```
+
+如果输出对应的 `.gitignore` 规则，说明已经生效。

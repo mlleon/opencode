@@ -4,22 +4,27 @@
   "runtime_fallback": {
     "enabled": true,
     "retry_on_errors": [400, 401, 403, 429, 500, 502, 503, 504, 529, 402],
-    "max_fallback_attempts": 5,
+    "max_fallback_attempts": 3,
     "cooldown_seconds": 120,
     "timeout_seconds": 60,
     "notify_on_fallback": true
   },
   "agents": {
     "sisyphus": {
-      "model": "litellm/kimi-k2.6",
+      "model": "pqapi/gpt-5.5",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
-          "variant": "high"
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
         },
         {
-          "model": "pqapi/gpt-5.4",
-          "variant": "high"
+          "model": "rcode-plus/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
         }
       ]
     },
@@ -28,16 +33,16 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
-          "variant": "medium"
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
         },
         {
           "model": "rcode-plus/gpt-5.4",
-          "variant": "medium"
+          "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
-          "variant": "medium"
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
         }
       ]
     },
@@ -46,20 +51,16 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
-          "variant": "high"
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
         },
         {
           "model": "rcode-plus/gpt-5.4",
-          "variant": "high"
+          "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
-          "variant": "high"
-        },
-        {
-          "model": "fox-gemini/gemini-3.1-pro",
-          "variant": "high"
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
         }
       ]
     },
@@ -70,24 +71,32 @@
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
           "variant": "high"
-        }
+        },
+        {
+          "model": "nvidia/stepfun-ai/step-3.5-flash",
+          "variant": "high"
+        },
+        "rcode-plus/gpt-5.4-mini"
       ]
     },
     "explore": {
       "model": "nvidia/stepfun-ai/step-3.7-flash",
       "variant": "high",
       "fallback_models": [
+        {
+          "model": "nvidia/stepfun-ai/step-3.5-flash",
+          "variant": "high"
+        },
         "pqapi/gpt-5.4-mini",
-        "nvidia/minimaxai/minimax-m2.7",
-        "fox-aws/claude-haiku-4-5-20251001"
+        "nvidia/minimaxai/minimax-m2.7"
       ]
     },
     "multimodal-looker": {
-      "model": "rcode-plus/gpt-5.2",
+      "model": "pqapi/gpt-5.5",
       "variant": "medium",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
+          "model": "pqapi/gpt-5.4",
           "variant": "medium"
         },
         {
@@ -95,7 +104,7 @@
           "variant": "medium"
         },
         {
-          "model": "fox-openai/gpt-5.2",
+          "model": "fox-openai/gpt-5.4",
           "variant": "medium"
         }
       ]
@@ -105,20 +114,16 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
-          "variant": "high"
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
         },
         {
           "model": "rcode-plus/gpt-5.4",
-          "variant": "high"
+          "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
-          "variant": "high"
-        },
-        {
-          "model": "deepseek-anthropic/deepseek-v4-pro",
-          "variant": "max"
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
         },
         {
           "model": "fox-ultra/claude-opus-4-6",
@@ -128,19 +133,19 @@
     },
     "metis": {
       "model": "pqapi/gpt-5.5",
-      "variant": "high",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
-          "variant": "high"
-        },
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
+        },        
         {
           "model": "rcode-plus/gpt-5.4",
-          "variant": "high"
+          "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
-          "variant": "high"
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
         },
         {
           "model": "fox-ultra/claude-opus-4-6",
@@ -153,15 +158,15 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
+          "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        },
+        }, 
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
+          "model": "fox-openai/gpt-5.4",
           "variant": "xhigh"
         },
         {
@@ -175,20 +180,16 @@
       "variant": "medium",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
+          "model": "pqapi/gpt-5.4",
           "variant": "medium"
-        },
+        }, 
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "medium"
         },
         {
-          "model": "fox-openai/gpt-5.2",
+          "model": "fox-openai/gpt-5.4",
           "variant": "medium"
-        },
-        {
-          "model": "deepseek-anthropic/deepseek-v4-pro",
-          "variant": "max"
         },
         {
           "model": "fox-ultra/claude-sonnet-4-6",
@@ -216,15 +217,15 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
+          "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        },
+        }, 
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
+          "model": "fox-openai/gpt-5.4",
           "variant": "xhigh"
         },
         {
@@ -238,12 +239,16 @@
       "variant": "xhigh",
       "fallback_models": [
         {
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
+        }, 
+        {
           "model": "rcode-plus/gpt-5.4",
-          "variant": "medium"
+          "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
-          "variant": "medium"
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
         }
       ]
     },
@@ -251,6 +256,18 @@
       "model": "pqapi/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
+        {
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
+        }, 
+        {
+          "model": "rcode-plus/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
+        },
         {
           "model": "fox-ultra/claude-opus-4-6",
           "variant": "max"
@@ -261,26 +278,28 @@
       "model": "pqapi/gpt-5.4",
       "variant": "medium",
       "fallback_models": [
+        "pqapi/gpt-5.4-mini",
         "rcode-plus/gpt-5.4-mini",
         "fox-aws/claude-sonnet-4-5-20250929-thinking"
       ]
     },
     "unspecified-low": {
-      "model": "pqapi/gpt-5.4",
+      "model": "pqapi/gpt-5.5",
       "variant": "medium",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.3-codex",
+          "model": "pqapi/gpt-5.4",
+          "variant": "medium"
+        }, 
+        {
+          "model": "rcode-plus/gpt-5.4",
           "variant": "medium"
         },
         {
-          "model": "fox-openai/gpt-5.3-codex",
+          "model": "fox-openai/gpt-5.4",
           "variant": "medium"
         },
-        {
-          "model": "fox-ultra/claude-sonnet-4-6",
-          "variant": "medium"
-        }
+        "fox-aws/claude-sonnet-4-5-20250929-thinking"
       ]
     },
     "unspecified-high": {
@@ -288,16 +307,16 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "rcode-plus/gpt-5.2",
-          "variant": "high"
-        },
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
+        }, 
         {
           "model": "rcode-plus/gpt-5.4",
-          "variant": "high"
+          "variant": "xhigh"
         },
         {
-          "model": "fox-openai/gpt-5.2",
-          "variant": "high"
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
         },
         {
           "model": "fox-ultra/claude-opus-4-6",
@@ -309,7 +328,31 @@
       "model": "pqapi/gpt-5.4",
       "variant": "medium",
       "fallback_models": [
+        {
+          "model": "rcode-plus/gpt-5.4",
+          "variant": "medium"
+        },
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "medium"
+        },
         "fox-aws/claude-sonnet-4-5-20250929-thinking"
+      ]
+    },
+    "git": {
+      "model": "nvidia/stepfun-ai/step-3.5-flash",
+      "variant": "high",
+      "fallback_models": [
+        {
+          "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+          "variant": "max"
+        },
+        "nvidia/minimaxai/minimax-m2.7",
+        {
+          "model": "nvidia/stepfun-ai/step-3.7-flash",
+          "variant": "high"
+        },
+        "pqapi/gpt-5.4-mini"
       ]
     }
   }
