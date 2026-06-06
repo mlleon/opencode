@@ -3,7 +3,7 @@
   "autoupdate":true,
   "provider": {
     "pqapi": {
-      "npm": "@ai-sdk/openai-compatible",
+      "npm": "@ai-sdk/openai",
       "name": "PQAPI",
       "options": {
         "baseURL": "https://www.pqapi.store/v1",

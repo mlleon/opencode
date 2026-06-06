@@ -80,11 +80,11 @@
       ]
     },
     "explore": {
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
+      "model": "nvidia/stepfun-ai/step-3.5-flash",
       "variant": "high",
       "fallback_models": [
         {
-          "model": "nvidia/stepfun-ai/step-3.5-flash",
+          "model": "nvidia/stepfun-ai/step-3.7-flash",
           "variant": "high"
         },
         "pqapi/gpt-5.4-mini",
@@ -275,7 +275,7 @@
       ]
     },
     "quick": {
-      "model": "pqapi/gpt-5.4",
+      "model": "pqapi/gpt-5.5",
       "variant": "medium",
       "fallback_models": [
         "pqapi/gpt-5.4-mini",
@@ -325,7 +325,7 @@
       ]
     },
     "writing": {
-      "model": "pqapi/gpt-5.4",
+      "model": "pqapi/gpt-5.5",
       "variant": "medium",
       "fallback_models": [
         {
@@ -343,10 +343,6 @@
       "model": "nvidia/stepfun-ai/step-3.5-flash",
       "variant": "high",
       "fallback_models": [
-        {
-          "model": "nvidia/deepseek-ai/deepseek-v4-flash",
-          "variant": "max"
-        },
         "nvidia/minimaxai/minimax-m2.7",
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
