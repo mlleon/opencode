@@ -67,6 +67,10 @@
     "librarian": {
       "model": "nvidia/minimaxai/minimax-m2.7",
       "fallback_models": [
+        {
+          "model": "pqapi/gpt-5.4",
+          "variant": "medium"
+        },
         "pqapi/gpt-5.4-mini",
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
@@ -86,6 +90,10 @@
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
           "variant": "high"
+        },
+        {
+          "model": "pqapi/gpt-5.4",
+          "variant": "medium"
         },
         "pqapi/gpt-5.4-mini",
         "nvidia/minimaxai/minimax-m2.7"
