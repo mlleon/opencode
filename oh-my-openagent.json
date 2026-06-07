@@ -1,33 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
-  "auto_update": true,
-  "runtime_fallback": {
-    "enabled": true,
-    "retry_on_errors": [400, 401, 403, 429, 500, 502, 503, 504, 529, 402],
-    "max_fallback_attempts": 3,
-    "cooldown_seconds": 120,
-    "timeout_seconds": 60,
-    "notify_on_fallback": true
-  },
   "agents": {
-    "sisyphus": {
-      "model": "pqapi/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "rcode-plus/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "fox-openai/gpt-5.4",
-          "variant": "xhigh"
-        }
-      ]
-    },
     "hephaestus": {
       "model": "pqapi/gpt-5.5",
       "variant": "xhigh",
@@ -146,7 +119,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        },        
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -168,7 +141,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        }, 
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -190,7 +163,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        }, 
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -208,6 +181,24 @@
     "sisyphus-junior": {
       "model": "pqapi/gpt-5.5",
       "variant": "medium"
+    },
+    "sisyphus": {
+      "model": "pqapi/gpt-5.5",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "rcode-plus/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "fox-openai/gpt-5.4",
+          "variant": "xhigh"
+        }
+      ]
     }
   },
   "categories": {
@@ -227,7 +218,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        }, 
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -249,7 +240,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        }, 
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -267,7 +258,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        }, 
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -298,7 +289,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "medium"
-        }, 
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "medium"
@@ -317,7 +308,7 @@
         {
           "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
-        }, 
+        },
         {
           "model": "rcode-plus/gpt-5.4",
           "variant": "xhigh"
@@ -359,5 +350,25 @@
         "pqapi/gpt-5.4-mini"
       ]
     }
+  },
+  "auto_update": true,
+  "runtime_fallback": {
+    "enabled": true,
+    "retry_on_errors": [
+      400,
+      401,
+      403,
+      429,
+      500,
+      502,
+      503,
+      504,
+      529,
+      402
+    ],
+    "max_fallback_attempts": 3,
+    "cooldown_seconds": 120,
+    "timeout_seconds": 60,
+    "notify_on_fallback": true
   }
 }
