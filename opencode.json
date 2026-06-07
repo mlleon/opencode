@@ -136,17 +136,171 @@
         "setCacheKey": true
       },
       "models": {
-        "glm-5": {
-          "name": "GLM 5"
+        "gpt-5.5-pro20x-openai-compact": {
+          "name": "gpt-5.5-compact",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
         },
-        "glm-5.1": {
-          "name": "GLM 5.1"
+        "gpt-5.5-pro20x": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
         },
-        "Kimi-K2.5": {
-          "name": "Kimi K2.5"
+        "gpt-5.4-pro20x-openai-compact": {
+          "name": "gpt-5.4-compact",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
         },
-        "x": {
-          "name": "Kimi K2.6"
+        "gpt-5.4-pro20x": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
+        },
+        "claude-opus-4-8": {
+          "name": "claude-opus-4-8",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-7": {
+          "name": "claude-opus-4-7",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "name": "claude-haiku-4-5-20251001"
         }
       }
     },

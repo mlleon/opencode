@@ -1,6 +1,24 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
   "agents": {
+    "sisyphus": {
+      "model": "hcnsec/claude-opus-4-8",
+      "variant": "max",
+      "fallback_models": [
+        {
+          "model": "pqapi/gpt-5.5",
+          "variant": "xhigh"
+        },
+        {
+          "model": "hcnsec/claude-opus-4-7",
+          "variant": "max"
+        },
+        {
+          "model": "hcnsec/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
     "hephaestus": {
       "model": "pqapi/gpt-5.5",
       "variant": "xhigh",
@@ -181,24 +199,6 @@
     "sisyphus-junior": {
       "model": "pqapi/gpt-5.5",
       "variant": "medium"
-    },
-    "sisyphus": {
-      "model": "pqapi/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "rcode-plus/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "fox-openai/gpt-5.4",
-          "variant": "xhigh"
-        }
-      ]
     }
   },
   "categories": {
