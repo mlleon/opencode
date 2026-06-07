@@ -185,23 +185,23 @@
     },
     "atlas": {
       "model": "pqapi/gpt-5.5",
-      "variant": "medium",
+      "variant": "xhigh",
       "fallback_models": [
         {
           "model": "pqapi/gpt-5.4",
-          "variant": "medium"
+          "variant": "xhigh"
         }, 
         {
           "model": "rcode-plus/gpt-5.4",
-          "variant": "medium"
+          "variant": "xhigh"
         },
         {
           "model": "fox-openai/gpt-5.4",
-          "variant": "medium"
+          "variant": "xhigh"
         },
         {
           "model": "fox-ultra/claude-sonnet-4-6",
-          "variant": "medium"
+          "variant": "xhigh"
         }
       ]
     },
