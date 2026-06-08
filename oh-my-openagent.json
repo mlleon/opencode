@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "hcnsec/claude-opus-4-8",
+      "model": "vsllm-claude/claude-opus-4-8",
       "variant": "max",
       "fallback_models": [
         {
@@ -10,11 +10,15 @@
           "variant": "xhigh"
         },
         {
-          "model": "hcnsec/claude-opus-4-7",
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-claude/claude-opus-4-7",
           "variant": "max"
         },
         {
-          "model": "hcnsec/claude-opus-4-6",
+          "model": "vsllm-claude/claude-opus-4-6",
           "variant": "max"
         }
       ]
@@ -366,7 +370,7 @@
       529,
       402
     ],
-    "max_fallback_attempts": 3,
+    "max_fallback_attempts": 4,
     "cooldown_seconds": 120,
     "timeout_seconds": 60,
     "notify_on_fallback": true
