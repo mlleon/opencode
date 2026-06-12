@@ -1,6 +1,5 @@
 # .gitignore
 
-```gitignore
 # 先忽略所有文件和目录
 *
 
@@ -39,11 +38,7 @@
 
 **/.DS_Store
 **/Thumbs.db
-
-# VSCode
 **/.vscode/
-
-# JetBrains
 **/.idea/
 
 # =========================
@@ -53,46 +48,9 @@
 **/build/
 **/dist/
 **/*.egg-info/
-
-# pytest
 **/.pytest_cache/
-
-# mypy
 **/.mypy_cache/
-
-# Ruff
 **/.ruff_cache/
-
-# uv
 **/.uv/
-
-# Coverage
 **/.coverage
 **/htmlcov/
-```
-
-## 如果这些文件已经被 Git 跟踪
-
-修改 `.gitignore` 后，需要清理 Git 索引：
-
-```bash
-git rm -r --cached .
-git add .
-git status
-```
-
-确认无误后提交：
-
-```bash
-git commit -m "fix gitignore rules"
-```
-
-## 验证规则是否生效
-
-查看某个文件是否被忽略：
-
-```bash
-git check-ignore -v skills/transcribe-video/scripts/__pycache__/analyze.cpython-312.pyc
-```
-
-如果输出对应的 `.gitignore` 规则，说明已经生效。
