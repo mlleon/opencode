@@ -8,7 +8,6 @@
 # =========================
 
 !/.gitignore
-!/git-sync-strategy.md
 !/opencode.json
 !/oh-my-openagent.json
 
