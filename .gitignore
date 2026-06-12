@@ -8,6 +8,7 @@
 # =========================
 
 !/.gitignore
+!/git-sync-strategy.md
 
 !/bakeup/
 !/bakeup/**
