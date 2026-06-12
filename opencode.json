@@ -1,0 +1,1096 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": true,
+  "lsp": true,
+  "provider": {
+    "vsllm-openai": {
+      "npm": "@ai-sdk/openai",
+      "name": "VSLLM-OpenAI",
+      "options": {
+        "baseURL": "https://vsllm.com/v1",
+        "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-5.5-pro20x-openai-compact": {
+          "name": "gpt-5.5-compact",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.5-pro20x": {
+          "name": "gpt-5.5-pro",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.5": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4-pro20x-openai-compact": {
+          "name": "gpt-5.4-compact",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4-pro20x": {
+          "name": "gpt-5.4-pro",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
+        }
+      }
+    },
+    "vsllm-claude": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "VSLLM-Claude",
+      "options": {
+        "baseURL": "https://vsllm.com/v1",
+        "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "claude-opus-4-8": {
+          "name": "claude-opus-4-8",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-7": {
+          "name": "claude-opus-4-7",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-6-antigravity": {
+          "name": "claude-opus-4-6-antigravity",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "kimi-k2.6": {
+          "name": "kimi-k2.6"
+        },
+        "glm-5.1": {
+          "name": "glm-5.1"
+        },
+        "claude-haiku-4-5-20251001": {
+          "name": "claude-haiku-4-5-20251001"
+        }
+      }
+    },
+    "vsllm-gemini": {
+      "npm": "@ai-sdk/google",
+      "name": "VSLLM-Gemini",
+      "options": {
+        "baseURL": "https://vsllm.com/v1beta",
+        "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gemini-3.5-flash-antigravity": {
+          "name": "gemini-3.5-flash-antigravity",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            }
+          }
+        }
+      }
+    },
+    "pqapi": {
+      "npm": "@ai-sdk/openai",
+      "name": "PQAPI",
+      "options": {
+        "baseURL": "https://www.pqapi.store/v1",
+        "apiKey": "{file:~/.config/opencode/keys/pqapi.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
+        },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.5": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "litellm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteLLM",
+      "options": {
+        "baseURL": "http://localhost:4000",
+        "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-model": {
+          "name": "GPT Model"
+        },
+        "gkd-model": {
+          "name": "GKD Model"
+        },
+        "nim-model": {
+          "name": "NIM Model",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "max"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        }
+      }
+    },
+    "dmxapi": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DMXAPI",
+      "options": {
+        "baseURL": "https://www.dmxapi.cn/v1",
+        "apiKey": "{file:~/.config/opencode/keys/dmxapi.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "MiniMax-M2.7-free": {
+          "name": "MiniMax-M2.7-free"
+        },
+        "kimi-k2.5-free": {
+          "name": "Kimi-K2.5-free"
+        },
+        "glm-5-free": {
+          "name": "GLM-5-free"
+        }
+      }
+    },
+    "zenmux": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "ZenMux",
+      "options": {
+        "baseURL": "https://zenmux.ai/api/v1",
+        "apiKey": "{file:~/.config/opencode/keys/zenmux.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "google/gemini-3.5-flash-free": {
+          "name": "Gemini 3.5 Flash Free"
+        }
+      }
+    },
+    "hcnsec": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "HcnSec",
+      "options": {
+        "baseURL": "https://api.iamhc.cn/v1",
+        "apiKey": "{file:~/.config/opencode/keys/hcnsec.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "glm-5.1": {
+          "name": "glm-5.1"
+        },
+        "Kimi-K2.6": {
+          "name": "Kimi-K2.6"
+        }
+      }
+    },
+    "deepseek-openai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DeepSeek-OpenAI",
+      "options": {
+        "baseURL": "https://api.deepseek.com/v1",
+        "apiKey": "{file:~/.config/opencode/keys/deepseek.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "deepseek-v4-flash": {
+          "name": "DeepSeek-V4-Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "DeepSeek-V4-Pro",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "deepseek-anthropic": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "DeepSeek-Anthropic",
+      "options": {
+        "baseURL": "https://api.deepseek.com/anthropic",
+        "apiKey": "{file:~/.config/opencode/keys/deepseek.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "deepseek-v4-flash": {
+          "name": "DeepSeek-V4-Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "DeepSeek-V4-Pro",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "rcode-plus": {
+      "npm": "@ai-sdk/openai",
+      "name": "Rcode-Plus",
+      "options": {
+        "baseURL": "https://www.right.codes/codex/v1",
+        "apiKey": "{file:~/.config/opencode/keys/rcode.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
+        },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.5": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "rcode-pro": {
+      "npm": "@ai-sdk/openai",
+      "name": "Rcode-Pro",
+      "options": {
+        "baseURL": "https://www.right.codes/codex-pro/v1",
+        "apiKey": "{file:~/.config/opencode/keys/rcode.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
+        },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.5": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "rcode-awsq": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Rcode-Awsq",
+      "options": {
+        "baseURL": "https://www.right.codes/claude-aws",
+        "apiKey": "{file:~/.config/opencode/keys/rcode.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "claude-haiku-4-5-20251001": {
+          "name": "claude-haiku-4-5"
+        },
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-7": {
+          "name": "claude-opus-4-7",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "fox-ultra": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Fox-Ultra",
+      "options": {
+        "baseURL": "https://code.newcli.com/claude/ultra/v1",
+        "apiKey": "{file:~/.config/opencode/keys/fox.key}",
+        "enableMeta": true,
+        "headers": {
+          "anthropic-beta": "prompt-caching-2024-07-31"
+        },
+        "setCacheKey": true
+      },
+      "models": {
+        "claude-haiku-4-5-20251001": {
+          "name": "claude-haiku-4-5"
+        },
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6"
+        },
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "fox-aws": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Fox-Aws",
+      "options": {
+        "baseURL": "https://code.newcli.com/claude/aws/v1",
+        "apiKey": "{file:~/.config/opencode/keys/fox.key}",
+        "enableMeta": true,
+        "headers": {
+          "anthropic-beta": "prompt-caching-2024-07-31"
+        },
+        "setCacheKey": true
+      },
+      "models": {
+        "claude-haiku-4-5-20251001": {
+          "name": "claude-haiku-4-5"
+        },
+        "claude-sonnet-4-5-20250929-thinking": {
+          "name": "claude-sonnet-4-5-thinking"
+        },
+        "claude-sonnet-4-5": {
+          "name": "claude-sonnet-4-5"
+        }
+      }
+    },
+    "fox-openai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Fox-OpenAI",
+      "options": {
+        "baseURL": "https://code.newcli.com/codex/v1",
+        "apiKey": "{file:~/.config/opencode/keys/fox.key}",
+        "setCacheKey": true,
+        "enableMeta": true
+      },
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.5": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "fox-gemini": {
+      "npm": "@ai-sdk/google",
+      "name": "Fox-Gemini",
+      "options": {
+        "baseURL": "https://code.newcli.com/gemini/v1beta",
+        "apiKey": "{file:~/.config/opencode/keys/fox.key}"
+      },
+      "models": {
+        "gemini-3.1-pro": {
+          "name": "gemini-3.1-pro",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
+        "gemini-3-flash": {
+          "name": "gemini-3-flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        }
+      }
+    },
+    "nvidia": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "NVIDIA",
+      "options": {
+        "baseURL": "https://integrate.api.nvidia.com/v1",
+        "apiKey": "{file:~/.config/opencode/keys/nvidia.key}"
+      },
+      "models": {
+        "z-ai/glm-5.1": {
+          "name": "GLM-5.1"
+        },
+        "deepseek-ai/deepseek-v4-flash": {
+          "name": "DeepSeek-V4-Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "deepseek-ai/deepseek-v4-pro": {
+          "name": "DeepSeek-V4-Pro",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "minimaxai/minimax-m2.7": {
+          "name": "MiniMax-M2.7"
+        },
+        "moonshotai/kimi-k2.6": {
+          "name": "Kimi K2.6",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "stepfun-ai/step-3.5-flash": {
+          "name": "Step 3.5 Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "stepfun-ai/step-3.7-flash": {
+          "name": "Step 3.7 Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        }
+      }
+    },
+    "modelscope": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "ModelScope",
+      "options": {
+        "baseURL": "https://api-inference.modelscope.cn/v1",
+        "apiKey": "{file:~/.config/opencode/keys/modelscope.key}"
+      },
+      "models": {
+        "MiniMax/MiniMax-M2.7": {
+          "name": "MiniMax-M2.7"
+        },
+        "moonshotai/Kimi-K2.5": {
+          "name": "Kimi-K2.5",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "ZhipuAI/GLM-5": {
+          "name": "GLM-5"
+        },
+        "ZhipuAI/GLM-5.1": {
+          "name": "GLM-5.1"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "siliconflow": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "SiliconFlow",
+      "options": {
+        "baseURL": "https://api.siliconflow.cn/v1",
+        "apiKey": "{file:~/.config/opencode/keys/siliconflow.key}"
+      },
+      "models": {
+        "Qwen/Qwen3.5-4B": {
+          "name": "Qwen3.5-4B",
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "video"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        }
+      }
+    },
+    "openrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenRouter",
+      "options": {
+        "baseURL": "https://openrouter.ai/api/v1",
+        "apiKey": "{file:~/.config/opencode/keys/openrouter.key}"
+      },
+      "models": {
+        "minimax/minimax-m2.5:free": {
+          "name": "MiniMax M2.5 Free"
+        },
+        "moonshotai/kimi-k2.6:free": {
+          "name": "Kimi K2.6 Free",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "@preset/kimi-k2-5": {
+          "name": "Kimi K2.5 Free",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        }
+      }
+    },
+    "kilo": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Kilo",
+      "options": {
+        "baseURL": "https://api.kilo.ai/api/gateway/v1",
+        "apiKey": "{file:~/.config/opencode/keys/kilo.key}"
+      },
+      "models": {
+        "kilo-auto/free": {
+          "name": "Kilo Auto Free",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "opencode": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenCode Zen",
+      "options": {
+        "baseURL": "https://opencode.ai/zen/v1",
+        "apiKey": "{file:~/.config/opencode/keys/opencode.key}"
+      },
+      "models": {
+        "deepseek-v4-flash-free": {
+          "name": "DeepSeek V4 Flash Free"
+        }
+      }
+    }
+  },
+  "mcp": {
+    "openmemory": {
+      "type": "remote",
+      "url": "http://localhost:8765/mcp/opencode/sse/default",
+      "enabled": false
+    },
+    "tavily": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "tavily-mcp@latest"
+      ],
+      "environment": {
+        "TAVILY_API_KEY": "{file:~/.config/opencode/keys/tavily.key}"
+      },
+      "enabled": false
+    }
+  },
+  "plugin": [
+    "oh-my-openagent"
+  ]
+}
