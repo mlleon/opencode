@@ -7,7 +7,7 @@
       "npm": "@ai-sdk/openai",
       "name": "VSLLM-OpenAI",
       "options": {
-        "baseURL": "https://api.vsllm.com/v1",
+        "baseURL": "https://vsllm.com/v1",
         "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
         "enableMeta": true,
         "setCacheKey": true
@@ -34,6 +34,26 @@
           }
         },
         "gpt-5.5-pro20x": {
+          "name": "gpt-5.5-pro",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.5": {
           "name": "gpt-5.5",
           "variants": {
             "xhigh": {
@@ -74,6 +94,26 @@
           }
         },
         "gpt-5.4-pro20x": {
+          "name": "gpt-5.4-pro",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4": {
           "name": "gpt-5.4",
           "variants": {
             "xhigh": {
@@ -102,7 +142,7 @@
       "npm": "@ai-sdk/anthropic",
       "name": "VSLLM-Claude",
       "options": {
-        "baseURL": "https://api.vsllm.com/v1",
+        "baseURL": "https://vsllm.com/v1",
         "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
         "enableMeta": true,
         "setCacheKey": true
@@ -168,6 +208,26 @@
             }
           }
         },
+        "claude-opus-4-6-antigravity": {
+          "name": "claude-opus-4-6-antigravity",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
         "claude-sonnet-4-6": {
           "name": "claude-sonnet-4-6",
           "variants": {
@@ -188,8 +248,37 @@
             }
           }
         },
+        "kimi-k2.6": {
+          "name": "kimi-k2.6"
+        },
+        "glm-5.1": {
+          "name": "glm-5.1"
+        },
         "claude-haiku-4-5-20251001": {
           "name": "claude-haiku-4-5-20251001"
+        }
+      }
+    },
+    "vsllm-gemini": {
+      "npm": "@ai-sdk/google",
+      "name": "VSLLM-Gemini",
+      "options": {
+        "baseURL": "https://vsllm.com/v1beta",
+        "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gemini-3.5-flash-antigravity": {
+          "name": "gemini-3.5-flash-antigravity",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            }
+          }
         }
       }
     },
@@ -1002,6 +1091,6 @@
     }
   },
   "plugin": [
-    "oh-my-openagent@latest"
+    "oh-my-openagent"
   ]
 }
