@@ -232,8 +232,8 @@
       "fallback_models": [
         "vsllm-claude/claude-haiku-4-5-20251001",
         {
-          "model": "vsllm-gemini/gemini-3.5-flash-antigravity",
-          "variant": "high"
+          "model": "vsllm-claude/claude-sonnet-4-6",
+          "variant": "max"
         }
       ]
     },
