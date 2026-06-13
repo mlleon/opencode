@@ -251,8 +251,14 @@
         "kimi-k2.6": {
           "name": "kimi-k2.6"
         },
+        "kimi-k2.7-code": {
+          "name": "kimi-k2.7"
+        },
         "glm-5.1": {
           "name": "glm-5.1"
+        },
+        "glm-5.2": {
+          "name": "glm-5.2"
         },
         "claude-haiku-4-5-20251001": {
           "name": "claude-haiku-4-5-20251001"
@@ -841,103 +847,6 @@
         }
       }
     },
-    "nvidia": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "NVIDIA",
-      "options": {
-        "baseURL": "https://integrate.api.nvidia.com/v1",
-        "apiKey": "{file:~/.config/opencode/keys/nvidia.key}"
-      },
-      "models": {
-        "z-ai/glm-5.1": {
-          "name": "GLM-5.1"
-        },
-        "deepseek-ai/deepseek-v4-flash": {
-          "name": "DeepSeek-V4-Flash",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "max",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "deepseek-ai/deepseek-v4-pro": {
-          "name": "DeepSeek-V4-Pro",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "max",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "minimaxai/minimax-m2.7": {
-          "name": "MiniMax-M2.7"
-        },
-        "moonshotai/kimi-k2.6": {
-          "name": "Kimi K2.6",
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        },
-        "stepfun-ai/step-3.5-flash": {
-          "name": "Step 3.5 Flash",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "stepfun-ai/step-3.7-flash": {
-          "name": "Step 3.7 Flash",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          }
-        }
-      }
-    },
     "modelscope": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "ModelScope",
@@ -1067,6 +976,106 @@
       "models": {
         "deepseek-v4-flash-free": {
           "name": "DeepSeek V4 Flash Free"
+        }
+      }
+    },
+    "nvidia": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "NVIDIA",
+      "options": {
+        "baseURL": "https://integrate.api.nvidia.com/v1",
+        "apiKey": "{file:~/.config/opencode/keys/nvidia.key}"
+      },
+      "models": {
+        "z-ai/glm-5.1": {
+          "name": "GLM-5.1"
+        },
+        "deepseek-ai/deepseek-v4-flash": {
+          "name": "DeepSeek-V4-Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "deepseek-ai/deepseek-v4-pro": {
+          "name": "DeepSeek-V4-Pro",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "minimaxai/minimax-m2.7": {
+          "name": "MiniMax-M2.7"
+        },
+        "minimaxai/minimax-m3": {
+          "name": "MiniMax-M3"
+        },
+        "moonshotai/kimi-k2.6": {
+          "name": "Kimi K2.6",
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
+        },
+        "stepfun-ai/step-3.5-flash": {
+          "name": "Step 3.5 Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "stepfun-ai/step-3.7-flash": {
+          "name": "Step 3.7 Flash",
+          "variants": {
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          }
         }
       }
     }

@@ -1,5 +1,13 @@
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "claude_code": {
+    "skills": false,
+    "commands": false,
+    "plugins": false,
+    "agents": false,
+    "hooks": false,
+    "mcp": false
+  },
   "agents": {
     "sisyphus": {
       "model": "vsllm-claude/claude-opus-4-6-antigravity",
