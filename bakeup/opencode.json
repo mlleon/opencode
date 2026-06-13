@@ -251,8 +251,14 @@
         "kimi-k2.6": {
           "name": "kimi-k2.6"
         },
+        "kimi-k2.7-code": {
+          "name": "kimi-k2.7"
+        },
         "glm-5.1": {
           "name": "glm-5.1"
+        },
+        "glm-5.2": {
+          "name": "glm-5.2"
         },
         "claude-haiku-4-5-20251001": {
           "name": "claude-haiku-4-5-20251001"

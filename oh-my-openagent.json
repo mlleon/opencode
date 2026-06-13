@@ -9,10 +9,7 @@
           "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         },
-        {
-          "model": "vsllm-claude/kimi-k2.6",
-          "variant": "xhigh"
-        },
+        "vsllm-claude/kimi-k2.7-code",
         {
           "model": "pqapi/gpt-5.5",
           "variant": "xhigh"
@@ -172,8 +169,8 @@
       "model": "vsllm-claude/claude-opus-4-6-antigravity",
       "variant": "max",
       "fallback_models": [
-        "vsllm-claude/glm-5.1",
-        "vsllm-claude/kimi-k2.6"
+        "vsllm-claude/glm-5.2",
+        "vsllm-claude/kimi-k2.7-code"
       ]
     },
     "ultrabrain": {
@@ -280,10 +277,6 @@
       "model": "vsllm-claude/claude-sonnet-4-6",
       "variant": "max",
       "fallback_models": [
-        {
-          "model": "vsllm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
         {
           "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
