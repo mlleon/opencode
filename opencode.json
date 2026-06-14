@@ -348,46 +348,6 @@
         }
       }
     },
-    "gptfree": {
-      "npm": "@ai-sdk/openai",
-      "name": "GPTFree",
-      "options": {
-        "baseURL": "https://api-public.proxy-gls.de5.net/v1",
-        "apiKey": "{file:~/.config/opencode/keys/gptfree.key}",
-        "enableMeta": true,
-        "setCacheKey": true
-      },
-      "models": {
-        "gpt-5.5": {
-          "name": "gpt-5.5",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
-          }
-        },
-        "gpt-5.4": {
-          "name": "gpt-5.4",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
-          }
-        }
-      }
-    },
     "litellm": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "LiteLLM",
@@ -490,6 +450,34 @@
         },
         "minimax-m2.7": {
           "name": "minimax-m2.7"
+        },
+        "deepseek-v4-flash": {
+          "name": "deepseek-v4-flash",
+          "variants": {
+            "max": {
+              "reasoningEffort": "max"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "deepseek-v4-pro",
+          "variants": {
+            "max": {
+              "reasoningEffort": "max"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
         }
       }
     },
