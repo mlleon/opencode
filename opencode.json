@@ -353,16 +353,24 @@
         "setCacheKey": true
       },
       "models": {
-        "gpt-model": {
-          "name": "GPT Model"
-        },
-        "gkd-model": {
-          "name": "GKD Model"
-        },
-        "nim-model": {
-          "name": "NIM Model",
+        "gpt-5.5": {
+          "name": "gpt-5.5",
           "variants": {
             "xhigh": {
+              "reasoningEffort": "xhigh"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
+        "claude-opus-4-8": {
+          "name": "claude-opus-4-8",
+          "variants": {
+            "max": {
               "reasoningEffort": "max"
             },
             "high": {
@@ -372,6 +380,15 @@
               "reasoningEffort": "medium"
             }
           }
+        },
+        "glm-5.1": {
+          "name": "glm-5.1"
+        },
+        "mimo-v2.5-pro": {
+          "name": "mimo-v2.5-pro"
+        },
+        "minimax-m2.7": {
+          "name": "minimax-m2.7"
         }
       }
     },
