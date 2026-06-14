@@ -343,6 +343,46 @@
         }
       }
     },
+    "gptfree": {
+      "npm": "@ai-sdk/openai",
+      "name": "GPTFree",
+      "options": {
+        "baseURL": "https://api-public.proxy-gls.de5.net/v1",
+        "apiKey": "{file:~/.config/opencode/keys/gptfree.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "gpt-5.5": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        }
+      }
+    },
     "litellm": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "LiteLLM",
@@ -1052,7 +1092,7 @@
         }
       }
     },
-    "nvidia": { 
+    "nvidia": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "NVIDIA",
       "options": {
