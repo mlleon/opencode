@@ -367,8 +367,64 @@
             }
           }
         },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
         "claude-opus-4-8": {
           "name": "claude-opus-4-8",
+          "variants": {
+            "max": {
+              "reasoningEffort": "max"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
+        "claude-opus-4-7": {
+          "name": "claude-opus-4-7",
+          "variants": {
+            "max": {
+              "reasoningEffort": "max"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "max": {
+              "reasoningEffort": "max"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            }
+          }
+        },
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6",
           "variants": {
             "max": {
               "reasoningEffort": "max"
