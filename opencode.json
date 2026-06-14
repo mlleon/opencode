@@ -1,7 +1,12 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
-  "lsp": true,
+  "lsp": {
+    "markdown-oxide": {
+      "command": ["markdown-oxide"],
+      "extensions": [".md", ".markdown"]
+    }
+  },
   "provider": {
     "vsllm-openai": {
       "npm": "@ai-sdk/openai",
