@@ -3,7 +3,7 @@
   "autoupdate": true,
   "lsp": {
     "markdown-oxide": {
-      "command": ["markdown-oxide"],
+      "command": ["markdown-oxide", "--stdio"],
       "extensions": [".md", ".markdown"]
     }
   },

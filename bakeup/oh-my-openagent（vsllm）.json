@@ -1,13 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
-  "claude_code": {
-    "skills": false,
-    "commands": false,
-    "plugins": false,
-    "agents": false,
-    "hooks": false,
-    "mcp": false
-  },
   "agents": {
     "sisyphus": {
       "model": "vsllm-claude/claude-opus-4-6-antigravity",
@@ -20,24 +12,6 @@
         "vsllm-claude/kimi-k2.7-code",
         {
           "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
-    },
-    "hephaestus": {
-      "model": "vsllm-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
           "variant": "xhigh"
         }
       ]
@@ -60,14 +34,7 @@
         }
       ]
     },
-    "librarian": {
-      "model": "nvidia/minimaxai/minimax-m2.7",
-      "fallback_models": [
-        "vsllm-claude/claude-haiku-4-5-20251001",
-        "vsllm-openai/gpt-5.4-mini"
-      ]
-    },
-    "explore": {  
+    "explore": {
       "model": "vsllm-openai/gpt-5.4-mini",
       "fallback_models": [
         {
@@ -170,6 +137,31 @@
     "sisyphus-junior": {
       "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh"
+    },
+    "hephaestus": {
+      "model": "vsllm-openai/gpt-5.5",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "pqapi/gpt-5.5",
+          "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-openai/gpt-5.4",
+          "variant": "xhigh"
+        },
+        {
+          "model": "pqapi/gpt-5.4",
+          "variant": "xhigh"
+        }
+      ]
+    },
+    "librarian": {
+      "model": "nvidia/minimaxai/minimax-m2.7",
+      "fallback_models": [
+        "vsllm-claude/claude-haiku-4-5-20251001",
+        "vsllm-openai/gpt-5.4-mini"
+      ]
     }
   },
   "categories": {
@@ -247,7 +239,6 @@
     },
     "unspecified-low": {
       "model": "vsllm-openai/gpt-5.4",
-      "variant": "xhigh",
       "fallback_models": [
         {
           "model": "vsllm-claude/claude-sonnet-4-6",
@@ -261,11 +252,11 @@
           "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
-      ]
+      ],
+      "variant": "xhigh"
     },
     "unspecified-high": {
       "model": "vsllm-openai/gpt-5.5",
-      "variant": "xhigh",
       "fallback_models": [
         {
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
@@ -279,11 +270,11 @@
           "model": "vsllm-openai/gpt-5.4",
           "variant": "xhigh"
         }
-      ]
+      ],
+      "variant": "xhigh"
     },
     "writing": {
       "model": "vsllm-openai/gpt-5.4",
-      "variant": "xhigh",
       "fallback_models": [
         {
           "model": "vsllm-claude/claude-sonnet-4-6",
@@ -293,7 +284,8 @@
           "model": "pqapi/gpt-5.5",
           "variant": "xhigh"
         }
-      ]
+      ],
+      "variant": "xhigh"
     },
     "git": {
       "model": "nvidia/stepfun-ai/step-3.5-flash",
@@ -308,10 +300,24 @@
       ]
     }
   },
+  "claude_code": {
+    "skills": false,
+    "commands": false,
+    "plugins": false,
+    "agents": false,
+    "hooks": false,
+    "mcp": false
+  },
   "auto_update": true,
   "runtime_fallback": {
     "enabled": true,
-    "retry_on_errors": [429, 500, 502, 503, 504],
+    "retry_on_errors": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
     "max_fallback_attempts": 3,
     "cooldown_seconds": 120,
     "timeout_seconds": 60,
