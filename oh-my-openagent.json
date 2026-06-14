@@ -152,13 +152,9 @@
       ]
     },
     "atlas": {
-      "model": "vsllm-claude/claude-sonnet-4-6",
-      "variant": "max",
+      "model": "vsllm-openai/gpt-5.5",
+      "variant": "xhigh",
       "fallback_models": [
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
         {
           "model": "pqapi/gpt-5.5",
           "variant": "xhigh"
@@ -166,6 +162,10 @@
         {
           "model": "vsllm-openai/gpt-5.4",
           "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-claude/claude-sonnet-4-6",
+          "variant": "max"
         }
       ]
     },
@@ -284,12 +284,12 @@
       ]
     },
     "writing": {
-      "model": "vsllm-claude/claude-sonnet-4-6",
-      "variant": "max",
+      "model": "vsllm-openai/gpt-5.5",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
+          "model": "vsllm-claude/claude-sonnet-4-6",
+          "variant": "max"
         },
         {
           "model": "pqapi/gpt-5.5",

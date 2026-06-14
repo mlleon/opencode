@@ -979,7 +979,7 @@
         }
       }
     },
-    "nvidia": {
+    "nvidia": { 
       "npm": "@ai-sdk/openai-compatible",
       "name": "NVIDIA",
       "options": {
