@@ -348,9 +348,53 @@
         }
       }
     },
-    "litellm": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "LiteLLM",
+    "litellm-claude": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "LiteLLM-Claude",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "claude-opus-4-8": {
+          "name": "claude-opus-4-8",
+          "variants": {
+            "max": { "reasoningEffort": "max" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
+          }
+        },
+        "claude-opus-4-7": {
+          "name": "claude-opus-4-7",
+          "variants": {
+            "max": { "reasoningEffort": "max" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
+          }
+        },
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "max": { "reasoningEffort": "max" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
+          }
+        },
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6",
+          "variants": {
+            "max": { "reasoningEffort": "max" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
+          }
+        }
+      }
+    },
+    "litellm-openai": {
+      "npm": "@ai-sdk/openai",
+      "name": "LiteLLM-OpenAI",
       "options": {
         "baseURL": "http://localhost:4000",
         "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
@@ -361,87 +405,31 @@
         "gpt-5.5": {
           "name": "gpt-5.5",
           "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
+            "xhigh": { "reasoningEffort": "xhigh" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
           }
         },
         "gpt-5.4": {
           "name": "gpt-5.4",
           "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
+            "xhigh": { "reasoningEffort": "xhigh" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
           }
-        },
-        "claude-opus-4-8": {
-          "name": "claude-opus-4-8",
-          "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
-          }
-        },
-        "claude-opus-4-7": {
-          "name": "claude-opus-4-7",
-          "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
-          }
-        },
-        "claude-opus-4-6": {
-          "name": "claude-opus-4-6",
-          "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
-          }
-        },
-        "claude-sonnet-4-6": {
-          "name": "claude-sonnet-4-6",
-          "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
-          }
-        },
+        }
+      }
+    },
+    "litellm-compate": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteLLM-ComPate",
+      "options": {
+        "baseURL": "https://www.dmxapi.cn/v1",
+        "apiKey": "{file:~/.config/opencode/keys/dmxapi.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
         "glm-5.1": {
           "name": "glm-5.1"
         },
@@ -454,29 +442,17 @@
         "deepseek-v4-flash": {
           "name": "deepseek-v4-flash",
           "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
+            "max": { "reasoningEffort": "max" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
           }
         },
         "deepseek-v4-pro": {
           "name": "deepseek-v4-pro",
           "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
+            "max": { "reasoningEffort": "max" },
+            "high": { "reasoningEffort": "high" },
+            "medium": { "reasoningEffort": "medium" }
           }
         }
       }
