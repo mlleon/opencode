@@ -265,8 +265,38 @@
         "glm-5.2": {
           "name": "glm-5.2"
         },
+        "qwen3.7-max": {
+          "name": "qwen3.7-max"
+        },
         "claude-haiku-4-5-20251001": {
           "name": "claude-haiku-4-5-20251001"
+        }
+      }
+    },
+    "vsllm-compate": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "VSLLM-Compate",
+      "options": {
+        "baseURL": "https://vsllm.com/v1",
+        "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "deepseek-v4-pro-free": {
+          "name": "deepseek-v4-pro-free"
+        },
+        "glm-5.1-free": {
+          "name": "glm-5.1-free"
+        },
+        "deepseek-v4-flash-free": {
+          "name": "deepseek-v4-flash-free"
+        },
+        "mimo-v2.5-pro": {
+          "name": "mimo-v2.5-pro"
+        },
+        "MiniMax-M3": {
+          "name": "MiniMax-M3"
         }
       }
     },
