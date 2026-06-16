@@ -64,12 +64,14 @@
       ]
     },
     "explore": {
-      "model": "vsllm-openai/gpt-5.4-mini",
+      "model": "nvidia/stepfun-ai/step-3.7-flash",
+      "variant": "high",
       "fallback_models": [
         {
-          "model": "nvidia/stepfun-ai/step-3.7-flash",
-          "variant": "high"
+          "model": "nvidia/deepseek-ai/deepseek-v4-flash",
+          "variant": "max"
         },
+        "vsllm-openai/gpt-5.4-mini",
         "vsllm-compate/MiniMax-M3"
       ]
     },
