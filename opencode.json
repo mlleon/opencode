@@ -454,20 +454,29 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "LiteLLM-ComPate",
       "options": {
-        "baseURL": "https://www.dmxapi.cn/v1",
-        "apiKey": "{file:~/.config/opencode/keys/dmxapi.key}",
+        "baseURL": "http://127.0.0.1:4000/v1",
+        "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
         "enableMeta": true,
         "setCacheKey": true
       },
       "models": {
+        "glm-4.7": {
+          "name": "glm-4.7"
+        },
         "glm-5.1": {
           "name": "glm-5.1"
+        },
+        "glm-5.2": {
+          "name": "glm-5.2"
         },
         "mimo-v2.5-pro": {
           "name": "mimo-v2.5-pro"
         },
         "minimax-m2.7": {
           "name": "minimax-m2.7"
+        },
+        "minimax-m3": {
+          "name": "minimax-m3"
         },
         "deepseek-v4-flash": {
           "name": "deepseek-v4-flash",

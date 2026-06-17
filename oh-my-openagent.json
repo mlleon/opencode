@@ -55,11 +55,11 @@
     "librarian": {
       "model": "nvidia/minimaxai/minimax-m2.7",
       "fallback_models": [
+        "litellm-compate/minimax-m3",
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
           "variant": "high"
         },
-        "nvidia/minimaxai/minimax-m3",
         "vsllm-openai/gpt-5.4-mini"
       ]
     },
@@ -67,10 +67,7 @@
       "model": "nvidia/stepfun-ai/step-3.7-flash",
       "variant": "high",
       "fallback_models": [
-        {
-          "model": "nvidia/deepseek-ai/deepseek-v4-flash",
-          "variant": "max"
-        },
+        "litellm-compate/mimo-v2.5-pro",
         "nvidia/minimaxai/minimax-m3",
         "vsllm-openai/gpt-5.4-mini"
       ]
@@ -237,6 +234,7 @@
       "model": "vsllm-openai/gpt-5.4-mini",
       "fallback_models": [
         "vsllm-claude/claude-haiku-4-5-20251001",
+        "litellm-compate/mimo-v2.5-pro",
         {
           "model": "vsllm-claude/claude-sonnet-4-6",
           "variant": "max"
