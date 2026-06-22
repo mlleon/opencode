@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "vsllm-claude/claude-opus-4-8",
+      "model": "vsllm-claude/claude-opus-4-7",
       "variant": "max",
       "fallback_models": [
         {
@@ -34,7 +34,7 @@
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-8",
+          "model": "vsllm-claude/claude-opus-4-7",
           "variant": "max"
         }
       ]
@@ -68,13 +68,13 @@
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-8",
+          "model": "vsllm-claude/claude-opus-4-7",
           "variant": "max"
         }
       ]
     },
     "prometheus": {
-      "model": "vsllm-claude/claude-opus-4-8",
+      "model": "vsllm-claude/claude-opus-4-7",
       "variant": "max",
       "fallback_models": [
         {
@@ -88,7 +88,7 @@
       ]
     },
     "metis": {
-      "model": "vsllm-claude/claude-opus-4-8",
+      "model": "vsllm-claude/claude-opus-4-7",
       "variant": "max",
       "fallback_models": [
          {
@@ -110,7 +110,7 @@
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-8",
+          "model": "vsllm-claude/claude-opus-4-7",
           "variant": "max"
         }
       ]
@@ -128,7 +128,7 @@
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-8",
+          "model": "vsllm-claude/claude-opus-4-7",
           "variant": "max"
         }
       ]
@@ -140,7 +140,7 @@
   },
   "categories": {
     "visual-engineering": {
-      "model": "vsllm-claude/claude-opus-4-8",
+      "model": "vsllm-claude/claude-opus-4-7",
       "variant": "max",
       "fallback_models": [
         "vsllm-claude/glm-5.2",
@@ -156,7 +156,7 @@
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-8",
+          "model": "vsllm-claude/claude-opus-4-7",
           "variant": "max"
         }
       ]
@@ -170,13 +170,13 @@
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-8",
+          "model": "vsllm-claude/claude-opus-4-7",
           "variant": "max"
         }
       ]
     },
     "artistry": {
-      "model": "vsllm-claude/claude-opus-4-8",
+      "model": "vsllm-claude/claude-opus-4-7",
       "variant": "max",
       "fallback_models": [
         {
@@ -212,7 +212,7 @@
       ]
     },
     "unspecified-high": {
-      "model": "vsllm-claude/claude-opus-4-8",
+      "model": "vsllm-claude/claude-opus-4-7",
       "variant": "max",
       "fallback_models": [
         {
