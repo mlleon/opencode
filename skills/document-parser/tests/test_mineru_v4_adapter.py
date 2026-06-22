@@ -6,14 +6,36 @@ import zipfile
 from pathlib import Path
 from typing import Dict, List, Optional
 from unittest.mock import Mock, patch
+import sys
+from importlib.util import spec_from_file_location, module_from_spec
 
 
-from scripts.providers.mineru_v4 import (
-  MinerUV4Adapter,
-  MinerUV4BatchLimitError,
-  MinerUV4Config,
-  MinerUV4PollTimeoutError,
+_SKILL_ROOT = Path(__file__).resolve().parent.parent
+
+# Dynamically load modules to avoid LSP import resolution issues
+_mineru_v4_spec = spec_from_file_location(
+  "scripts.providers.mineru_v4",
+  _SKILL_ROOT / "scripts" / "providers" / "mineru_v4.py"
 )
+assert _mineru_v4_spec is not None and _mineru_v4_spec.loader is not None
+_mineru_v4_module = module_from_spec(_mineru_v4_spec)
+sys.modules["scripts.providers.mineru_v4"] = _mineru_v4_module
+_mineru_v4_spec.loader.exec_module(_mineru_v4_module)
+
+_orchestrator_spec = spec_from_file_location(
+  "scripts.orchestrator",
+  _SKILL_ROOT / "scripts" / "orchestrator.py"
+)
+assert _orchestrator_spec is not None and _orchestrator_spec.loader is not None
+_orchestrator_module = module_from_spec(_orchestrator_spec)
+sys.modules["scripts.orchestrator"] = _orchestrator_module
+_orchestrator_spec.loader.exec_module(_orchestrator_module)
+
+MinerUV4Adapter = _mineru_v4_module.MinerUV4Adapter
+MinerUV4BatchLimitError = _mineru_v4_module.MinerUV4BatchLimitError
+MinerUV4Config = _mineru_v4_module.MinerUV4Config
+MinerUV4PollTimeoutError = _mineru_v4_module.MinerUV4PollTimeoutError
+ParseOptions = _orchestrator_module.ParseOptions
 
 
 class _FakeResponse:
@@ -94,6 +116,308 @@ class MinerUV4AdapterTests(unittest.TestCase):
 
       md = paths.normalizedMarkdownPath.read_text(encoding="utf-8")
       self.assertIn("![x](images/a.png)", md)
+
+      submitPayload = session.request.call_args_list[0].kwargs["json"]
+      self.assertEqual(submitPayload, {"url": "https://example.com/a.pdf"})
+
+  def test_url_submit_payload_includes_page_ranges_and_core_params(self):
+    zipBytes = _buildZipBytes(
+      markdown="# hi\n",
+      jsonObj=[{"type": "p", "text": "hi"}],
+    )
+
+    postResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"task_id": "t1"}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {"state": "done", "full_zip_url": "https://zip"},
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[postResp, pollDone])
+
+    options = ParseOptions(
+      pageRange="2-4",
+      modelVersion="vlm",
+      language="ch",
+      isOcr=False,
+      enableTable=False,
+      enableFormula=True,
+      rangeSource="url",
+      disableFallback=True,
+    )
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        paths = adapter.extractFromUrl(
+          url="https://example.com/a.pdf",
+          outputDir=outputDir,
+          options=options,
+        )
+
+      submitPayload = session.request.call_args_list[0].kwargs["json"]
+      self.assertEqual(
+        submitPayload,
+        {
+          "url": "https://example.com/a.pdf",
+          "page_ranges": "2-4",
+          "model_version": "vlm",
+          "language": "ch",
+          "is_ocr": False,
+          "enable_table": False,
+          "enable_formula": True,
+        },
+      )
+      self.assertNotIn("disableFallback", submitPayload)
+      self.assertNotIn("disable_fallback", submitPayload)
+
+      normalized = json.loads(paths.normalizedJsonPath.read_text(encoding="utf-8"))
+      self.assertEqual(
+        normalized["extras"]["parseRequest"],
+        {
+          "requestedPageRange": "2-4",
+          "providerPageRange": "2-4",
+          "rangeSource": "url",
+          "disableFallback": True,
+          "modelVersion": "vlm",
+          "language": "ch",
+          "isOcr": False,
+          "enableTable": False,
+          "enableFormula": True,
+        },
+      )
+      self.assertEqual(
+        normalized["extras"]["parseResult"],
+        {
+          "providerPageRange": "2-4",
+          "taskId": "t1",
+        },
+      )
+      self.assertEqual(normalized["extras"]["raw"], [{"type": "p", "text": "hi"}])
+      self.assertEqual(normalized["meta"]["backend"], "mineru_v4")
+
+  def test_local_batch_payload_includes_page_ranges_and_core_params(self):
+    zipBytes = _buildZipBytes(
+      markdown="# local\n",
+      jsonObj=[{"type": "p", "text": "local"}],
+    )
+
+    batchResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"batch_id": "b1", "file_urls": ["https://upload"]}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {
+          "extract_result": [
+            {
+              "state": "done",
+              "file_name": "a.pdf",
+              "full_zip_url": "https://zip",
+            }
+          ]
+        },
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[batchResp, pollDone])
+
+    options = ParseOptions(
+      pageRange="3",
+      modelVersion="doc",
+      language="en",
+      isOcr=True,
+      enableTable=True,
+      enableFormula=False,
+      pdfPageCount=42,
+      rangeSource="local-pdf",
+      disableFallback=True,
+    )
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      filePath = outputDir / "a.pdf"
+      filePath.write_bytes(b"pdf")
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch("scripts.providers.mineru_v4.requests.put", return_value=_FakeResponse(statusCode=200)),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        paths = adapter.extractFromLocalFiles(
+          filePaths=[filePath],
+          outputDir=outputDir,
+          options=options,
+        )[0]
+
+      batchPayload = session.request.call_args_list[0].kwargs["json"]
+      self.assertEqual(
+        batchPayload,
+        {
+          "files": [
+            {
+              "name": "a.pdf",
+              "page_ranges": "3",
+              "model_version": "doc",
+              "language": "en",
+              "is_ocr": True,
+              "enable_table": True,
+              "enable_formula": False,
+            }
+          ]
+        },
+      )
+      self.assertNotIn("disableFallback", batchPayload["files"][0])
+      self.assertNotIn("disable_fallback", batchPayload["files"][0])
+
+      normalized = json.loads(paths.normalizedJsonPath.read_text(encoding="utf-8"))
+      self.assertEqual(
+        normalized["extras"]["parseRequest"],
+        {
+          "requestedPageRange": "3",
+          "providerPageRange": "3",
+          "rangeSource": "local-pdf",
+          "pdfPageCount": 42,
+          "disableFallback": True,
+          "modelVersion": "doc",
+          "language": "en",
+          "isOcr": True,
+          "enableTable": True,
+          "enableFormula": False,
+        },
+      )
+      self.assertEqual(normalized["extras"]["parseResult"]["batchId"], "b1")
+      self.assertEqual(normalized["extras"]["parseResult"]["providerPageRange"], "3")
+
+  def test_no_options_url_payload_preserves_baseline(self):
+    """options=None 时 URL submit payload 只包含 url 字段，无额外 parse 参数。"""
+    zipBytes = _buildZipBytes(
+      markdown="# hi\n",
+      jsonObj=[{"type": "p", "text": "hi"}],
+    )
+
+    postResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"task_id": "t1"}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {"state": "done", "full_zip_url": "https://zip"},
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[postResp, pollDone])
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        paths = adapter.extractFromUrl(url="https://example.com/a.pdf", outputDir=outputDir, options=None)
+
+      submitPayload = session.request.call_args_list[0].kwargs["json"]
+      self.assertEqual(submitPayload, {"url": "https://example.com/a.pdf"})
+
+      normalized = json.loads(paths.normalizedJsonPath.read_text(encoding="utf-8"))
+      # options=None 时 parseRequest 为空 dict → 不写入 extras
+      self.assertNotIn("parseRequest", normalized["extras"])
+      # parseResult 仍然记录 taskId 作为 provenance
+      self.assertEqual(normalized["extras"]["parseResult"], {"taskId": "t1"})
+      self.assertEqual(normalized["extras"]["raw"], [{"type": "p", "text": "hi"}])
+      self.assertEqual(normalized["meta"]["backend"], "mineru_v4")
+      self.assertEqual(normalized["meta"]["fallback"], False)
+
+  def test_no_options_local_batch_payload_preserves_baseline(self):
+    """options=None 时 local batch payload 的 files 条目只包含 name 字段。"""
+    zipBytes = _buildZipBytes(
+      markdown="# local\n",
+      jsonObj=[{"type": "p", "text": "local"}],
+    )
+
+    batchResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"batch_id": "b1", "file_urls": ["https://upload"]}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {
+          "extract_result": [
+            {
+              "state": "done",
+              "file_name": "a.pdf",
+              "full_zip_url": "https://zip",
+            }
+          ]
+        },
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[batchResp, pollDone])
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      filePath = outputDir / "a.pdf"
+      filePath.write_bytes(b"pdf")
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch("scripts.providers.mineru_v4.requests.put", return_value=_FakeResponse(statusCode=200)),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        paths = adapter.extractFromLocalFiles(
+          filePaths=[filePath],
+          outputDir=outputDir,
+          options=None,
+        )[0]
+
+      batchPayload = session.request.call_args_list[0].kwargs["json"]
+      self.assertEqual(batchPayload, {"files": [{"name": "a.pdf"}]})
+
+      normalized = json.loads(paths.normalizedJsonPath.read_text(encoding="utf-8"))
+      self.assertNotIn("parseRequest", normalized["extras"])
+      self.assertEqual(normalized["extras"]["parseResult"], {"batchId": "b1"})
+      self.assertEqual(normalized["extras"]["raw"], [{"type": "p", "text": "local"}])
 
   def test_url_state_failed(self):
     postResp = _FakeResponse(

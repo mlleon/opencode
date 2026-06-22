@@ -142,8 +142,16 @@ def build_normalized_envelope(
   warnings: List[str],
   pages: Optional[List[PageEnvelope]],
   extras: Dict[str, JsonValue],
+  parseRequest: Optional[Dict[str, JsonValue]] = None,
+  parseResult: Optional[Dict[str, JsonValue]] = None,
 ) -> NormalizedEnvelope:
   validate_offline_reproducible(markdown)
+  envelopeExtras = dict(extras)
+  if parseRequest:
+    envelopeExtras["parseRequest"] = dict(parseRequest)
+  if parseResult:
+    envelopeExtras["parseResult"] = dict(parseResult)
+
   return {
     "meta": {
       "input": input_source,
@@ -155,7 +163,7 @@ def build_normalized_envelope(
     "markdown": markdown,
     "pages": pages,
     "artifacts": build_artifacts_manifest(output_dir=output_dir, stem=stem),
-    "extras": dict(extras),
+    "extras": envelopeExtras,
   }
 
 

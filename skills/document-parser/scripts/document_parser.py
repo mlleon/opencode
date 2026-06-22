@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import shutil
 import tempfile
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 import sys
@@ -17,8 +18,156 @@ _orchestrator = import_module("scripts.orchestrator")
 
 
 _SOURCE_KIND_CHOICES = ["book", "article", "paper", "web"]
+_OUTPUT_PROFILE_CHOICES = ["legacy-memory", "evidence-local"]
+_EVIDENCE_LOCAL_WRITTEN_FILES = [
+  "normalized/document.md",
+  "normalized/document.json",
+  "normalized/images.manifest.json",
+]
 
 _FINAL_STEM_SHA_RE = re.compile(r"__h[0-9a-f]{12}$")
+
+_PAGE_RANGE_SINGLE_RE = re.compile(r"^\d+$")
+_PAGE_RANGE_INTERVAL_RE = re.compile(r"^(\d+)-(\d+)$")
+
+
+@dataclass(frozen=True)
+class PageRangePreflight:
+  requestedPageRange: Optional[str]
+  normalizedPageRange: Optional[str]
+  intervals: tuple[tuple[int, int], ...]
+  pdfPageCount: Optional[int]
+  rangeSource: str
+
+
+def _isUrlInput(inputValue: str) -> bool:
+  return inputValue.startswith(("http://", "https://"))
+
+
+def _parsePositivePageNumber(text: str) -> int:
+  if not _PAGE_RANGE_SINGLE_RE.fullmatch(text):
+    raise ValueError("page-range 只能包含正整数、闭区间和逗号")
+
+  value = int(text)
+  if value < 1:
+    raise ValueError("page-range 页码必须从 1 开始")
+  return value
+
+
+def _mergePageRangeIntervals(intervals: list[tuple[int, int]]) -> tuple[tuple[int, int], ...]:
+  merged: list[tuple[int, int]] = []
+  for start, end in sorted(intervals):
+    if not merged or start > merged[-1][1] + 1:
+      merged.append((start, end))
+      continue
+
+    previousStart, previousEnd = merged[-1]
+    merged[-1] = (previousStart, max(previousEnd, end))
+
+  return tuple(merged)
+
+
+def _parsePageRange(pageRangeRaw: str) -> tuple[tuple[int, int], ...]:
+  raw = pageRangeRaw.strip()
+  if not raw:
+    raise ValueError("page-range 不能为空")
+
+  intervals: list[tuple[int, int]] = []
+  for rawSegment in raw.split(","):
+    segment = rawSegment.strip()
+    if not segment:
+      raise ValueError("page-range 包含空片段")
+
+    if _PAGE_RANGE_SINGLE_RE.fullmatch(segment):
+      page = _parsePositivePageNumber(segment)
+      intervals.append((page, page))
+      continue
+
+    match = _PAGE_RANGE_INTERVAL_RE.fullmatch(segment)
+    if match is None:
+      raise ValueError("page-range 只能包含正整数、闭区间和逗号")
+
+    start = _parsePositivePageNumber(match.group(1))
+    end = _parsePositivePageNumber(match.group(2))
+    if start > end:
+      raise ValueError("page-range 区间起点不能大于终点")
+    intervals.append((start, end))
+
+  return _mergePageRangeIntervals(intervals)
+
+
+def _formatPageRange(intervals: tuple[tuple[int, int], ...]) -> str:
+  parts: list[str] = []
+  for start, end in intervals:
+    if start == end:
+      parts.append(str(start))
+      continue
+    parts.append(f"{start}-{end}")
+  return ",".join(parts)
+
+
+def _readPdfPageCount(path: Path) -> int:
+  from pypdf import PdfReader
+
+  reader = PdfReader(str(path))
+  return len(reader.pages)
+
+
+def _preflightPageRange(*, inputValue: str, pageRangeRaw: Optional[str]) -> PageRangePreflight:
+  if pageRangeRaw is None:
+    pdfPageCount: Optional[int] = None
+    rangeSource = "none"
+    if not _isUrlInput(inputValue):
+      inputPath = Path(inputValue).expanduser()
+      if inputPath.suffix.lower() == ".pdf" and inputPath.exists():
+        try:
+          pdfPageCount = _readPdfPageCount(inputPath)
+          rangeSource = "local-pdf"
+        except Exception:
+          pdfPageCount = None
+    return PageRangePreflight(
+      requestedPageRange=None,
+      normalizedPageRange=None,
+      intervals=(),
+      pdfPageCount=pdfPageCount,
+      rangeSource=rangeSource,
+    )
+
+  requestedPageRange = str(pageRangeRaw).strip()
+  intervals = _parsePageRange(requestedPageRange)
+  normalizedPageRange = _formatPageRange(intervals)
+
+  if _isUrlInput(inputValue):
+    return PageRangePreflight(
+      requestedPageRange=requestedPageRange,
+      normalizedPageRange=normalizedPageRange,
+      intervals=intervals,
+      pdfPageCount=None,
+      rangeSource="url",
+    )
+
+  inputPath = Path(inputValue).expanduser()
+  if inputPath.suffix.lower() != ".pdf":
+    raise ValueError("--page-range 仅支持本地 PDF 输入；URL 输入会跳过本地预检")
+
+  try:
+    pdfPageCount = _readPdfPageCount(inputPath)
+  except Exception as e:
+    raise ValueError(f"无法读取本地 PDF 页数：{inputPath}") from e
+
+  maxRequestedPage = max(end for _, end in intervals)
+  if maxRequestedPage > pdfPageCount:
+    raise ValueError(
+      f"page-range 超出 PDF 页数：请求到第 {maxRequestedPage} 页，本地 PDF 共 {pdfPageCount} 页"
+    )
+
+  return PageRangePreflight(
+    requestedPageRange=requestedPageRange,
+    normalizedPageRange=normalizedPageRange,
+    intervals=intervals,
+    pdfPageCount=pdfPageCount,
+    rangeSource="local-pdf",
+  )
 
 
 def _isHexSha12(text: str) -> bool:
@@ -108,6 +257,14 @@ def _ensureInside(baseDir: Path, path: Path) -> None:
     pathResolved.relative_to(baseResolved)
   except Exception as e:
     raise ValueError(f"非法路径（越界）：{pathResolved}") from e
+
+
+def _rejectSymlinkComponents(baseDir: Path, relativePath: Path) -> None:
+  current = baseDir
+  for part in relativePath.parts:
+    current = current / part
+    if current.is_symlink():
+      raise ValueError(f"非法路径（symlink escape）：{current}")
 
 
 def _readText(path: Path) -> str:
@@ -250,13 +407,13 @@ def _extractImageRefs(markdown: str) -> List[str]:
 
 
 def _rewriteImageRefs(*, markdown: str, mapping: dict[str, str]) -> str:
-  def _mdRepl(match: re.Match) -> str:
+  def _mdRepl(match: re.Match[str]) -> str:
     target = match.group(1)
     if target not in mapping:
       return match.group(0)
     return f"![[{mapping[target]}]]"
 
-  def _htmlRepl(match: re.Match) -> str:
+  def _htmlRepl(match: re.Match[str]) -> str:
     target = match.group(1)
     if target not in mapping:
       return match.group(0)
@@ -510,7 +667,7 @@ def _splitByChunks(*, text: str, targetMin: int, targetMax: int) -> list[tuple[i
 def _splitBookMarkdown(
   *,
   markdown: str,
-) -> tuple[str, list[dict], list[dict[str, int]], int, int]:
+) -> tuple[str, list[dict[str, str | int]], list[dict[str, int]], int, int]:
   # 返回 splitMode, chunksMeta, tocRanges, strongCount, candidateCount。
   markdown = _normalizeNewlines(markdown)
   markdown = _mergeConsecutiveHeadingBlocks(markdown)
@@ -526,7 +683,7 @@ def _splitBookMarkdown(
   else:
     splitMode = "chunk"
 
-  chunks: list[dict] = []
+  chunks: list[dict[str, str | int]] = []
 
   if splitMode == "chapter":
     boundaries = sorted(strongCandidates)
@@ -669,7 +826,7 @@ def _postprocessBook(
   humanStem: str,
   titleExtracted: Optional[str],
   finalStem: str,
-) -> dict:
+) -> dict[str, object]:
   vaultRoot = projectRoot / "memory-source"
   rawRoot = vaultRoot / "raw"
   assetsRoot = vaultRoot / "assets"
@@ -872,7 +1029,7 @@ def _postprocessNonBook(
   humanStem: str,
   titleExtracted: Optional[str],
   finalStem: str,
-) -> dict:
+) -> dict[str, object]:
   vaultRoot = projectRoot / "memory-source"
   rawRoot = vaultRoot / "raw"
   assetsRoot = vaultRoot / "assets"
@@ -1029,10 +1186,147 @@ def _postprocessNonBook(
   }
 
 
+def _resolveEvidenceLocalOutputRoot(*, projectRoot: Path, outputRootRaw: Optional[str]) -> Path:
+  if outputRootRaw is None or not str(outputRootRaw).strip():
+    raise ValueError("evidence-local 必须提供 --output-root")
+
+  outputRootRel = Path(str(outputRootRaw).strip())
+  if outputRootRel.is_absolute():
+    raise ValueError("evidence-local --output-root 必须是 project-relative 路径")
+  if ".." in outputRootRel.parts:
+    raise ValueError("evidence-local --output-root 不允许包含 ..")
+
+  projectRootResolved = projectRoot.resolve()
+  evidenceRoot = projectRootResolved / ".omo" / "evidence"
+  if len(outputRootRel.parts) < 3 or outputRootRel.parts[:2] != (".omo", "evidence"):
+    raise ValueError("evidence-local --output-root 必须位于 .omo/evidence/**")
+
+  _rejectSymlinkComponents(projectRootResolved, outputRootRel)
+
+  outputRoot = (projectRootResolved / outputRootRel).resolve()
+  evidenceRootResolved = evidenceRoot.resolve()
+  _ensureInside(projectRootResolved, evidenceRootResolved)
+  _ensureInside(evidenceRootResolved, outputRoot)
+  if outputRoot == evidenceRootResolved:
+    raise ValueError("evidence-local --output-root 必须位于 .omo/evidence/ 的子路径")
+  return outputRoot
+
+
+def _collectEvidenceLocalImages(*, stagingNormalizedDir: Path, markdown: str, sourceKind: str) -> list[dict[str, object]]:
+  imagesDir = stagingNormalizedDir / "images"
+  imagePaths: set[Path] = set()
+
+  for ref in sorted(set(_extractImageRefs(markdown))):
+    normalizedRef = ref[2:] if ref.startswith("./") else ref
+    if not normalizedRef.startswith("images/"):
+      raise ValueError(f"不支持的图片引用（必须位于 images/）：{ref}")
+    srcPath = stagingNormalizedDir / normalizedRef
+    _ensureInside(imagesDir, srcPath)
+    if not srcPath.exists() or not srcPath.is_file():
+      raise FileNotFoundError(f"图片引用指向不存在的文件：{ref} -> {srcPath}")
+    imagePaths.add(srcPath.resolve())
+
+  if imagesDir.exists():
+    for srcPath in sorted(p for p in imagesDir.rglob("*") if p.is_file()):
+      _ensureInside(imagesDir, srcPath)
+      imagePaths.add(srcPath.resolve())
+
+  images: list[dict[str, object]] = []
+  for srcPath in sorted(imagePaths, key=lambda path: path.relative_to(stagingNormalizedDir.resolve()).as_posix()):
+    data = srcPath.read_bytes()
+    images.append(
+      {
+        "relativePath": f"normalized/{srcPath.relative_to(stagingNormalizedDir.resolve()).as_posix()}",
+        "sha256": _sha256HexFromBytes(data),
+        "byteCount": len(data),
+        "sourceKind": sourceKind,
+      }
+    )
+  return images
+
+
+def _postprocessEvidenceLocal(
+  *,
+  projectRoot: Path,
+  stagingDocRoot: Path,
+  sourceKind: str,
+  sha12: str,
+  humanStem: str,
+  titleExtracted: Optional[str],
+  finalStem: str,
+  outputRootRaw: Optional[str],
+) -> dict[str, object]:
+  outputRoot = _resolveEvidenceLocalOutputRoot(projectRoot=projectRoot, outputRootRaw=outputRootRaw)
+
+  stagingNormalizedDir = stagingDocRoot / "normalized"
+  stagingMarkdownPath = stagingNormalizedDir / "document.md"
+  if not stagingMarkdownPath.exists():
+    raise FileNotFoundError(f"staging 缺少 normalized/document.md：{stagingMarkdownPath}")
+
+  markdown = _normalizeNewlines(_readText(stagingMarkdownPath))
+  markdownBytes = markdown.encode("utf-8")
+  images = _collectEvidenceLocalImages(
+    stagingNormalizedDir=stagingNormalizedDir,
+    markdown=markdown,
+    sourceKind=sourceKind,
+  )
+
+  normalizedOutDir = outputRoot / "normalized"
+  _writeText(normalizedOutDir / "document.md", markdown)
+
+  documentJson = {
+    "projectRoot": str(projectRoot.resolve()),
+    "sourceKind": sourceKind,
+    "sha12": sha12,
+    "finalStem": finalStem,
+    "humanStem": humanStem,
+    "titleExtracted": titleExtracted,
+    "stagingDocRoot": str(stagingDocRoot.resolve()),
+    "document": {
+      "relativePath": "normalized/document.md",
+      "sha256": _sha256HexFromBytes(markdownBytes),
+      "byteCount": len(markdownBytes),
+    },
+  }
+  _writeText(
+    normalizedOutDir / "document.json",
+    json.dumps(documentJson, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+  )
+
+  imagesManifest = {
+    "projectRoot": str(projectRoot.resolve()),
+    "sourceKind": sourceKind,
+    "finalStem": finalStem,
+    "stagingDocRoot": str(stagingDocRoot.resolve()),
+    "images": images,
+  }
+  _writeText(
+    normalizedOutDir / "images.manifest.json",
+    json.dumps(imagesManifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+  )
+
+  return {
+    "projectRoot": str(projectRoot.resolve()),
+    "sourceKind": sourceKind,
+    "finalStem": finalStem,
+    "stagingDocRoot": str(stagingDocRoot.resolve()),
+    "outputProfile": "evidence-local",
+    "outputRoot": str(outputRoot.resolve()),
+    "writtenFiles": list(_EVIDENCE_LOCAL_WRITTEN_FILES),
+  }
+
+
 def _parsePostprocessArgs(argv: List[str]) -> argparse.Namespace:
   parser = argparse.ArgumentParser(prog="document-parser postprocess")
   parser.add_argument("--project-root", dest="projectRoot", required=True)
   parser.add_argument("--source-kind", dest="sourceKind", required=True, choices=_SOURCE_KIND_CHOICES)
+  parser.add_argument(
+    "--output-profile",
+    dest="outputProfile",
+    default="legacy-memory",
+    choices=_OUTPUT_PROFILE_CHOICES,
+  )
+  parser.add_argument("--output-root", dest="outputRoot", default=None)
   parser.add_argument(
     "--sha12",
     dest="sha12",
@@ -1043,6 +1337,10 @@ def _parsePostprocessArgs(argv: List[str]) -> argparse.Namespace:
   group = parser.add_mutually_exclusive_group(required=True)
   group.add_argument("--input", dest="input", default=None)
   group.add_argument("--staging-doc-root", dest="stagingDocRoot", default=None)
+
+  for flag in ("--parse-only", "--no-postprocess"):
+    if flag in argv:
+      parser.error(f"{flag} 仅支持 parse 子命令")
 
   return parser.parse_args(argv)
 
@@ -1138,7 +1436,18 @@ def _runPostprocess(argv: List[str]) -> int:
   )
 
   try:
-    if args.sourceKind == "book":
+    if args.outputProfile == "evidence-local":
+      data = _postprocessEvidenceLocal(
+        projectRoot=projectRoot,
+        stagingDocRoot=stagingDocRoot,
+        sourceKind=args.sourceKind,
+        sha12=sha12,
+        humanStem=humanStem,
+        titleExtracted=titleExtracted,
+        finalStem=finalStem,
+        outputRootRaw=args.outputRoot,
+      )
+    elif args.sourceKind == "book":
       data = _postprocessBook(
         projectRoot=projectRoot,
         stagingDocRoot=stagingDocRoot,
@@ -1401,7 +1710,41 @@ def _parseParseArgs(argv: List[str]) -> argparse.Namespace:
   parser = argparse.ArgumentParser(prog="document-parser parse")
   parser.add_argument("--project-root", dest="projectRoot", required=False)
   parser.add_argument("--input", dest="input", required=False)
+  parser.add_argument("--page-range", dest="pageRange", required=False)
+  parser.add_argument("--model-version", dest="modelVersion", required=False)
+  parser.add_argument("--language", dest="language", required=False)
+  parser.add_argument("--is-ocr", dest="isOcr", required=False, type=_parseOptionalBool)
+  parser.add_argument("--enable-table", dest="enableTable", required=False, type=_parseOptionalBool)
+  parser.add_argument("--enable-formula", dest="enableFormula", required=False, type=_parseOptionalBool)
+  parser.add_argument(
+    "--no-fallback",
+    dest="disableFallback",
+    action="store_true",
+    help="显式禁用 MinerU 到 PaddleOCR fallback（fail-closed）",
+  )
+  parseOnlyGroup = parser.add_mutually_exclusive_group(required=False)
+  parseOnlyGroup.add_argument(
+    "--parse-only",
+    dest="parseOnly",
+    action="store_true",
+    help="断言 parse 只写 staging 输出，不执行 postprocess",
+  )
+  parseOnlyGroup.add_argument(
+    "--no-postprocess",
+    dest="parseOnly",
+    action="store_true",
+    help="--parse-only 的兼容别名",
+  )
   return parser.parse_args(argv)
+
+
+def _parseOptionalBool(raw: str) -> bool:
+  normalized = raw.strip().lower()
+  if normalized in ("true", "1", "yes", "y", "on"):
+    return True
+  if normalized in ("false", "0", "no", "n", "off"):
+    return False
+  raise argparse.ArgumentTypeError("必须是 true 或 false")
 
 
 def _parseDryRunArgs(argv: List[str]) -> argparse.Namespace:
@@ -1457,6 +1800,25 @@ def _runParse(argv: List[str]) -> int:
     print("ERROR: 必须提供 --input", file=sys.stderr)
     return 2
 
+  try:
+    _pageRangePreflight = _preflightPageRange(inputValue=inputValue, pageRangeRaw=args.pageRange)
+  except ValueError as e:
+    print(f"ERROR: {e}", file=sys.stderr)
+    return 2
+
+  parseOptions = _orchestrator.ParseOptions(
+    pageRange=_pageRangePreflight.normalizedPageRange,
+    modelVersion=args.modelVersion,
+    language=args.language,
+    isOcr=args.isOcr,
+    enableTable=args.enableTable,
+    enableFormula=args.enableFormula,
+    pdfPageCount=_pageRangePreflight.pdfPageCount,
+    rangeSource=_pageRangePreflight.rangeSource,
+    parseOnly=bool(args.parseOnly),
+    disableFallback=bool(args.disableFallback),
+  )
+
   vaultRoot = projectRoot / "memory-source"
   stagingRoot = _getStagingRoot(projectRoot=projectRoot)
   if vaultRoot.exists() and _isPathInside(baseDir=vaultRoot, candidate=stagingRoot):
@@ -1464,7 +1826,7 @@ def _runParse(argv: List[str]) -> int:
     return 3
 
   try:
-    results = _orchestrator.parseMany(sources=[inputValue], outputDir=stagingRoot)
+    results = _orchestrator.parseMany(sources=[inputValue], outputDir=stagingRoot, options=parseOptions)
   except Exception as e:
     print(f"ERROR: {e}", file=sys.stderr)
     return 1

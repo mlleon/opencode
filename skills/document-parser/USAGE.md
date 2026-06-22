@@ -9,7 +9,8 @@
 - 解析 PDF、Word、PPT、图片或扫描件
 - 把文档转换成 Markdown / JSON
 - 对扫描件做 OCR 并保留原始解析工件
-- 将解析结果整理到项目级 `memory-source/` 结构中
+- 在允许写终态知识资产的通用项目里，把解析结果整理到项目级 `memory-source/` 结构中
+- 在 culture-system 这类受限项目里，只做 bounded parse、staging 解析或 `.omo/evidence/**` 本地证据落地
 - 在写入最终知识库前校验 `raw/` 和图片引用是否符合约束
 
 不适合使用 `document-parser` 的场景：
@@ -36,6 +37,8 @@
 
 PaddleOCR 只作为保守回退方案使用。
 
+默认 parse 路线保持兼容行为，不加 `--no-fallback` 时，quota-like MinerU 错误在 PaddleOCR 支持的 PDF 或图片上仍可能自动回退到 PaddleOCR。
+
 触发条件：
 
 - MinerU 明确命中配额或限流类错误
@@ -53,6 +56,14 @@ PaddleOCR 支持的后缀：
 - `.tif`
 
 PaddleOCR 回退结果会在 JSON 中记录 `DEGRADED_OCR_FALLBACK` warning。
+
+只有在 `parse` 子命令里显式 opt-in `--no-fallback` 时，才会禁用 fallback providers；这会让原本可回退的 MinerU 配额或限流类错误 fail closed。`--parse-only` 与 `--no-postprocess` 不控制 provider fallback，它们只控制 parse 之后是否继续走 postprocess。
+
+### 2.4 future boundary：PaddleOCR `/ocr` service adapter
+
+当前实现只有 PaddleOCR Jobs API 回退。
+
+`/ocr` service adapter 仍然属于 future boundary，本版 skill 不把它当成当前可调用路径，也不会把 MinerU 页数超限错误自动改走 `/ocr`。
 
 ## 3. 凭据配置
 
@@ -81,6 +92,12 @@ export PADDLEOCR_TOKEN="你的 PaddleOCR token"
 1. 环境变量
 2. 本地 key 文件
 3. 都不存在时报错
+
+### 3.4 凭据脱敏规则
+
+- 可以记录“凭据已配置”这一事实
+- 不要在 stdout、stderr、evidence、截图或提交内容里回显真实 token
+- 如果需要排查环境，只记录来源，例如“来自环境变量”或“来自本地 key 文件”，不要记录值
 
 ## 4. 输出结构
 
@@ -113,17 +130,47 @@ document_parser_output/<stem>/
 
 规范化 Markdown 不允许保留远程图片链接，图片必须本地化。
 
+### 4.1 `parse` 子命令的项目级 staging
+
+`parse --project-root ...` 会把 staging 根目录固定到：
+
+```text
+<project-root>/.cache/document-parser/
+```
+
+然后由后端在其下生成：
+
+```text
+<project-root>/.cache/document-parser/document_parser_output/<backend-stem>/
+```
+
+这一步只写 staging，不直接写 `memory-source/`。
+
+### 4.2 `evidence-local` 输出 profile
+
+当 `postprocess --output-profile evidence-local` 被显式选择时，输出根必须位于项目内 `.omo/evidence/**`，并固定产出：
+
+```text
+<project-root>/.omo/evidence/<run-dir>/
+└── normalized/
+    ├── document.md
+    ├── document.json
+    └── images.manifest.json
+```
+
+这个 profile 不复制图片或 PDF 二进制，也不代表获得了 ingest、wiki 写入或稳定 memory 更新许可。
+
 ## 5. 命令总览
 
-当前 CLI 支持 5 类入口。正常调试时从 skill 目录执行，并通过 `skills/` 级共享 uv project 加载 `document-parser` dependency group：
+正常使用由 Agent 调用 `/document-parser` 完成，用户不需要把手工 CLI 当成日常入口。下面的命令只用于 Agent 执行参考或本地调试时核对参数。
+
+当前 CLI 支持 5 类入口，并通过 `skills/` 级共享 uv project 加载 `document-parser` dependency group：
 
 ```bash
-cd "$HOME/.config/opencode/skills/document-parser"
-
 uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser <inputs...> [--output-dir <dir>]
-uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser parse --project-root <project> --input <file-or-url>
+uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser parse --project-root <project> --input <file-or-url> [--page-range <range>] [--model-version <value>] [--language <code>] [--is-ocr <true|false>] [--enable-table <true|false>] [--enable-formula <true|false>] [--parse-only | --no-postprocess] [--no-fallback]
 uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser dry-run --project-root <project>
-uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser postprocess --project-root <project> --source-kind <kind> (--input <file> | --staging-doc-root <dir>) [--sha12 <sha12>]
+uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser postprocess --project-root <project> --source-kind <kind> (--input <file> | --staging-doc-root <dir>) [--sha12 <sha12>] [--output-profile <legacy-memory|evidence-local>] [--output-root <project-relative-.omo/evidence/...>]
 uv run --project "$HOME/.config/opencode/skills" --group document-parser python -m scripts.document_parser validate --project-root <project>
 ```
 
@@ -135,6 +182,15 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser python 
 - Python 版本：`>=3.12`
 
 如果 `uv` 不可用，才临时回退到系统 `python3`，并显式设置 `PYTHONPATH`；正常 `/document-parser` 调用由 Agent 自动执行，不要求用户手动操作 CLI。
+
+对 culture-system 一类受限项目，命令总览还要额外记住两条：
+
+- `legacy-memory` 仍是通用 CLI 的兼容默认行为，但不是该项目里的默认安全路线
+- 当项目规则禁止 raw/assets/wiki 写入时，优先使用 `parse --page-range ... --parse-only`，只有需要本地证据时才显式加 `postprocess --output-profile evidence-local --output-root .omo/evidence/...`
+- `--no-fallback` 不是默认 parse 路线，只有在需要 fail-closed provider 证明时才显式加上
+- 对 R021 一类 source-sensitive OCR，如果目标是证明没有走 PaddleOCR 回退，应使用 `parse --page-range ... --parse-only --no-fallback`
+- 这条 no-fallback amendment 只代表工具能力补齐，不代表 R021 页发现成功，也不代表 source-lock、ingest、wiki 或下游 readiness
+- `LIVE_SMOKE_MISSING_NORMALIZED_OUTPUTS` 仍是单独未解决的 live-smoke blocker，不要把本次文档更新当成 live-smoke 修复
 
 ## 6. 旧式批量解析模式
 
@@ -174,22 +230,88 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 ### 7.1 参数
 
 ```text
---project-root  必填，目标项目根目录
---input         必填，本地文件路径或 URL
+--project-root    必填，目标项目根目录
+--input           必填，本地文件路径或 URL
+--page-range      可选，bounded parse 范围，支持 N、N-M、2,4-6
+--model-version   可选，透传给 MinerU v4 的模型版本参数
+--language        可选，透传给 MinerU v4 的语言参数
+--is-ocr          可选，布尔值，控制 OCR 行为
+--enable-table    可选，布尔值，控制表格抽取
+--enable-formula  可选，布尔值，控制公式抽取
+--parse-only      可选，parse-only 规范写法
+--no-postprocess  可选，与 --parse-only 同语义的别名，只能二选一
+--no-fallback     可选，显式 opt-in 禁用 fallback providers，遇到原本可回退的 MinerU 配额或限流类错误时 fail closed
 ```
 
 虽然 argparse 层没有把参数声明为 required，但运行时会强制校验，缺少参数会返回错误。
 
-### 7.2 示例
+### 7.2 `--page-range` 规则
+
+- 支持 `N`、`N-M`、逗号分隔片段，如 `2,4-6`
+- 语义为 1-based、闭区间，内部会标准化为升序、去重后的页段
+- 会拒绝 `0`、负数、空片段、反向区间、非整数和本地 PDF 越界范围
+- 本地非 PDF 输入不接受 `--page-range`
+- URL 输入保留 `--page-range`，但跳过本地 PDF 预检
+- 本地 PDF 预检会记录页数元数据，但在未显式传入 `--page-range` 时，不会只因为 PDF 总页数很大就阻止 provider 调用
+
+### 7.3 示例
 
 ```bash
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser parse \
   --project-root /home/mleon/workspace/culture-system \
-  --input /path/to/book.pdf
+  --input /path/to/book.pdf \
+  --page-range 12-20
 ```
 
-### 7.3 输出位置
+```bash
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
+  --project-root /home/mleon/workspace/culture-system \
+  --input /path/to/book.pdf \
+  --page-range 2,4-6 \
+  --model-version mineru-v4 \
+  --language zh \
+  --is-ocr false \
+  --enable-table true \
+  --enable-formula true \
+  --parse-only
+```
+
+```bash
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
+  --project-root /home/mleon/workspace/culture-system \
+  --input https://example.com/sample.pdf \
+  --page-range 1-3 \
+  --no-postprocess
+```
+
+```bash
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
+  --project-root /home/mleon/workspace/culture-system \
+  --input /path/to/source-sensitive.pdf \
+  --page-range 1-1 \
+  --parse-only \
+  --no-fallback
+```
+
+### 7.4 `--parse-only` / `--no-postprocess` / `--no-fallback` 语义
+
+- `--parse-only` 是规范写法
+- `--no-postprocess` 是同语义别名，主要用于强调“这次 parse 结束后不要继续走 postprocess”
+- 二者只能二选一，且只允许出现在 `parse` 子命令上
+- `postprocess` 子命令如果收到这两个参数，会直接报参数错误
+- 无论是否传入它们，`parse` 本身都只写 staging；它们表达的是调用方的流程意图和 containment 边界
+- `--no-fallback` 是独立的 provider policy 开关，只能显式 opt-in 使用，默认不启用
+- 不加 `--no-fallback` 时，quota-like MinerU 错误在 PaddleOCR 支持的 PDF 或图片上仍可能自动回退到 PaddleOCR，并记录 `DEGRADED_OCR_FALLBACK`
+- 加上 `--no-fallback` 时，同类 fallback-eligible MinerU 错误会 fail closed，不会调用 PaddleOCR
+- MinerU 页数超限错误保持结构化失败，不会因为这些参数而改走 PaddleOCR
+- 对 culture-system 或 R021 一类 source-sensitive OCR，如果既要 containment 又要证明没有走回退 provider，应使用 `--parse-only --no-fallback`
+- 这不代表 R021 页发现成功，也不代表 source-lock、ingest、wiki 或 live-smoke 已就绪；`LIVE_SMOKE_MISSING_NORMALIZED_OUTPUTS` 仍是单独未解决的 blocker
+
+### 7.5 输出位置
 
 ```text
 <project-root>/.cache/document-parser/document_parser_output/<backend-stem>/
@@ -203,11 +325,36 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 
 然后由 MinerU 或 PaddleOCR 在该目录下创建 `document_parser_output/<backend-stem>/`。
 
-### 7.4 成功输出
+### 7.6 成功输出
 
 成功时 stdout 打印 `normalized/document.md` 路径。
 
-### 7.5 失败返回码
+### 7.7 结构化页数超限指引
+
+当 MinerU 返回页数超限错误时，当前实现会把它归类成稳定的结构化错误，而不是自动重试或自动拆分 PDF。
+
+典型信号：
+
+- provider 错误码 `-60006`
+- 明确表达页数超限的 provider 错误消息
+
+结构化错误会包含这类字段：
+
+- `errorCode`
+- `provider`
+- `pdfPageCount`，本地 PDF 预检可用时
+- `requestedPageRange`
+- `suggestedPageRange`
+- `retryHint`
+
+处理原则：
+
+- 根据 `suggestedPageRange` 改成 bounded parse
+- 不自动拆分 PDF
+- 不自动 provider retry
+- 不因为 `-60006` 自动回退到 PaddleOCR
+
+### 7.8 失败返回码
 
 - `1`：解析后端失败
 - `2`：参数错误，例如缺少 `--project-root` 或 `--input`
@@ -253,7 +400,9 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 
 ## 9. `postprocess`：整理 staging 到终态结构
 
-`postprocess` 用于把 staging 中的 `normalized/document.md`、`document.json` 和图片整理到项目的 `memory-source/` 终态结构。
+`postprocess` 用于把 staging 中的 `normalized/document.md`、`document.json` 和图片整理成显式选择的输出 profile。
+
+当前通用 CLI 默认 profile 仍是 `legacy-memory`，也就是兼容旧行为的 `memory-source/` 终态路线。对 culture-system 这类禁止 raw/assets/wiki 写入的项目，不应把它当成默认安全路线；那类项目应优先停在 `parse --parse-only`，或显式改用 `evidence-local`。
 
 ### 9.1 参数
 
@@ -263,6 +412,8 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 --input              与 --staging-doc-root 二选一，本地输入文件
 --staging-doc-root   与 --input 二选一，已有 staging 文档目录
 --sha12              可选，仅用于 --staging-doc-root 模式，必须是 12 位小写十六进制
+--output-profile     可选，`legacy-memory` 或 `evidence-local`
+--output-root        可选，`evidence-local` 时必填，且必须位于项目内 `.omo/evidence/**`
 ```
 
 `--source-kind` 可选值：
@@ -272,7 +423,31 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 - `paper`
 - `web`
 
-### 9.2 使用 `--input`
+补充说明：
+
+- `--output-profile` 不传时，当前 CLI 兼容默认值是 `legacy-memory`
+- `--output-root` 只给 `evidence-local` 使用
+- `--parse-only` 和 `--no-postprocess` 只属于 `parse`，不是 `postprocess` 参数
+
+### 9.2 输出 profile
+
+#### `legacy-memory`
+
+- 通用 CLI 的兼容默认行为
+- 会把内容整理到项目 `memory-source/` 的 raw/assets 终态结构
+- 适合明确允许写终态知识资产的项目
+- 在 culture-system 里，只有单独授权时才应使用
+
+#### `evidence-local`
+
+- 显式 opt-in 的 containment profile
+- 必须配合 `--output-root .omo/evidence/<run-dir>`
+- `--output-root` 只能是项目相对路径，并且解析后必须仍位于 `.omo/evidence/**`
+- 会拒绝绝对路径、`..` 跳转、symlink escape 和任何项目内非 `.omo/evidence/**` 路径
+- 只写文本、JSON 和图片清单，不复制图片或 PDF 二进制
+- 不代表已经获得 ingest、wiki 写入或 stable memory 更新许可
+
+### 9.3 使用 `--input`
 
 ```bash
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
@@ -290,7 +465,7 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 
 注意：这要求 staging 目录已经存在，并且目录名与 input 文件内容 sha12 一致。若前一步 `parse` 由后端生成的是文件名 stem，而不是 sha12 stem，则应优先使用 `--staging-doc-root` 显式传入实际 staging 目录。
 
-### 9.3 使用 `--staging-doc-root`
+### 9.4 使用 `--staging-doc-root`
 
 ```bash
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
@@ -300,7 +475,21 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   --staging-doc-root /home/mleon/workspace/culture-system/.cache/document-parser/document_parser_output/example
 ```
 
-### 9.4 指定 sha12
+### 9.5 `evidence-local` 示例
+
+```bash
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
+  --project-root /home/mleon/workspace/culture-system \
+  --source-kind article \
+  --staging-doc-root /home/mleon/workspace/culture-system/.cache/document-parser/document_parser_output/example \
+  --output-profile evidence-local \
+  --output-root .omo/evidence/document-parser-example
+```
+
+这条命令适合 parse-only 之后的本地证据落地。它不会把结果写进 `memory-source/raw/04-books`、`memory-source/assets/raw/*` 或 `memory-source/wiki/**`。
+
+### 9.6 指定 sha12
 
 ```bash
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
@@ -311,7 +500,7 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   --sha12 abc123def456
 ```
 
-### 9.5 项目结构要求
+### 9.7 项目结构要求
 
 目标项目必须包含：
 
@@ -324,9 +513,9 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 
 否则 `postprocess` 会失败。
 
-### 9.6 source-kind 与终态 bucket
+### 9.8 source-kind 与终态 bucket
 
-`postprocess` 会根据 `source-kind` 写入对应 raw bucket 和 assets bucket。
+当 profile 为 `legacy-memory` 时，`postprocess` 会根据 `source-kind` 写入对应 raw bucket 和 assets bucket。
 
 常见映射：
 
@@ -337,9 +526,25 @@ paper   -> raw/02-papers/     + assets/raw/papers/
 web     -> raw/07-web/        + assets/raw/web/
 ```
 
-### 9.7 图片引用规则
+这些映射描述的是通用兼容终态，不是 culture-system 当前项目里的默认安全落点。
 
-终态 Markdown 中不保留标准 Markdown 图片语法：
+### 9.9 `evidence-local` 输出布局
+
+`evidence-local` 固定只写：
+
+```text
+<project-root>/.omo/evidence/<run-dir>/
+└── normalized/
+    ├── document.md
+    ├── document.json
+    └── images.manifest.json
+```
+
+`images.manifest.json` 用于记录 staging 图片来源信息，例如相对路径、hash、字节数和 `sourceKind`。它不会复制图片或 PDF 二进制。
+
+### 9.10 图片引用规则
+
+`legacy-memory` 终态 Markdown 中不保留标准 Markdown 图片语法：
 
 ```markdown
 ![alt](image.png)
@@ -359,9 +564,11 @@ web     -> raw/07-web/        + assets/raw/web/
 
 `books` 会根据 source-kind 替换为 `articles`、`papers` 或 `web`。
 
-### 9.8 成功输出
+### 9.11 成功输出
 
-成功时 stdout 只输出一行 JSON，包含：
+成功时 stdout 只输出一行 JSON。
+
+`legacy-memory` 常见字段包括：
 
 - `projectRoot`
 - `sourceKind`
@@ -373,7 +580,18 @@ web     -> raw/07-web/        + assets/raw/web/
 - `manifestPath`
 - `writtenFiles`
 
-### 9.9 失败返回码
+`evidence-local` 成功输出至少会包含：
+
+- `projectRoot`
+- `sourceKind`
+- `stagingDocRoot`
+- `outputProfile`
+- `outputRoot`
+- `writtenFiles`
+
+并且不会返回 legacy raw/assets 终态目录字段作为目标路径。
+
+### 9.12 失败返回码
 
 - `2`：参数错误
 - `3`：项目结构、输入文件或 staging 路径错误
@@ -382,7 +600,7 @@ web     -> raw/07-web/        + assets/raw/web/
 
 ## 10. 书籍后处理与拆分
 
-当 `--source-kind book` 时，会进入书籍后处理流程。
+当 profile 为 `legacy-memory`，且 `--source-kind book` 时，会进入书籍后处理流程。
 
 ### 10.1 主要输出
 
@@ -432,6 +650,8 @@ ch-02.md
 ## 11. `validate`：校验终态结构
 
 `validate` 用于检查 `memory-source/` 终态是否符合约束。
+
+它面向 `legacy-memory` 终态路线。`evidence-local` 不把结果写进 `memory-source/`，因此默认不需要把 `validate` 当成下一步。
 
 ### 11.1 参数
 
@@ -527,11 +747,35 @@ SUMMARY ok=<0|1> errors=<int>
 
 ## 12. 推荐工作流
 
-### 12.1 项目级标准流程
+正常使用仍然应该由 Agent 执行 `/document-parser`。下面工作流是给 Agent 指令编写者和本地调试者参考的，不是要求用户把手工 CLI 当成常规入口。
+
+### 12.1 通用兼容流程，显式允许终态写入时使用
 
 ```bash
-cd "$HOME/.config/opencode/skills/document-parser"
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser dry-run \
+  --project-root /home/mleon/workspace/culture-system
 
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
+  --project-root /home/mleon/workspace/culture-system \
+  --input /path/to/source.pdf
+
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
+  --project-root /home/mleon/workspace/culture-system \
+  --source-kind book \
+  --staging-doc-root /home/mleon/workspace/culture-system/.cache/document-parser/document_parser_output/<backend-stem> \
+  --output-profile legacy-memory
+
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser validate \
+  --project-root /home/mleon/workspace/culture-system
+```
+
+### 12.2 culture-system containment 流程，默认优先
+
+```bash
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser dry-run \
   --project-root /home/mleon/workspace/culture-system
@@ -540,37 +784,38 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser parse \
   --project-root /home/mleon/workspace/culture-system \
   --input /path/to/source.pdf \
-  > /tmp/document-parser-normalized-path.txt
-
-normalizedMarkdownPath="$(cat /tmp/document-parser-normalized-path.txt)"
-stagingDocRoot="$(dirname "$(dirname "$normalizedMarkdownPath")")"
-
-uv run --project "$HOME/.config/opencode/skills" --group document-parser \
-  python -m scripts.document_parser postprocess \
-  --project-root /home/mleon/workspace/culture-system \
-  --source-kind book \
-  --staging-doc-root "$stagingDocRoot"
-
-uv run --project "$HOME/.config/opencode/skills" --group document-parser \
-  python -m scripts.document_parser validate \
-  --project-root /home/mleon/workspace/culture-system
-```
-
-### 12.2 已有 staging 的流程
-
-```bash
-cd "$HOME/.config/opencode/skills/document-parser"
+  --page-range 12-20 \
+  --model-version mineru-v4 \
+  --language zh \
+  --is-ocr false \
+  --enable-table true \
+  --enable-formula true \
+  --parse-only
 
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind article \
-  --staging-doc-root /path/to/document_parser_output/<stem>
-
-uv run --project "$HOME/.config/opencode/skills" --group document-parser \
-  python -m scripts.document_parser validate \
-  --project-root /home/mleon/workspace/culture-system
+  --staging-doc-root /home/mleon/workspace/culture-system/.cache/document-parser/document_parser_output/<backend-stem> \
+  --output-profile evidence-local \
+  --output-root .omo/evidence/document-parser-example
 ```
+
+这条流程里，`postprocess` 是可选步骤，只在需要把 parse 结果整理到项目内证据目录时才运行。
+
+### 12.3 已有 staging 的 containment 流程
+
+```bash
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
+  --project-root /home/mleon/workspace/culture-system \
+  --source-kind article \
+  --staging-doc-root /path/to/document_parser_output/<stem> \
+  --output-profile evidence-local \
+  --output-root .omo/evidence/document-parser-existing-staging
+```
+
+除非有单独授权，否则不要把这条 containment 流程替换成 `legacy-memory`，也不要据此推断已经允许写 `memory-source/wiki/**` 或执行 ingest。
 
 ## 13. 常见问题
 
@@ -613,45 +858,83 @@ Markdown 通过 Obsidian embed 引用这些图片。
 5. staging 目录下是否存在 `normalized/document.md`
 6. 使用 `--input` 时，staging 是否位于对应 sha12 目录
 
+如果这次走的是 `evidence-local`，再额外检查：
+
+7. `--output-profile` 是否显式设置为 `evidence-local`
+8. `--output-root` 是否是项目相对路径，且位于 `.omo/evidence/**`
+9. 路径中是否包含 `..` 或 symlink escape
+
 ### 13.6 什么时候会使用 PaddleOCR？
 
-只有 MinerU 明确出现额度或限流类错误，并且输入是 PDF 或图片时，才会回退到 PaddleOCR。
+只有 MinerU 明确出现额度或限流类错误，并且输入是 PDF 或图片时，才会回退到 PaddleOCR Jobs API。
+
+页数超限错误，例如 `-60006`，不会自动触发 PaddleOCR 回退。
+
+### 13.7 PaddleOCR `/ocr` 为什么没出现？
+
+因为当前 skill 只实现了 Jobs API 回退。
+
+`/ocr` service adapter 仍然是 future boundary。文档里提到它，只是为了说明边界，不代表当前 CLI 或 Agent 流程已经支持。
+
+### 13.8 什么时候不该把 `legacy-memory` 当默认下一步？
+
+当项目规则明确禁止写 `memory-source/raw`、`memory-source/assets` 或 `memory-source/wiki` 时，不该把 `legacy-memory` 当 parse 之后的默认动作。
+
+对 culture-system，默认路线应是：
+
+1. `dry-run`
+2. `parse --page-range ... --parse-only`
+3. 只有需要本地证据时，才显式运行 `postprocess --output-profile evidence-local --output-root .omo/evidence/...`
 
 ## 14. 最小示例
 
-### 14.1 解析并整理一本书
+这些示例只用于参数参考。正常使用仍然应由 Agent 调用 `/document-parser`。
+
+### 14.1 显式授权的通用终态流程
 
 ```bash
-cd "$HOME/.config/opencode/skills/document-parser"
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser dry-run \
+  --project-root /home/mleon/workspace/culture-system \
 
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser parse \
   --project-root /home/mleon/workspace/culture-system \
-  --input /home/mleon/bookfiles/example.pdf \
-  > /tmp/document-parser-normalized-path.txt
-
-normalizedMarkdownPath="$(cat /tmp/document-parser-normalized-path.txt)"
-stagingDocRoot="$(dirname "$(dirname "$normalizedMarkdownPath")")"
+  --input /home/mleon/bookfiles/example.pdf
 
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser postprocess \
   --project-root /home/mleon/workspace/culture-system \
   --source-kind book \
-  --staging-doc-root "$stagingDocRoot"
+  --staging-doc-root /home/mleon/workspace/culture-system/.cache/document-parser/document_parser_output/<backend-stem> \
+  --output-profile legacy-memory
 
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser validate \
   --project-root /home/mleon/workspace/culture-system
 ```
 
-### 14.2 只检查项目路径策略
+### 14.2 culture-system parse-only + evidence-local
 
 ```bash
-cd "$HOME/.config/opencode/skills/document-parser"
-
 uv run --project "$HOME/.config/opencode/skills" --group document-parser \
   python -m scripts.document_parser dry-run \
   --project-root /home/mleon/workspace/culture-system
+
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser parse \
+  --project-root /home/mleon/workspace/culture-system \
+  --input /home/mleon/bookfiles/example.pdf \
+  --page-range 12-20 \
+  --parse-only
+
+uv run --project "$HOME/.config/opencode/skills" --group document-parser \
+  python -m scripts.document_parser postprocess \
+  --project-root /home/mleon/workspace/culture-system \
+  --source-kind book \
+  --staging-doc-root /home/mleon/workspace/culture-system/.cache/document-parser/document_parser_output/<backend-stem> \
+  --output-profile evidence-local \
+  --output-root .omo/evidence/document-parser-example
 ```
 
 ## 15. 事实与注意事项
@@ -660,8 +943,12 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 
 - 当前实现包含 `parse`、`dry-run`、`postprocess`、`validate` 四个显式子命令。
 - 未指定子命令时，会走兼容旧接口的批量解析模式。
-- `parse` 会调用真实解析后端，需要有效 token。
+- `parse` 会调用真实解析后端，需要有效 token，并支持 `--page-range`、`--model-version`、`--language`、`--is-ocr`、`--enable-table`、`--enable-formula`、`--parse-only`、`--no-postprocess`。
 - `dry-run` 不调用解析后端，也不写文件。
+- `postprocess` 的通用 CLI 默认 profile 仍是 `legacy-memory`，但它不是 culture-system 里的默认安全路线。
+- `evidence-local` 是显式 containment profile，只允许写项目内 `.omo/evidence/**`，并且不复制图片或 PDF 二进制。
+- MinerU 页数超限会返回结构化错误和 `suggestedPageRange`，不会自动拆分 PDF，也不会自动回退到 PaddleOCR。
+- 当前 PaddleOCR `/ocr` service adapter 仍是 future boundary，不属于本版 skill 的可用路径。
 - `postprocess` 要求项目根和 `memory-source/` 都有 `CLAUDE.md` 或 `AGENTS.md`，并且 `memory-source/raw`、`memory-source/assets` 存在。
 - `validate` 的错误输出是结构化 stderr，最后以 `SUMMARY` 收尾。
 
@@ -669,5 +956,8 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 
 - 不要把 `.cache/document-parser/` 当成最终知识库内容。
 - 不要手动把图片、PDF、zip 或临时文件放入 `memory-source/raw/`。
+- 不要在 stdout、stderr、evidence 或提交记录里泄露真实 token。
+- 不要把 `memory-source/raw/04-books`、`memory-source/assets/raw/*` 或 `memory-source/wiki/**` 当成 culture-system 当前任务里的默认活动输出。
+- 不要把 `evidence-local` 输出误读成 ingest 完成、wiki 写入许可或 source-lock 完成。
 - 如果手动修改终态 Markdown，修改后应重新运行 `validate`。
 - URL 与本地文件在旧式批量模式下不能混用。

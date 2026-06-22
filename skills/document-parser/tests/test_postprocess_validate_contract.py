@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import os
 import subprocess
@@ -5,15 +6,24 @@ import tempfile
 import unittest
 import sys
 import re
+from collections.abc import Callable
 from pathlib import Path
-
-
-from scripts.document_parser import _sha12FromStagingInputs
+from typing import cast
 
 
 _HERE = Path(__file__).resolve().parent
 _SKILL_ROOT = _HERE.parent
 _FIXTURES_ROOT = _HERE / "fixtures" / "staging-book" / "document_parser_output"
+if str(_SKILL_ROOT) not in sys.path:
+  sys.path.insert(0, str(_SKILL_ROOT))
+_DOCUMENT_PARSER_PATH = _SKILL_ROOT / "scripts" / "document_parser.py"
+_DOCUMENT_PARSER_SPEC = importlib.util.spec_from_file_location("document_parser_for_tests", _DOCUMENT_PARSER_PATH)
+assert _DOCUMENT_PARSER_SPEC is not None
+assert _DOCUMENT_PARSER_SPEC.loader is not None
+_documentParser = importlib.util.module_from_spec(_DOCUMENT_PARSER_SPEC)
+sys.modules[_DOCUMENT_PARSER_SPEC.name] = _documentParser
+_DOCUMENT_PARSER_SPEC.loader.exec_module(_documentParser)
+_sha12FromStagingInputs = cast(Callable[[Path], str], _documentParser._sha12FromStagingInputs)
 
 
 def _makeTmpProject(tmpDir: str) -> Path:
@@ -27,7 +37,7 @@ def _makeTmpProject(tmpDir: str) -> Path:
   return projectRoot
 
 
-def _runCli(*args: str) -> subprocess.CompletedProcess:
+def _runCli(*args: str) -> subprocess.CompletedProcess[str]:
   env = os.environ.copy()
   env["PYTHONPATH"] = str(_SKILL_ROOT)
   return subprocess.run(
@@ -39,7 +49,7 @@ def _runCli(*args: str) -> subprocess.CompletedProcess:
   )
 
 
-def _assertOneLineJson(test: unittest.TestCase, stdout: str, *, context: str) -> dict:
+def _assertOneLineJson(test: unittest.TestCase, stdout: str, *, context: str) -> dict[str, object]:
   lines = stdout.splitlines()
   test.assertEqual(
     len(lines),
@@ -54,10 +64,34 @@ def _assertOneLineJson(test: unittest.TestCase, stdout: str, *, context: str) ->
   except Exception as e:
     test.fail(f"{context} stdout 必须是合法 JSON：{e}\nstdout=\n{stdout}\n")
   test.assertIsInstance(data, dict, msg=f"{context} stdout JSON 顶层必须是 object")
-  return data
+  return cast(dict[str, object], data)
 
 
-def _assertPostprocessStdoutSchema(test: unittest.TestCase, data: dict, *, projectRoot: Path):
+def _jsonStr(data: dict[str, object], key: str) -> str:
+  value = data[key]
+  assert isinstance(value, str)
+  return value
+
+
+def _jsonInt(data: dict[str, object], key: str) -> int:
+  value = data[key]
+  assert isinstance(value, int)
+  return value
+
+
+def _jsonObject(data: dict[str, object], key: str) -> dict[str, object]:
+  value = data[key]
+  assert isinstance(value, dict)
+  return cast(dict[str, object], value)
+
+
+def _jsonList(data: dict[str, object], key: str) -> list[object]:
+  value = data[key]
+  assert isinstance(value, list)
+  return cast(list[object], value)
+
+
+def _assertPostprocessStdoutSchema(test: unittest.TestCase, data: dict[str, object], *, projectRoot: Path):
   required = [
     "projectRoot",
     "sourceKind",
@@ -73,35 +107,76 @@ def _assertPostprocessStdoutSchema(test: unittest.TestCase, data: dict, *, proje
     test.assertIn(key, data, msg=f"postprocess stdout JSON 必须包含 {key}")
 
   test.assertIsInstance(data["projectRoot"], str)
-  test.assertEqual(Path(data["projectRoot"]).resolve(), projectRoot.resolve(), msg="projectRoot 必须等于传入的 projectRoot(绝对路径)")
+  test.assertEqual(Path(_jsonStr(data, "projectRoot")).resolve(), projectRoot.resolve(), msg="projectRoot 必须等于传入的 projectRoot(绝对路径)")
 
   test.assertIsInstance(data["sourceKind"], str)
   test.assertIn(data["sourceKind"], {"book", "article", "paper", "web"})
 
-  finalStem = data["finalStem"]
+  finalStem = _jsonStr(data, "finalStem")
   test.assertIsInstance(finalStem, str)
   test.assertRegex(finalStem, r".+__h[0-9a-f]{12}$", msg="finalStem 必须形如 <humanStem>__h<sha12>")
 
   for pathKey in ["stagingDocRoot", "rawDir", "assetsDir", "metaPath", "manifestPath"]:
-    value = data[pathKey]
+    value = _jsonStr(data, pathKey)
     test.assertIsInstance(value, str, msg=f"{pathKey} 必须是 string")
     test.assertTrue(Path(value).is_absolute(), msg=f"{pathKey} 必须是绝对路径")
 
-  rawDir = Path(data["rawDir"])
-  assetsDir = Path(data["assetsDir"])
+  rawDir = Path(_jsonStr(data, "rawDir"))
+  assetsDir = Path(_jsonStr(data, "assetsDir"))
   test.assertTrue(rawDir.exists(), msg="rawDir 指向的目录必须存在")
   test.assertTrue(assetsDir.exists(), msg="assetsDir 指向的目录必须存在")
-  test.assertTrue(Path(data["metaPath"]).exists(), msg="metaPath 指向的文件必须存在")
-  test.assertTrue(Path(data["manifestPath"]).exists(), msg="manifestPath 指向的文件必须存在")
+  test.assertTrue(Path(_jsonStr(data, "metaPath")).exists(), msg="metaPath 指向的文件必须存在")
+  test.assertTrue(Path(_jsonStr(data, "manifestPath")).exists(), msg="manifestPath 指向的文件必须存在")
 
-  wf = data["writtenFiles"]
+  wf = _jsonObject(data, "writtenFiles")
   test.assertIsInstance(wf, dict, msg="writtenFiles 必须是 object")
   for key in ["rawMarkdownCount", "assetBinaryCount", "manifestCount", "metaCount"]:
     test.assertIn(key, wf, msg=f"writtenFiles 必须包含 {key}")
-    test.assertIsInstance(wf[key], int, msg=f"writtenFiles.{key} 必须是 int")
-  test.assertGreaterEqual(wf["rawMarkdownCount"], 1)
-  test.assertGreaterEqual(wf["manifestCount"], 1)
-  test.assertGreaterEqual(wf["metaCount"], 1)
+    _jsonInt(wf, key)
+  test.assertGreaterEqual(_jsonInt(wf, "rawMarkdownCount"), 1)
+  test.assertGreaterEqual(_jsonInt(wf, "manifestCount"), 1)
+  test.assertGreaterEqual(_jsonInt(wf, "metaCount"), 1)
+
+
+def _assertEvidenceLocalStdoutSchema(
+  test: unittest.TestCase,
+  data: dict[str, object],
+  *,
+  projectRoot: Path,
+  outputRoot: Path,
+):
+  required = [
+    "projectRoot",
+    "sourceKind",
+    "finalStem",
+    "stagingDocRoot",
+    "outputProfile",
+    "outputRoot",
+    "writtenFiles",
+  ]
+  for key in required:
+    test.assertIn(key, data, msg=f"evidence-local stdout JSON 必须包含 {key}")
+
+  for legacyKey in ["rawDir", "assetsDir", "metaPath", "manifestPath"]:
+    test.assertNotIn(legacyKey, data, msg=f"evidence-local stdout 不应包含 legacy 字段 {legacyKey}")
+
+  test.assertEqual(data["outputProfile"], "evidence-local")
+  test.assertEqual(Path(_jsonStr(data, "projectRoot")).resolve(), projectRoot.resolve())
+  test.assertEqual(Path(_jsonStr(data, "outputRoot")).resolve(), outputRoot.resolve())
+  test.assertTrue(Path(_jsonStr(data, "outputRoot")).is_absolute(), msg="outputRoot 必须是绝对路径")
+  test.assertEqual(data["sourceKind"], "book")
+  test.assertRegex(_jsonStr(data, "finalStem"), r".+__h[0-9a-f]{12}$", msg="finalStem 必须形如 <humanStem>__h<sha12>")
+
+  writtenFiles = _jsonList(data, "writtenFiles")
+  test.assertIsInstance(writtenFiles, list, msg="evidence-local writtenFiles 必须是 deterministic list")
+  test.assertEqual(
+    writtenFiles,
+    [
+      "normalized/document.md",
+      "normalized/document.json",
+      "normalized/images.manifest.json",
+    ],
+  )
 
 
 def _assertRawHasNoBinaries(test: unittest.TestCase, rawRoot: Path):
@@ -120,7 +195,13 @@ def _assertRawHasNoBinaries(test: unittest.TestCase, rawRoot: Path):
       test.fail(f"raw/ 不应包含二进制或过程工件：{path}")
 
 
-def _assertBookMetaTraceability(test: unittest.TestCase, *, meta: dict, booksDir: Path, stagingDocRoot: Path):
+def _assertBookMetaTraceability(
+  test: unittest.TestCase,
+  *,
+  meta: dict[str, object],
+  booksDir: Path,
+  stagingDocRoot: Path,
+):
   # plan 要求：meta.json 必须包含拆分与可追溯字段（Step 7）。
   requiredTopKeys = [
     "splitMode",
@@ -139,19 +220,20 @@ def _assertBookMetaTraceability(test: unittest.TestCase, *, meta: dict, booksDir
   test.assertIn(meta["splitMode"], {"chapter", "chunk"}, msg="splitMode 必须为 chapter|chunk")
   for key in ["strongCount", "candidateCount", "chapterCount"]:
     test.assertIsInstance(meta[key], int, msg=f"{key} 必须是 int")
-    test.assertGreaterEqual(meta[key], 0, msg=f"{key} 必须 >= 0")
+    test.assertGreaterEqual(_jsonInt(meta, key), 0, msg=f"{key} 必须 >= 0")
 
   test.assertIsInstance(meta["tocRanges"], list, msg="tocRanges 必须是 list（可为空）")
-  for item in meta["tocRanges"]:
+  for itemRaw in _jsonList(meta, "tocRanges"):
+    item = cast(dict[str, object], itemRaw)
     test.assertIsInstance(item, dict, msg="tocRanges[] 必须是 object")
     test.assertIn("startLine", item)
     test.assertIn("endLine", item)
-    test.assertIsInstance(item["startLine"], int)
-    test.assertIsInstance(item["endLine"], int)
+    _jsonInt(item, "startLine")
+    _jsonInt(item, "endLine")
 
   test.assertEqual(meta["offsetRef"], "postprocessed_document", msg="offsetRef 必须固定为 postprocessed_document")
 
-  postprocessedPath = Path(meta["postprocessedDocumentPath"]).resolve()
+  postprocessedPath = Path(_jsonStr(meta, "postprocessedDocumentPath")).resolve()
   expectedPostprocessedPath = (stagingDocRoot / "postprocess" / "document.postprocessed.md").resolve()
   test.assertEqual(
     postprocessedPath,
@@ -160,28 +242,29 @@ def _assertBookMetaTraceability(test: unittest.TestCase, *, meta: dict, booksDir
   )
   test.assertTrue(postprocessedPath.exists(), msg="staging 必须生成并保留 document.postprocessed.md")
   test.assertIsInstance(meta["postprocessedDocumentSha256"], str)
-  test.assertRegex(meta["postprocessedDocumentSha256"], r"^[0-9a-f]{64}$", msg="postprocessedDocumentSha256 必须是 64 位 hex")
+  test.assertRegex(_jsonStr(meta, "postprocessedDocumentSha256"), r"^[0-9a-f]{64}$", msg="postprocessedDocumentSha256 必须是 64 位 hex")
 
-  chunks = meta["chunks"]
+  chunks = _jsonList(meta, "chunks")
   test.assertIsInstance(chunks, list, msg="chunks 必须是 list")
   test.assertGreaterEqual(len(chunks), 1, msg="chunks 至少包含 1 项")
 
   postprocessedText = postprocessedPath.read_text(encoding="utf-8")
   postLen = len(postprocessedText)
 
-  for item in chunks:
+  for itemRaw in chunks:
+    item = cast(dict[str, object], itemRaw)
     test.assertIsInstance(item, dict, msg="chunks[] 必须是 object")
     for key in ["fileName", "charStart", "charEnd", "preview"]:
       test.assertIn(key, item, msg=f"chunks[] 必须包含字段：{key}")
-    test.assertIsInstance(item["fileName"], str)
-    test.assertIsInstance(item["charStart"], int)
-    test.assertIsInstance(item["charEnd"], int)
+    fileName = _jsonStr(item, "fileName")
+    charStart = _jsonInt(item, "charStart")
+    charEnd = _jsonInt(item, "charEnd")
     test.assertIsInstance(item["preview"], str)
-    test.assertGreaterEqual(item["charStart"], 0)
-    test.assertGreater(item["charEnd"], item["charStart"], msg="charEnd 必须 > charStart")
-    test.assertLessEqual(item["charEnd"], postLen, msg="charEnd 不得超过 postprocessed 文本长度")
+    test.assertGreaterEqual(charStart, 0)
+    test.assertGreater(charEnd, charStart, msg="charEnd 必须 > charStart")
+    test.assertLessEqual(charEnd, postLen, msg="charEnd 不得超过 postprocessed 文本长度")
 
-    outPath = (booksDir / item["fileName"]).resolve()
+    outPath = (booksDir / fileName).resolve()
     test.assertTrue(outPath.exists(), msg=f"chunks.fileName 指向的输出文件必须存在：{outPath}")
 
 
@@ -217,7 +300,7 @@ class PostprocessValidateContractTests(unittest.TestCase):
 
       data = _assertOneLineJson(self, result.stdout, context="postprocess")
       _assertPostprocessStdoutSchema(self, data, projectRoot=projectRoot)
-      finalStem = data["finalStem"]
+      finalStem = _jsonStr(data, "finalStem")
 
       booksDir = vaultRoot / "raw" / "04-books" / finalStem
       self.assertTrue(
@@ -236,8 +319,10 @@ class PostprocessValidateContractTests(unittest.TestCase):
       _assertRawHasNoBinaries(self, vaultRoot / "raw")
 
       # 书籍 meta.json 的拆分与可追溯字段合同
-      metaPath = Path(data["metaPath"]).resolve()
-      meta = json.loads(metaPath.read_text(encoding="utf-8"))
+      metaPath = Path(_jsonStr(data, "metaPath")).resolve()
+      metaRaw = json.loads(metaPath.read_text(encoding="utf-8"))
+      self.assertIsInstance(metaRaw, dict)
+      meta = cast(dict[str, object], metaRaw)
       _assertBookMetaTraceability(self, meta=meta, booksDir=booksDir, stagingDocRoot=stagingDocRoot)
 
   def test_postprocess_chunk_mode_when_candidate_headings_over_300(self):
@@ -271,14 +356,16 @@ class PostprocessValidateContractTests(unittest.TestCase):
 
       _assertPostprocessStdoutSchema(self, data, projectRoot=projectRoot)
 
-      finalStem = data["finalStem"]
-      metaFile = Path(data["metaPath"])
+      finalStem = _jsonStr(data, "finalStem")
+      metaFile = Path(_jsonStr(data, "metaPath"))
       self.assertTrue(metaFile.exists(), msg="postprocess 必须落盘 meta.json（metaPath 指向的文件必须存在）")
 
       try:
-        meta = json.loads(metaFile.read_text(encoding="utf-8"))
+        metaRaw = json.loads(metaFile.read_text(encoding="utf-8"))
       except Exception as e:
         self.fail(f"meta.json 必须是合法 JSON：{e}\nmetaPath={metaFile}")
+      self.assertIsInstance(metaRaw, dict)
+      meta = cast(dict[str, object], metaRaw)
 
       self.assertEqual(
         meta.get("splitMode"),
@@ -363,9 +450,9 @@ class PostprocessValidateContractTests(unittest.TestCase):
       _assertPostprocessStdoutSchema(self, data, projectRoot=projectRoot)
       self.assertEqual(data["sourceKind"], "article")
 
-      finalStem = data["finalStem"]
-      rawDir = Path(data["rawDir"]).resolve()
-      assetsDir = Path(data["assetsDir"]).resolve()
+      finalStem = _jsonStr(data, "finalStem")
+      rawDir = Path(_jsonStr(data, "rawDir")).resolve()
+      assetsDir = Path(_jsonStr(data, "assetsDir")).resolve()
 
       self.assertEqual(rawDir, (vaultRoot / "raw" / "01-articles" / finalStem).resolve())
       self.assertEqual(assetsDir, (vaultRoot / "assets" / "raw" / "articles" / finalStem).resolve())
@@ -413,6 +500,138 @@ class PostprocessValidateContractTests(unittest.TestCase):
       )
       self.assertEqual(result.stdout, "", msg="冲突失败时 stdout 必须为空")
       self.assertTrue(result.stderr.startswith("ERROR:"), msg="冲突失败时 stderr 必须以 ERROR: 开头")
+
+  def test_postprocess_evidence_local_writes_only_normalized_outputs(self):
+    stagingDocRoot = _FIXTURES_ROOT / "book-demo"
+
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = _makeTmpProject(tmp)
+      outputRoot = projectRoot / ".omo" / "evidence" / "document-parser-test"
+
+      result = _runCli(
+        "postprocess",
+        "--project-root",
+        str(projectRoot),
+        "--source-kind",
+        "book",
+        "--staging-doc-root",
+        str(stagingDocRoot),
+        "--output-profile",
+        "evidence-local",
+        "--output-root",
+        ".omo/evidence/document-parser-test",
+      )
+
+      self.assertEqual(result.returncode, 0, msg=f"stdout=\n{result.stdout}\nstderr=\n{result.stderr}\n")
+      data = _assertOneLineJson(self, result.stdout, context="postprocess evidence-local")
+      _assertEvidenceLocalStdoutSchema(self, data, projectRoot=projectRoot, outputRoot=outputRoot)
+
+      expectedFiles = [
+        outputRoot / "normalized" / "document.md",
+        outputRoot / "normalized" / "document.json",
+        outputRoot / "normalized" / "images.manifest.json",
+      ]
+      for path in expectedFiles:
+        self.assertTrue(path.exists(), msg=f"evidence-local 必须写入 {path}")
+
+      actualFiles = sorted(path.relative_to(outputRoot).as_posix() for path in outputRoot.rglob("*") if path.is_file())
+      self.assertEqual(
+        actualFiles,
+        [
+          "normalized/document.json",
+          "normalized/document.md",
+          "normalized/images.manifest.json",
+        ],
+        msg="evidence-local 只能写 deterministic text/json/manifest 输出",
+      )
+
+      forbiddenSuffixes = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".pdf"}
+      for path in outputRoot.rglob("*"):
+        self.assertFalse(
+          path.is_file() and path.suffix.lower() in forbiddenSuffixes,
+          msg=f"evidence-local 不得复制图片/PDF 二进制：{path}",
+        )
+
+      manifestRaw = json.loads((outputRoot / "normalized" / "images.manifest.json").read_text(encoding="utf-8"))
+      self.assertIsInstance(manifestRaw, dict)
+      manifest = cast(dict[str, object], manifestRaw)
+      self.assertEqual(manifest["sourceKind"], "book")
+      self.assertEqual(manifest["stagingDocRoot"], str(stagingDocRoot.resolve()))
+      images = _jsonList(manifest, "images")
+      self.assertEqual(len(images), 1)
+      imageRaw = images[0]
+      self.assertIsInstance(imageRaw, dict)
+      image = cast(dict[str, object], imageRaw)
+      self.assertEqual(_jsonStr(image, "relativePath"), "normalized/images/xxx.jpg")
+      self.assertRegex(_jsonStr(image, "sha256"), r"^[0-9a-f]{64}$")
+      self.assertEqual(_jsonInt(image, "byteCount"), (stagingDocRoot / "normalized" / "images" / "xxx.jpg").stat().st_size)
+      self.assertEqual(image["sourceKind"], "book")
+
+      self.assertFalse((projectRoot / "memory-source" / "raw" / "04-books").exists())
+      self.assertFalse((projectRoot / "memory-source" / "assets" / "raw" / "books").exists())
+
+  def test_postprocess_evidence_local_rejects_uncontained_output_roots(self):
+    stagingDocRoot = _FIXTURES_ROOT / "book-demo"
+
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = _makeTmpProject(tmp)
+      outsideTarget = Path(tmp) / "outside-target"
+      outsideTarget.mkdir()
+      symlinkRoot = projectRoot / ".omo" / "evidence" / "symlink-out"
+      symlinkRoot.parent.mkdir(parents=True, exist_ok=True)
+      symlinkRoot.symlink_to(outsideTarget, target_is_directory=True)
+
+      rejectedRoots = [
+        str(Path(tmp) / "absolute-output"),
+        "../outside",
+        "outputs/document-parser-test",
+        ".omo/evidence/symlink-out/nested",
+      ]
+
+      for outputRoot in rejectedRoots:
+        with self.subTest(outputRoot=outputRoot):
+          result = _runCli(
+            "postprocess",
+            "--project-root",
+            str(projectRoot),
+            "--source-kind",
+            "book",
+            "--staging-doc-root",
+            str(stagingDocRoot),
+            "--output-profile",
+            "evidence-local",
+            "--output-root",
+            outputRoot,
+          )
+
+          self.assertNotEqual(result.returncode, 0, msg=f"outputRoot 应 fail closed: {outputRoot}")
+          self.assertEqual(result.stdout, "", msg="containment 失败时 stdout 必须为空")
+          self.assertIn("ERROR:", result.stderr)
+
+      self.assertFalse((projectRoot / "outputs").exists(), msg="非 evidence project-local root 不应被创建")
+      self.assertEqual(list(outsideTarget.iterdir()), [], msg="symlink escape 目标不应被写入")
+
+  def test_postprocess_evidence_local_requires_output_root(self):
+    stagingDocRoot = _FIXTURES_ROOT / "book-demo"
+
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = _makeTmpProject(tmp)
+
+      result = _runCli(
+        "postprocess",
+        "--project-root",
+        str(projectRoot),
+        "--source-kind",
+        "book",
+        "--staging-doc-root",
+        str(stagingDocRoot),
+        "--output-profile",
+        "evidence-local",
+      )
+
+      self.assertNotEqual(result.returncode, 0)
+      self.assertEqual(result.stdout, "")
+      self.assertIn("ERROR:", result.stderr)
 
 
 if __name__ == "__main__":

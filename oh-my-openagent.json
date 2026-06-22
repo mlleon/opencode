@@ -2,16 +2,11 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "vsllm-claude/claude-opus-4-6-antigravity",
+      "model": "litellm-claude/claude-opus-4-8",
       "variant": "max",
       "fallback_models": [
         {
           "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        "vsllm-claude/kimi-k2.7-code",
-        {
-          "model": "pqapi/gpt-5.5",
           "variant": "xhigh"
         }
       ]
@@ -21,15 +16,7 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
@@ -39,23 +26,19 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
+          "model": "vsllm-claude/claude-opus-4-8",
+          "variant": "max"
         }
       ]
     },
     "librarian": {
       "model": "nvidia/minimaxai/minimax-m2.7",
       "fallback_models": [
-        "litellm-compate/minimax-m3",
+        "litellm-compate/glm-4.7",
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
           "variant": "high"
@@ -77,51 +60,39 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
+          "model": "vsllm-claude/claude-opus-4-8",
+          "variant": "max"
         }
       ]
     },
     "prometheus": {
-      "model": "vsllm-openai/gpt-5.5",
-      "variant": "xhigh",
+      "model": "vsllm-claude/claude-opus-4-8",
+      "variant": "max",
       "fallback_models": [
         {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
-          "variant": "max"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "metis": {
-      "model": "vsllm-openai/gpt-5.4",
-      "variant": "xhigh",
+      "model": "vsllm-claude/claude-opus-4-8",
+      "variant": "max",
       "fallback_models": [
-        {
-          "model": "vsllm-claude/claude-sonnet-4-6",
-          "variant": "max"
+         {
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
-          "variant": "max"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
@@ -131,16 +102,12 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
+          "model": "vsllm-claude/claude-opus-4-8",
+          "variant": "max"
         }
       ]
     },
@@ -149,16 +116,16 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
-        {
           "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         },
         {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-claude/claude-opus-4-8",
+          "variant": "max"
         }
       ]
     },
@@ -169,7 +136,7 @@
   },
   "categories": {
     "visual-engineering": {
-      "model": "vsllm-claude/claude-opus-4-6-antigravity",
+      "model": "vsllm-claude/claude-opus-4-8",
       "variant": "max",
       "fallback_models": [
         "vsllm-claude/glm-5.2",
@@ -181,15 +148,11 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
+          "model": "vsllm-claude/claude-opus-4-8",
           "variant": "max"
         }
       ]
@@ -199,42 +162,35 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
+          "model": "vsllm-claude/claude-opus-4-8",
           "variant": "max"
         }
       ]
     },
     "artistry": {
-      "model": "vsllm-claude/claude-opus-4-6-antigravity",
+      "model": "vsllm-claude/claude-opus-4-8",
       "variant": "max",
       "fallback_models": [
         {
+          "model": "vsllm-openai/gpt-5.5-pro20x",
+          "variant": "xhigh"
+        },
+        {
           "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4",
           "variant": "xhigh"
         }
       ]
     },
     "quick": {
-      "model": "vsllm-openai/gpt-5.4-mini",
+      "model": "vsllm-openai/gpt-5.4",
+      "variant": "xhigh",
       "fallback_models": [
-        "vsllm-claude/claude-haiku-4-5-20251001",
-        "litellm-compate/mimo-v2.5-pro",
+        "vsllm-openai/gpt-5.4-mini",
+        "vsllm-gemini/gemini-3.5-flash-antigravity",
         {
           "model": "vsllm-claude/claude-sonnet-4-6",
           "variant": "max"
@@ -243,53 +199,37 @@
     },
     "unspecified-low": {
       "model": "vsllm-openai/gpt-5.4",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
+        }
+      ]
+    },
+    "unspecified-high": {
+      "model": "vsllm-claude/claude-opus-4-8",
+      "variant": "max",
+      "fallback_models": [
         {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
           "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
-      ],
-      "variant": "xhigh"
-    },
-    "unspecified-high": {
-      "model": "vsllm-openai/gpt-5.5",
-      "fallback_models": [
-        {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
-          "variant": "max"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        }
-      ],
-      "variant": "xhigh"
+      ]
     },
     "writing": {
       "model": "vsllm-openai/gpt-5.4",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
-      ],
-      "variant": "xhigh"
+      ]
     },
     "git": {
       "model": "nvidia/stepfun-ai/step-3.5-flash",

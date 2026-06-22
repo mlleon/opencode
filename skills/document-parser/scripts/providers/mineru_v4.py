@@ -7,13 +7,13 @@ import time
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Protocol, cast
 from urllib.parse import urlparse
 
 import requests
 
-from scripts import errors
-from scripts import output_contract
+from .. import errors
+from .. import output_contract
 
 
 _DEFAULT_BASE_URL = "https://mineru.net/api/v4"
@@ -37,6 +37,27 @@ class MinerUV4PollTimeoutError(MinerUV4AdapterError):
 
 class MinerUV4BatchLimitError(MinerUV4AdapterError):
   pass
+
+
+class MinerUV4ParseOptions(Protocol):
+  @property
+  def pageRange(self) -> Optional[str]: ...
+  @property
+  def modelVersion(self) -> Optional[str]: ...
+  @property
+  def language(self) -> Optional[str]: ...
+  @property
+  def isOcr(self) -> Optional[bool]: ...
+  @property
+  def enableTable(self) -> Optional[bool]: ...
+  @property
+  def enableFormula(self) -> Optional[bool]: ...
+  @property
+  def pdfPageCount(self) -> Optional[int]: ...
+  @property
+  def rangeSource(self) -> Optional[str]: ...
+  @property
+  def disableFallback(self) -> bool: ...
 
 
 class MinerUV4ApiError(MinerUV4AdapterError):
@@ -77,14 +98,20 @@ class MinerUV4Adapter:
       }
     )
 
-  def extractFromUrl(self, *, url: str, outputDir: Path) -> output_contract.OutputPaths:
+  def extractFromUrl(
+    self,
+    *,
+    url: str,
+    outputDir: Path,
+    options: Optional[MinerUV4ParseOptions] = None,
+  ) -> output_contract.OutputPaths:
     stem = _getSourceStem(url)
     paths = output_contract.get_output_paths(output_dir=outputDir, stem=stem)
     paths.rawMineruDir.mkdir(parents=True, exist_ok=True)
     paths.normalizedDir.mkdir(parents=True, exist_ok=True)
     paths.normalizedImagesDir.mkdir(parents=True, exist_ok=True)
 
-    taskId = self._submitUrlTask(url=url)
+    taskId = self._submitUrlTask(url=url, options=options)
     taskData = self._pollTask(taskId=taskId)
     zipUrl = _extractStr(taskData, "full_zip_url")
     if not zipUrl:
@@ -107,6 +134,8 @@ class MinerUV4Adapter:
       normalizedImagesDir=paths.normalizedImagesDir,
       normalizedMarkdownPath=paths.normalizedMarkdownPath,
       normalizedJsonPath=paths.normalizedJsonPath,
+      parseRequest=_buildParseRequestMetadata(options=options),
+      parseResult=_buildParseResultMetadata(options=options, taskId=taskId),
     )
     return paths
 
@@ -115,11 +144,12 @@ class MinerUV4Adapter:
     *,
     filePaths: List[Path],
     outputDir: Path,
+    options: Optional[MinerUV4ParseOptions] = None,
   ) -> List[output_contract.OutputPaths]:
     if len(filePaths) > 50:
       raise MinerUV4BatchLimitError("/file-urls/batch 单次最多 50 个文件")
 
-    batchId, uploadUrls = self._requestBatchUploadUrls(filePaths=filePaths)
+    batchId, uploadUrls = self._requestBatchUploadUrls(filePaths=filePaths, options=options)
     self._uploadFiles(filePaths=filePaths, uploadUrls=uploadUrls)
 
     extractResults = self._pollBatchResults(batchId=batchId)
@@ -155,6 +185,8 @@ class MinerUV4Adapter:
           normalizedImagesDir=paths.normalizedImagesDir,
           normalizedMarkdownPath=paths.normalizedMarkdownPath,
           normalizedJsonPath=paths.normalizedJsonPath,
+          parseRequest=_buildParseRequestMetadata(options=options),
+          parseResult=_buildParseResultMetadata(options=options, batchId=batchId),
         )
       elif state == "failed":
         errMsg = _extractStr(item, "err_msg") or "解析失败"
@@ -178,11 +210,14 @@ class MinerUV4Adapter:
 
     return outputPathsList
 
-  def _submitUrlTask(self, *, url: str) -> str:
+  def _submitUrlTask(self, *, url: str, options: Optional[MinerUV4ParseOptions]) -> str:
+    jsonBody: Dict[str, object] = {"url": url}
+    jsonBody.update(_buildMineruRequestFields(options=options))
+
     resp = self._requestJson(
       method="POST",
       endpoint="/extract/task",
-      jsonBody={"url": url},
+      jsonBody=jsonBody,
       stage="mineru_v4",
     )
     data = _extractDict(resp, "data")
@@ -226,10 +261,17 @@ class MinerUV4Adapter:
 
       time.sleep(self._config.pollIntervalSeconds)
 
-  def _requestBatchUploadUrls(self, *, filePaths: List[Path]) -> tuple[str, List[str]]:
-    files: List[Dict[str, str]] = []
+  def _requestBatchUploadUrls(
+    self,
+    *,
+    filePaths: List[Path],
+    options: Optional[MinerUV4ParseOptions],
+  ) -> tuple[str, List[str]]:
+    files: List[Dict[str, object]] = []
     for filePath in filePaths:
-      files.append({"name": filePath.name})
+      filePayload: Dict[str, object] = {"name": filePath.name}
+      filePayload.update(_buildMineruRequestFields(options=options))
+      files.append(filePayload)
 
     resp = self._requestJson(
       method="POST",
@@ -333,7 +375,7 @@ class MinerUV4Adapter:
     resp = self._session.request(
       method,
       url,
-      json=jsonBody,
+      json=cast(Any, jsonBody),
       timeout=self._config.timeoutSeconds,
     )
 
@@ -395,6 +437,8 @@ class MinerUV4Adapter:
     normalizedImagesDir: Path,
     normalizedMarkdownPath: Path,
     normalizedJsonPath: Path,
+    parseRequest: Optional[Dict[str, output_contract.JsonValue]] = None,
+    parseResult: Optional[Dict[str, output_contract.JsonValue]] = None,
   ) -> None:
     rawMarkdownPath = rawMineruDir / "full.md"
     rawJsonPath = rawMineruDir / "content_list_v2.json"
@@ -425,6 +469,8 @@ class MinerUV4Adapter:
       warnings=[],
       pages=None,
       extras={"raw": rawJson},
+      parseRequest=parseRequest,
+      parseResult=parseResult,
     )
     normalizedJsonPath.write_text(
       json.dumps(envelope, ensure_ascii=False, indent=2) + "\n",
@@ -451,6 +497,104 @@ def _rewriteMarkdownImageLinks(markdown: str) -> str:
     return match.group(0)
 
   return _MARKDOWN_IMAGE_RE.sub(repl, markdown)
+
+
+def _buildMineruRequestFields(*, options: Optional[MinerUV4ParseOptions]) -> Dict[str, object]:
+  if options is None:
+    return {}
+
+  fields: Dict[str, object] = {}
+  pageRange = _cleanOptionalString(options.pageRange)
+  if pageRange is not None:
+    fields["page_ranges"] = pageRange
+
+  modelVersion = _cleanOptionalString(options.modelVersion)
+  if modelVersion is not None:
+    fields["model_version"] = modelVersion
+
+  language = _cleanOptionalString(options.language)
+  if language is not None:
+    fields["language"] = language
+
+  if options.isOcr is not None:
+    fields["is_ocr"] = options.isOcr
+  if options.enableTable is not None:
+    fields["enable_table"] = options.enableTable
+  if options.enableFormula is not None:
+    fields["enable_formula"] = options.enableFormula
+
+  return fields
+
+
+def _buildParseRequestMetadata(
+  *,
+  options: Optional[MinerUV4ParseOptions],
+) -> Dict[str, output_contract.JsonValue]:
+  if options is None:
+    return {}
+
+  metadata: Dict[str, output_contract.JsonValue] = {}
+  pageRange = _cleanOptionalString(options.pageRange)
+  if pageRange is not None:
+    metadata["requestedPageRange"] = pageRange
+    metadata["providerPageRange"] = pageRange
+
+  rangeSource = _cleanOptionalString(options.rangeSource)
+  if rangeSource is not None:
+    metadata["rangeSource"] = rangeSource
+
+  metadata["disableFallback"] = options.disableFallback
+
+  if options.pdfPageCount is not None:
+    metadata["pdfPageCount"] = options.pdfPageCount
+
+  modelVersion = _cleanOptionalString(options.modelVersion)
+  if modelVersion is not None:
+    metadata["modelVersion"] = modelVersion
+
+  language = _cleanOptionalString(options.language)
+  if language is not None:
+    metadata["language"] = language
+
+  if options.isOcr is not None:
+    metadata["isOcr"] = options.isOcr
+  if options.enableTable is not None:
+    metadata["enableTable"] = options.enableTable
+  if options.enableFormula is not None:
+    metadata["enableFormula"] = options.enableFormula
+
+  return metadata
+
+
+def _buildParseResultMetadata(
+  *,
+  options: Optional[MinerUV4ParseOptions],
+  taskId: Optional[str] = None,
+  batchId: Optional[str] = None,
+  errorCode: Optional[int] = None,
+  errorMessage: Optional[str] = None,
+) -> Dict[str, output_contract.JsonValue]:
+  metadata: Dict[str, output_contract.JsonValue] = {}
+  if options is not None:
+    pageRange = _cleanOptionalString(options.pageRange)
+    if pageRange is not None:
+      metadata["providerPageRange"] = pageRange
+  if taskId is not None:
+    metadata["taskId"] = taskId
+  if batchId is not None:
+    metadata["batchId"] = batchId
+  if errorCode is not None:
+    metadata["errorCode"] = errorCode
+  if errorMessage is not None:
+    metadata["errorMessage"] = errorMessage
+  return metadata
+
+
+def _cleanOptionalString(value: Optional[str]) -> Optional[str]:
+  if value is None:
+    return None
+  stripped = value.strip()
+  return stripped or None
 
 
 def _getSourceStem(source: str) -> str:
