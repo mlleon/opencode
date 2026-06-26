@@ -441,23 +441,44 @@ class MinerUV4Adapter:
     parseResult: Optional[Dict[str, output_contract.JsonValue]] = None,
   ) -> None:
     rawMarkdownPath = rawMineruDir / "full.md"
-    rawJsonPath = rawMineruDir / "content_list_v2.json"
+    rawJsonV2Path = rawMineruDir / "content_list_v2.json"
+    rawJsonFallbackPath = rawMineruDir / "content_list.json"
     rawImagesDir = rawMineruDir / "images"
 
     if rawImagesDir.exists() and rawImagesDir.is_dir():
       _copyTree(srcDir=rawImagesDir, destDir=normalizedImagesDir)
 
-    if not rawMarkdownPath.exists() or not rawJsonPath.exists():
-      return
+    if not rawMarkdownPath.is_file():
+      raise MinerUV4AdapterError("MinerU normalized output missing full.md")
 
     markdown = rawMarkdownPath.read_text(encoding="utf-8")
+    if not markdown.strip():
+      raise MinerUV4AdapterError("MinerU normalized output full.md is empty")
+
+    rawJsonPath: Optional[Path] = None
+    rawJsonFile: Optional[str] = None
+    if rawJsonV2Path.exists():
+      rawJsonPath = rawJsonV2Path
+      rawJsonFile = "content_list_v2.json"
+    elif rawJsonFallbackPath.exists():
+      rawJsonPath = rawJsonFallbackPath
+      rawJsonFile = "content_list.json"
+
+    warnings: List[str] = []
+    if rawJsonPath is None:
+      warnings.append("MINERU_CONTENT_LIST_MISSING")
+      rawJson: output_contract.JsonValue = []
+    else:
+      try:
+        with open(rawJsonPath, encoding="utf-8") as f:
+          rawJson = cast(output_contract.JsonValue, json.load(f))
+      except json.JSONDecodeError as e:
+        raise MinerUV4AdapterError(f"MinerU normalized output invalid JSON in {rawJsonFile}: {e}") from e
+
     markdown = _rewriteMarkdownImageLinks(markdown)
     output_contract.validate_offline_reproducible(markdown)
 
     normalizedMarkdownPath.write_text(markdown, encoding="utf-8")
-
-    with open(rawJsonPath, encoding="utf-8") as f:
-      rawJson = json.load(f)
 
     envelope = output_contract.build_normalized_envelope(
       output_dir=outputDir,
@@ -466,9 +487,16 @@ class MinerUV4Adapter:
       backend="mineru_v4",
       markdown=markdown,
       fallback=False,
-      warnings=[],
+      warnings=warnings,
       pages=None,
-      extras={"raw": rawJson},
+      extras={
+        "raw": rawJson,
+        "rawArtifacts": {
+          "fullMarkdownPresent": True,
+          "contentListPresent": rawJsonPath is not None,
+          "contentListFile": rawJsonFile,
+        },
+      },
       parseRequest=parseRequest,
       parseResult=parseResult,
     )

@@ -67,6 +67,14 @@ def _buildZipBytes(*, markdown: str, jsonObj: object, imageName: str = "a.png") 
   return buf.getvalue()
 
 
+def _buildZipBytesWithTextFiles(entries: Dict[str, str]) -> bytes:
+  buf = io.BytesIO()
+  with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+    for name, content in entries.items():
+      zf.writestr(name, content)
+  return buf.getvalue()
+
+
 class MinerUV4AdapterTests(unittest.TestCase):
   def test_url_submit_running_done(self):
     zipBytes = _buildZipBytes(
@@ -256,7 +264,7 @@ class MinerUV4AdapterTests(unittest.TestCase):
     with tempfile.TemporaryDirectory() as tmp:
       outputDir = Path(tmp)
       filePath = outputDir / "a.pdf"
-      filePath.write_bytes(b"pdf")
+      _ = filePath.write_bytes(b"pdf")
       with (
         patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
         patch("scripts.providers.mineru_v4.requests.put", return_value=_FakeResponse(statusCode=200)),
@@ -311,6 +319,287 @@ class MinerUV4AdapterTests(unittest.TestCase):
       )
       self.assertEqual(normalized["extras"]["parseResult"]["batchId"], "b1")
       self.assertEqual(normalized["extras"]["parseResult"]["providerPageRange"], "3")
+
+  def test_local_batch_full_md_without_content_list_writes_minimal_normalized_outputs(self):
+    zipBytes = _buildZipBytesWithTextFiles({"full.md": "# only markdown\n"})
+
+    batchResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"batch_id": "b1", "file_urls": ["https://upload"]}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {
+          "extract_result": [
+            {
+              "state": "done",
+              "file_name": "a.pdf",
+              "full_zip_url": "https://zip",
+            }
+          ]
+        },
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[batchResp, pollDone])
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      filePath = outputDir / "a.pdf"
+      _ = filePath.write_bytes(b"pdf")
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch("scripts.providers.mineru_v4.requests.put", return_value=_FakeResponse(statusCode=200)),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        paths = adapter.extractFromLocalFiles(filePaths=[filePath], outputDir=outputDir)[0]
+
+      self.assertTrue(
+        paths.normalizedMarkdownPath.exists(),
+        msg=(
+          "expected full.md-only output to write normalized/document.md; "
+          f"observed full.md exists={(paths.rawMineruDir / 'full.md').exists()} "
+          f"content_list_v2.json exists={(paths.rawMineruDir / 'content_list_v2.json').exists()} "
+          f"normalized/document.md exists={paths.normalizedMarkdownPath.exists()}"
+        ),
+      )
+      self.assertTrue(paths.normalizedJsonPath.exists())
+      normalized = json.loads(paths.normalizedJsonPath.read_text(encoding="utf-8"))
+      self.assertEqual(normalized["meta"]["backend"], "mineru_v4")
+      self.assertEqual(normalized["meta"]["fallback"], False)
+      self.assertIn("MINERU_CONTENT_LIST_MISSING", normalized["meta"]["warnings"])
+      self.assertEqual(normalized["extras"]["raw"], [])
+      self.assertEqual(
+        normalized["extras"]["rawArtifacts"],
+        {
+          "fullMarkdownPresent": True,
+          "contentListPresent": False,
+          "contentListFile": None,
+        },
+      )
+
+  def test_url_submit_content_list_json_fallback_writes_raw_extras(self):
+    rawEntries = [{"type": "p", "text": "fallback"}]
+    zipBytes = _buildZipBytesWithTextFiles(
+      {
+        "full.md": "# fallback\n",
+        "content_list.json": json.dumps(rawEntries, ensure_ascii=False),
+      }
+    )
+
+    postResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"task_id": "t1"}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {"state": "done", "full_zip_url": "https://zip"},
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[postResp, pollDone])
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        paths = adapter.extractFromUrl(url="https://example.com/a.pdf", outputDir=outputDir)
+
+      self.assertTrue(
+        paths.normalizedJsonPath.exists(),
+        msg=(
+          "expected content_list.json fallback to write normalized/document.json; "
+          f"observed full.md exists={(paths.rawMineruDir / 'full.md').exists()} "
+          f"content_list.json exists={(paths.rawMineruDir / 'content_list.json').exists()} "
+          f"content_list_v2.json exists={(paths.rawMineruDir / 'content_list_v2.json').exists()} "
+          f"normalized/document.json exists={paths.normalizedJsonPath.exists()}"
+        ),
+      )
+      normalized = json.loads(paths.normalizedJsonPath.read_text(encoding="utf-8"))
+      self.assertEqual(normalized["extras"]["raw"], rawEntries)
+      self.assertEqual(normalized["extras"]["rawArtifacts"]["fullMarkdownPresent"], True)
+      self.assertEqual(normalized["extras"]["rawArtifacts"]["contentListPresent"], True)
+      self.assertEqual(normalized["extras"]["rawArtifacts"]["contentListFile"], "content_list.json")
+
+  def test_url_submit_invalid_selected_content_list_json_fails_closed(self):
+    zipBytes = _buildZipBytesWithTextFiles(
+      {
+        "full.md": "# invalid json\n",
+        "content_list_v2.json": "{not-json",
+        "content_list.json": json.dumps([{"type": "p", "text": "fallback"}], ensure_ascii=False),
+      }
+    )
+
+    postResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"task_id": "t1"}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {"state": "done", "full_zip_url": "https://zip"},
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[postResp, pollDone])
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        with self.assertRaisesRegex(Exception, r"content_list_v2\.json|JSON|normaliz"):
+          _ = adapter.extractFromUrl(url="https://example.com/a.pdf", outputDir=outputDir)
+
+      paths = outputDir / "document_parser_output" / "a" / "normalized"
+      self.assertFalse((paths / "document.md").exists())
+      self.assertFalse((paths / "document.json").exists())
+
+  def test_local_batch_missing_full_md_fails_closed(self):
+    zipBytes = _buildZipBytesWithTextFiles(
+      {"content_list_v2.json": json.dumps([{"type": "p", "text": "orphan"}], ensure_ascii=False)}
+    )
+
+    batchResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"batch_id": "b1", "file_urls": ["https://upload"]}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {
+          "extract_result": [
+            {
+              "state": "done",
+              "file_name": "a.pdf",
+              "full_zip_url": "https://zip",
+            }
+          ]
+        },
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[batchResp, pollDone])
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      filePath = outputDir / "a.pdf"
+      _ = filePath.write_bytes(b"pdf")
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch("scripts.providers.mineru_v4.requests.put", return_value=_FakeResponse(statusCode=200)),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        try:
+          paths = adapter.extractFromLocalFiles(filePaths=[filePath], outputDir=outputDir)[0]
+        except Exception as e:
+          self.assertRegex(str(e), r"full\.md|normaliz")
+          return
+
+      self.assertFalse(paths.normalizedMarkdownPath.exists())
+      self.fail(
+        "expected missing full.md to raise an explicit normalization error; "
+        + f"observed full.md exists={(paths.rawMineruDir / 'full.md').exists()} "
+        + f"content_list_v2.json exists={(paths.rawMineruDir / 'content_list_v2.json').exists()} "
+        + f"normalized/document.md exists={paths.normalizedMarkdownPath.exists()}"
+      )
+
+  def test_local_batch_empty_full_md_fails_closed(self):
+    zipBytes = _buildZipBytesWithTextFiles(
+      {
+        "full.md": "  \n\t\n",
+        "content_list_v2.json": json.dumps([{"type": "p", "text": "empty"}], ensure_ascii=False),
+      }
+    )
+
+    batchResp = _FakeResponse(
+      statusCode=200,
+      jsonBody={"code": 0, "data": {"batch_id": "b1", "file_urls": ["https://upload"]}},
+    )
+    pollDone = _FakeResponse(
+      statusCode=200,
+      jsonBody={
+        "code": 0,
+        "data": {
+          "extract_result": [
+            {
+              "state": "done",
+              "file_name": "a.pdf",
+              "full_zip_url": "https://zip",
+            }
+          ]
+        },
+      },
+    )
+
+    session = Mock()
+    session.headers = {}
+    session.request = Mock(side_effect=[batchResp, pollDone])
+
+    with tempfile.TemporaryDirectory() as tmp:
+      outputDir = Path(tmp)
+      filePath = outputDir / "a.pdf"
+      _ = filePath.write_bytes(b"pdf")
+      with (
+        patch("scripts.providers.mineru_v4.requests.Session", return_value=session),
+        patch("scripts.providers.mineru_v4.requests.put", return_value=_FakeResponse(statusCode=200)),
+        patch(
+          "scripts.providers.mineru_v4.requests.get",
+          return_value=_FakeResponse(statusCode=200, content=zipBytes),
+        ),
+        patch("scripts.providers.mineru_v4.time.sleep", return_value=None),
+      ):
+        adapter = MinerUV4Adapter(config=MinerUV4Config(token="t", timeoutSeconds=5, pollIntervalSeconds=0))
+        try:
+          paths = adapter.extractFromLocalFiles(filePaths=[filePath], outputDir=outputDir)[0]
+        except Exception as e:
+          self.assertRegex(str(e), r"full\.md|empty|normaliz")
+          return
+
+      self.assertFalse(paths.normalizedMarkdownPath.exists())
+      self.fail(
+        "expected whitespace-only full.md to raise an explicit normalization error; "
+        + f"observed full.md stripped_empty={(paths.rawMineruDir / 'full.md').read_text(encoding='utf-8').strip() == ''} "
+        + f"content_list_v2.json exists={(paths.rawMineruDir / 'content_list_v2.json').exists()} "
+        + f"normalized/document.md exists={paths.normalizedMarkdownPath.exists()}"
+      )
 
   def test_no_options_url_payload_preserves_baseline(self):
     """options=None 时 URL submit payload 只包含 url 字段，无额外 parse 参数。"""

@@ -67,37 +67,50 @@ PaddleOCR 回退结果会在 JSON 中记录 `DEGRADED_OCR_FALLBACK` warning。
 
 ## 3. 凭据配置
 
-### 3.1 环境变量
+### 3.1 MinerU 本地 key 文件
 
-可以通过环境变量提供 token：
-
-```bash
-export MINERU_TOKEN="你的 MinerU token"
-export PADDLEOCR_TOKEN="你的 PaddleOCR token"
-```
-
-### 3.2 本地 key 文件
-
-也可以写入本地 key 文件：
+MinerU token 只从本地 key 文件读取：
 
 ```text
 ~/.config/opencode/keys/mineru.key
+```
+
+`MINERU_TOKEN` 环境变量不会被 document-parser 用作 MinerU 凭据来源。
+
+### 3.2 PaddleOCR 环境变量
+
+PaddleOCR token 可以通过环境变量提供：
+
+```bash
+export PADDLEOCR_TOKEN="你的 PaddleOCR token"
+```
+
+### 3.3 本地 key 文件
+
+PaddleOCR 也可以写入本地 key 文件：
+
+```text
 ~/.config/opencode/keys/paddleocr.key
 ```
 
-### 3.3 读取优先级
+### 3.4 读取优先级
 
-读取顺序为：
+MinerU 读取规则：
 
-1. 环境变量
-2. 本地 key 文件
+1. `~/.config/opencode/keys/mineru.key`
+2. 文件不存在或为空时报错
+
+PaddleOCR 读取顺序为：
+
+1. `PADDLEOCR_TOKEN` 环境变量
+2. `~/.config/opencode/keys/paddleocr.key`
 3. 都不存在时报错
 
-### 3.4 凭据脱敏规则
+### 3.5 凭据脱敏规则
 
 - 可以记录“凭据已配置”这一事实
 - 不要在 stdout、stderr、evidence、截图或提交内容里回显真实 token
-- 如果需要排查环境，只记录来源，例如“来自环境变量”或“来自本地 key 文件”，不要记录值
+- 如果需要排查环境，只记录来源，例如“MinerU 来自本地 key 文件”或“PaddleOCR 来自环境变量”，不要记录值
 
 ## 4. 输出结构
 

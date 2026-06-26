@@ -1832,6 +1832,12 @@ def _runParse(argv: List[str]) -> int:
     return 1
 
   for result in results:
+    normalizedMarkdownPath = result.paths.normalizedMarkdownPath
+    if not normalizedMarkdownPath.is_file():
+      print(f"ERROR: normalized markdown missing: {normalizedMarkdownPath}", file=sys.stderr)
+      return 7
+
+  for result in results:
     print(result.paths.normalizedMarkdownPath)
   return 0
 

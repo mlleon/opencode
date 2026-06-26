@@ -274,6 +274,7 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 - 只有在执行 `legacy-memory` 终态路线时，`validate` 才是最终交付前的必经步骤
 - 在 culture-system 或其他受限项目里，若规则禁止 raw/assets/wiki 写入，默认使用 `--parse-only` 或 `--no-postprocess`，只在需要证据落地时额外使用 `evidence-local`
 - 如果任务像 R021 一样需要 source-sensitive OCR 证据，必须显式 opt-in `--no-fallback`；不要把 `--parse-only` 误当成禁用回退 provider 的开关
+- MinerU token 只从 `~/.config/opencode/keys/mineru.key` 读取；`MINERU_TOKEN` 环境变量不是 MinerU 凭据来源
 - 记录执行证据时只能保留 token 存在性或已脱敏状态，不能回显或落盘真实凭据值
 - 当前 PaddleOCR 边界仍然只是 Jobs API 回退，`/ocr` service adapter 属于 future boundary，不要把它写成当前可用流程
 - 发现路径不明确时，先推断再验证，只有必要时才问用户
@@ -287,7 +288,7 @@ uv run --project "$HOME/.config/opencode/skills" --group document-parser \
 
 ## 9. 常见失败处理
 
-- token 缺失：检查 `MINERU_TOKEN` / `PADDLEOCR_TOKEN` 或 `~/.config/opencode/keys/*.key`
+- token 缺失：MinerU 检查 `~/.config/opencode/keys/mineru.key`；PaddleOCR 检查 `PADDLEOCR_TOKEN` 或 `~/.config/opencode/keys/paddleocr.key`
 - `projectRoot` 不存在：重新确认项目路径
 - `memory-source/` 不完整：先补齐项目结构
 - `stagingDocRoot` 不存在：先确认 `parse` 是否成功执行

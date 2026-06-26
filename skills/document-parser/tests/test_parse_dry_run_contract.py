@@ -1,3 +1,5 @@
+import contextlib
+import io
 import json
 import os
 import subprocess
@@ -101,6 +103,13 @@ class _FakePaths:
 class _FakeResult:
   def __init__(self, *, normalizedMarkdownPath: Path):
     self.paths = _FakePaths(normalizedMarkdownPath=normalizedMarkdownPath)
+
+
+def _writeFakeNormalizedMarkdown(outputDir: Path, *, stem: str = "sample") -> Path:
+  path = outputDir / "document_parser_output" / stem / "normalized" / "document.md"
+  path.parent.mkdir(parents=True, exist_ok=True)
+  _ = path.write_text("# normalized\n", encoding="utf-8")
+  return path
 
 
 def _runCli(*args: str) -> subprocess.CompletedProcess[str]:
@@ -300,15 +309,7 @@ class ParseDryRunContractTests(unittest.TestCase):
         options: _ParseOptions | None = None,
       ) -> list[_FakeResult]:
         calls.append({"sources": sources, "outputDir": outputDir, "options": options})
-        return [
-          _FakeResult(
-            normalizedMarkdownPath=outputDir
-            / "document_parser_output"
-            / "sample"
-            / "normalized"
-            / "document.md"
-          )
-        ]
+        return [_FakeResult(normalizedMarkdownPath=_writeFakeNormalizedMarkdown(outputDir))]
 
       originalParseMany = document_parser._orchestrator.parseMany
       setattr(document_parser._orchestrator, "parseMany", fakeParseMany)
@@ -367,15 +368,7 @@ class ParseDryRunContractTests(unittest.TestCase):
         options: _ParseOptions | None = None,
       ) -> list[_FakeResult]:
         calls.append({"sources": sources, "outputDir": outputDir, "options": options})
-        return [
-          _FakeResult(
-            normalizedMarkdownPath=outputDir
-            / "document_parser_output"
-            / "sample"
-            / "normalized"
-            / "document.md"
-          )
-        ]
+        return [_FakeResult(normalizedMarkdownPath=_writeFakeNormalizedMarkdown(outputDir))]
 
       originalParseMany = document_parser._orchestrator.parseMany
       setattr(document_parser._orchestrator, "parseMany", fakeParseMany)
@@ -415,15 +408,7 @@ class ParseDryRunContractTests(unittest.TestCase):
         options: _ParseOptions | None = None,
       ) -> list[_FakeResult]:
         calls.append({"sources": sources, "outputDir": outputDir, "options": options})
-        return [
-          _FakeResult(
-            normalizedMarkdownPath=outputDir
-            / "document_parser_output"
-            / "sample"
-            / "normalized"
-            / "document.md"
-          )
-        ]
+        return [_FakeResult(normalizedMarkdownPath=_writeFakeNormalizedMarkdown(outputDir))]
 
       def failPostprocess(argv: list[str]) -> int:
         self.fail(f"parse-only 不应调用 postprocess：{argv}")
@@ -473,15 +458,7 @@ class ParseDryRunContractTests(unittest.TestCase):
         options: _ParseOptions | None = None,
       ) -> list[_FakeResult]:
         calls.append({"sources": sources, "outputDir": outputDir, "options": options})
-        return [
-          _FakeResult(
-            normalizedMarkdownPath=outputDir
-            / "document_parser_output"
-            / "sample"
-            / "normalized"
-            / "document.md"
-          )
-        ]
+        return [_FakeResult(normalizedMarkdownPath=_writeFakeNormalizedMarkdown(outputDir))]
 
       def failPostprocess(argv: list[str]) -> int:
         self.fail(f"parse 不应调用 postprocess：{argv}")
@@ -513,6 +490,62 @@ class ParseDryRunContractTests(unittest.TestCase):
     if options is None:
       self.fail("--no-postprocess 必须以 parseOnly intent 进入 orchestrator")
     self.assertTrue(options.parseOnly)
+
+  def test_parse_fails_when_orchestrator_returns_missing_stdout_path(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      projectRoot = _makeProjectRoot(tmp)
+      missingPath = (
+        projectRoot
+        / ".cache"
+        / "document-parser"
+        / "document_parser_output"
+        / "sample"
+        / "normalized"
+        / "document.md"
+      )
+
+      def fakeParseMany(
+        *,
+        sources: list[str],
+        outputDir: Path,
+        options: _ParseOptions | None = None,
+      ) -> list[_FakeResult]:
+        self.assertEqual(sources, ["https://example.com/sample.pdf"])
+        self.assertEqual(outputDir, projectRoot / ".cache" / "document-parser")
+        self.assertIsNotNone(options)
+        return [_FakeResult(normalizedMarkdownPath=missingPath)]
+
+      originalParseMany = document_parser._orchestrator.parseMany
+      setattr(document_parser._orchestrator, "parseMany", fakeParseMany)
+      stdout = io.StringIO()
+      stderr = io.StringIO()
+      try:
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+          code = document_parser._runParse(
+            [
+              "--project-root",
+              str(projectRoot),
+              "--input",
+              "https://example.com/sample.pdf",
+              "--parse-only",
+            ]
+          )
+      finally:
+        setattr(document_parser._orchestrator, "parseMany", originalParseMany)
+
+    self.assertEqual(
+      code,
+      7,
+      msg=(
+        "_runParse should return 7 when orchestrator returns a missing normalizedMarkdownPath; "
+        f"observed code={code} stdout={stdout.getvalue()!r} stderr={stderr.getvalue()!r} "
+        f"missingPath.exists={missingPath.exists()}"
+      ),
+    )
+    self.assertEqual(stdout.getvalue(), "")
+    self.assertTrue(stderr.getvalue().startswith("ERROR:"), msg=f"stderr=\n{stderr.getvalue()}\n")
+    self.assertIn("normalized", stderr.getvalue())
+    self.assertIn(str(missingPath), stderr.getvalue())
 
   def test_parse_only_flags_are_mutually_exclusive(self):
     with tempfile.TemporaryDirectory() as tmp:

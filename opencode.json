@@ -8,58 +8,6 @@
     }
   },
   "provider": {
-    "agentrouter-openai": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "AgentRouter-OpenAI",
-      "options": {
-        "baseURL": "https://agentrouter.org/v1",
-        "apiKey": "{file:~/.config/opencode/keys/agentrouter.key}",
-        "enableMeta": true,
-        "setCacheKey": true
-      },
-      "models": {
-        "gpt-5.5": {
-          "name": "gpt-5.5",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "gpt-5.4": {
-          "name": "gpt-5.4",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        }
-      }
-    },
     "vsllm-openai": {
       "npm": "@ai-sdk/openai",
       "name": "VSLLM-OpenAI",
@@ -202,7 +150,9 @@
         "baseURL": "https://vsllm.com/v1",
         "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
         "enableMeta": true,
-        "setCacheKey": true
+        "setCacheKey": true,
+        "timeout": 600000,
+        "chunkTimeout": 300000
       },
       "models": {
         "claude-opus-4-8": {
@@ -265,6 +215,26 @@
             }
           }
         },
+        "claude-opus-4-6-antigravity-ultra": {
+          "name": "claude-opus-4-6-antigravity-ultra",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
         "claude-opus-4-6-antigravity": {
           "name": "claude-opus-4-6-antigravity",
           "variants": {
@@ -308,8 +278,25 @@
         "kimi-k2.7-code": {
           "name": "kimi-k2.7"
         },
-        "glm-5.2": {
-          "name": "glm-5.2"
+        "glm-5.2-anthropic": {
+          "name": "glm-5.2",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
         },
         "claude-haiku-4-5-20251001": {
           "name": "claude-haiku-4-5-20251001"
@@ -323,11 +310,24 @@
         "baseURL": "https://vsllm.com/v1beta",
         "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
         "enableMeta": true,
-        "setCacheKey": true
+        "setCacheKey": true,
+        "timeout": 600000,
+        "chunkTimeout": 300000
       },
       "models": {
-        "gemini-3.5-flash-antigravity": {
-          "name": "gemini-3.5-flash-antigravity",
+        "gemini-3.1-pro-antigravity-ultra": {
+          "name": "gemini-3.1-pro-antigravity-ultra",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            }
+          }
+        },
+        "gemini-3.5-flash-antigravity-ultra": {
+          "name": "gemini-3.5-flash-antigravity-ultra",
           "variants": {
             "medium": {
               "reasoningEffort": "medium"
@@ -349,29 +349,6 @@
         "setCacheKey": true
       },
       "models": {
-        "gpt-5.4-mini": {
-          "name": "gpt-5.4-mini"
-        },
-        "gpt-5.4": {
-          "name": "gpt-5.4",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
         "gpt-5.5": {
           "name": "gpt-5.5",
           "variants": {

@@ -4,7 +4,6 @@ import os
 from pathlib import Path
 
 
-MINERU_TOKEN_ENV = "MINERU_TOKEN"
 PADDLEOCR_TOKEN_ENV = "PADDLEOCR_TOKEN"
 
 MINERU_TOKEN_FILE_NAME = "mineru.key"
@@ -12,9 +11,9 @@ PADDLEOCR_TOKEN_FILE_NAME = "paddleocr.key"
 
 
 def getMinerUToken() -> str:
-  return _getToken(
-    envName=MINERU_TOKEN_ENV,
+  return _getTokenFromKeyFileOnly(
     keyFilePath=_getKeyFilePath(MINERU_TOKEN_FILE_NAME),
+    providerName="MinerU",
   )
 
 
@@ -35,6 +34,14 @@ def _getToken(*, envName: str, keyFilePath: Path) -> str:
     return fileToken
 
   raise ValueError(f"缺失凭据文件: {keyFilePath}，仅支持 env + keys 文件")
+
+
+def _getTokenFromKeyFileOnly(*, keyFilePath: Path, providerName: str) -> str:
+  fileToken = _readTokenFromFile(keyFilePath)
+  if fileToken:
+    return fileToken
+
+  raise ValueError(f"缺失凭据文件: {keyFilePath}，{providerName} 仅支持 keys 文件")
 
 
 def _readTokenFromFile(keyFilePath: Path) -> str | None:
