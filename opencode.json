@@ -275,8 +275,17 @@
             }
           }
         },
+        "claude-haiku-4-5-20251001": {
+          "name": "claude-haiku-4-5-20251001"
+        },
+        "kimi-k2.6": {
+          "name": "kimi-k2.6"
+        },
         "kimi-k2.7-code": {
           "name": "kimi-k2.7"
+        },
+        "qwen3.7-plus": {
+          "name": "qwen3.7-plus"
         },
         "glm-5.2-anthropic": {
           "name": "glm-5.2",
@@ -297,9 +306,6 @@
               "reasoningSummary": "auto"
             }
           }
-        },
-        "claude-haiku-4-5-20251001": {
-          "name": "claude-haiku-4-5-20251001"
         }
       }
     },
