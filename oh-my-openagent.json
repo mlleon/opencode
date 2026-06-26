@@ -2,19 +2,22 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "vsllm-claude/glm-5.2-anthropic",
+      "model": "vsllm-claude/claude-opus-4-6-antigravity",
       "variant": "max",
       "fallback_models": [
-        "vsllm-claude/kimi-k2.7-code",
         {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
+          "model": "vsllm-claude/glm-5.2-anthropic",
           "variant": "max"
         },
         {
           "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-claude/claude-opus-4-6",
+          "variant": "max"
         }
-      ] 
+      ]
     },
     "hephaestus": {
       "model": "vsllm-openai/gpt-5.5-pro20x",
@@ -27,19 +30,19 @@
       ]
     },
     "oracle": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-claude/claude-opus-4-6",
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
+        },
+        {
+          "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
         }
       ]
@@ -65,13 +68,13 @@
       ]
     },
     "multimodal-looker": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
         "vsllm-claude/kimi-k2.7-code",
         {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "xhigh"
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
         },
         {
           "model": "vsllm-openai/gpt-5.5",
@@ -80,72 +83,80 @@
       ]
     },
     "prometheus": {
-      "model": "vsllm-claude/glm-5.2-anthropic",
-      "variant": "max",
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-claude/claude-opus-4-6-antigravity",
+          "variant": "max"
+        },
+        {
+          "model": "vsllm-claude/glm-5.2-anthropic",
+          "variant": "max"
+        },
+        {
+          "model": "vsllm-claude/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "metis": {
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-claude/claude-opus-4-6-antigravity",
+          "variant": "max"
+        },
+        {
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-claude/claude-opus-4-6",
+          "variant": "max"
+        }
+      ]
+    },
+    "momus": {
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
         {
           "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
           "variant": "high"
         },
         {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "xhigh"
-        },
-        "vsllm-claude/kimi-k2.7-code"
-      ]
-    },
-    "metis": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
-      "fallback_models": [
-        {
-          "model": "vsllm-claude/glm-5.2-anthropic",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "xhigh"
-        },
-        "vsllm-claude/kimi-k2.7-code"
-      ]
-    },
-    "momus": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
-      "fallback_models": [
-        {
-          "model": "vsllm-claude/glm-5.2-anthropic",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "xhigh"
-        },
-        {
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
+        },
+        {
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
         }
       ]
     },
     "atlas": {
-      "model": "vsllm-claude/kimi-k2.7-code",
+      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-claude/glm-5.2-anthropic",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4-pro20x",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
+        },
+        {
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
         }
       ]
     },
     "sisyphus-junior": {
-      "model": "vsllm-claude/kimi-k2.7-code"
+      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "variant": "xhigh"
     }
   },
   "categories": {
@@ -157,19 +168,16 @@
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
         },
-        {
-          "model": "vsllm-claude/glm-5.2-anthropic",
-          "variant": "max"
-        },
+        "vsllm-claude/glm-5.2",
         "vsllm-claude/kimi-k2.7-code"
       ]
     },
     "ultrabrain": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-claude/glm-5.2-anthropic",
+          "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
         },
         {
@@ -177,26 +185,26 @@
           "variant": "max"
         },
         {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
       ]
     },
     "deep": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
-        {
-          "model": "vsllm-claude/glm-5.2-anthropic",
-          "variant": "max"
-        },
         {
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
         },
         {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
         }
       ]
     },
@@ -205,24 +213,27 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "vsllm-claude/glm-5.2-anthropic",
-          "variant": "max"
-        },
-        {
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
         },
         {
           "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
         }
       ]
     },
     "quick": {
-      "model": "vsllm-gemini/gemini-3.5-flash-antigravity-ultra",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
-        "vsllm-claude/qwen3.7-plus",
+        {
+          "model": "vsllm-gemini/gemini-3.5-flash-antigravity-ultra",
+          "variant": "high"
+        },
         {
           "model": "vsllm-claude/claude-sonnet-4-6",
           "variant": "max"
@@ -231,46 +242,55 @@
       ]
     },
     "unspecified-low": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
-        "vsllm-claude/kimi-k2.7-code",
         {
-          "model": "vsllm-claude/glm-5.2-anthropic",
+          "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
         },
         {
-          "model": "vsllm-openai/gpt-5.4-pro20x",
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
+        },
+        {
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
       ]
     },
     "unspecified-high": {
-      "model": "vsllm-claude/glm-5.2-anthropic",
-      "variant": "max",
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
-        "vsllm-claude/kimi-k2.7-code",
         {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "max"
+          "model": "vsllm-openai/gpt-5.5",
+          "variant": "xhigh"
         },
         {
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
-          "variant": "high"
+          "variant": "max"
+        },
+        {
+          "model": "vsllm-claude/claude-opus-4-6",
+          "variant": "max"
         }
       ]
     },
     "writing": {
-      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "variant": "xhigh",
       "fallback_models": [
-        "vsllm-claude/kimi-k2.7-code",
         {
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
+          "variant": "max"
+        },
+        {
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
           "variant": "high"
         },
         {
-          "model": "vsllm-openai/gpt-5.4-pro20x",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
       ]
