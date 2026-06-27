@@ -7,16 +7,32 @@
 使用前需要设置微信读书 API Key：
 
 1. 前往 [https://weread.qq.com/r/weread-skills](https://weread.qq.com/r/weread-skills) 获取你的 API Key
-2. 在启动 OpenCode 的 shell 环境中设置环境变量：
+2. 在启动 OpenCode 的 shell 环境中设置环境变量。
+
+直接执行 `export` 只对当前终端有效，关闭终端后不会保留：
 
 ```bash
 export WEREAD_API_KEY=wrk-xxxxxxxx
 ```
 
-推荐一次性写入当前 shell 的启动文件。Bash 使用 `~/.bashrc`，Zsh 使用 `~/.zshrc`：
+如果希望以后新开终端后直接运行 `opencode` 就能使用，需要把同一行写入当前 shell 的启动文件。Bash 写入 `~/.bashrc`，Zsh 写入 `~/.zshrc`。
+
+Bash 用户首次配置可以直接追加到 `~/.bashrc`：
 
 ```bash
-export WEREAD_API_KEY="wrk-你的真实key"
+echo 'export WEREAD_API_KEY="wrk-你的真实key"' >> ~/.bashrc
+```
+
+Zsh 用户对应写入 `~/.zshrc`：
+
+```bash
+echo 'export WEREAD_API_KEY="wrk-你的真实key"' >> ~/.zshrc
+```
+
+不要只在终端里执行一次 `export`；那只对当前终端临时有效。重复执行上面的追加命令会产生重复配置，已经配置过时先检查：
+
+```bash
+grep -n 'WEREAD_API_KEY' ~/.bashrc
 ```
 
 写入后只需要让当前终端重新加载一次配置：可以重新打开终端，或在当前终端手动执行一次：
