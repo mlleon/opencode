@@ -8,6 +8,94 @@
     }
   },
   "provider": {
+    "agentrouter-openai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "AgentRouter-OpenAI",
+      "options": {
+        "baseURL": "https://agentrouter.org/v1",
+        "apiKey": "{file:~/.config/opencode/keys/agentrouter.key}",
+        "enableMeta": true,
+        "setCacheKey": true,
+        "timeout": 600000,
+        "chunkTimeout": 300000
+      },
+      "models": {
+        "gpt-5.5": {
+          "name": "gpt-5.5",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "glm-5.2": {
+          "name": "glm-5.2",
+          "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
+    "agentrouter-claude": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "AgentRouter-claude",
+      "options": {
+        "baseURL": "https://agentrouter.org",
+        "apiKey": "{file:~/.config/opencode/keys/agentrouter.key}",
+        "enableMeta": true,
+        "setCacheKey": true,
+        "timeout": 600000,
+        "chunkTimeout": 300000
+      },
+      "models": {
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        }
+      }
+    },
     "vsllm-openai": {
       "npm": "@ai-sdk/openai",
       "name": "VSLLM-OpenAI",
@@ -15,7 +103,9 @@
         "baseURL": "https://vsllm.com/v1",
         "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
         "enableMeta": true,
-        "setCacheKey": true
+        "setCacheKey": true,
+        "timeout": 600000,
+        "chunkTimeout": 300000
       },
       "models": {
         "gpt-5.5-pro20x-openai-compact": {
