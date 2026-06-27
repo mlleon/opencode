@@ -13,21 +13,26 @@
 export WEREAD_API_KEY=wrk-xxxxxxxx
 ```
 
-推荐把它写入当前 shell 的启动文件，例如 Bash 使用 `~/.bashrc`，Zsh 使用 `~/.zshrc`：
+推荐一次性写入当前 shell 的启动文件。Bash 使用 `~/.bashrc`，Zsh 使用 `~/.zshrc`：
 
 ```bash
 export WEREAD_API_KEY="wrk-你的真实key"
 ```
 
-然后重新打开终端，或手动加载配置：
+写入后只需要让当前终端重新加载一次配置：可以重新打开终端，或在当前终端手动执行一次：
 
 ```bash
 source ~/.bashrc
 echo "${WEREAD_API_KEY:+set}"
+```
+
+如果输出 `set`，说明当前终端已经有 `WEREAD_API_KEY`。之后从这个终端启动 OpenCode：
+
+```bash
 opencode
 ```
 
-如果输出 `set` 后再启动 `opencode`，OpenCode 进程和本 Skill 都能读取到 `WEREAD_API_KEY`。
+以后新打开的终端会自动读取 `~/.bashrc` / `~/.zshrc`，不需要每次手动 `source`。日常使用时直接运行 `opencode` 即可；只有刚修改启动文件、且不想重新打开终端时，才需要手动 `source` 一次。
 
 全局安装和项目安装的配置方式相同：无论 Skill 位于 `~/.config/opencode/skills/WeChatReading`，还是项目内的 `.opencode/skills/WeChatReading`，API Key 都通过启动 OpenCode 的进程环境传入，而不是从 Skill 目录读取。项目安装时也只需要确保在启动该项目的 OpenCode 前，当前 shell 中已经存在 `WEREAD_API_KEY`。
 
