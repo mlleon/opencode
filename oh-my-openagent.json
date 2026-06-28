@@ -2,18 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "vsllm-claude/claude-opus-4-6-antigravity",
-      "variant": "max",
-      "fallback_models": [
-        {
-          "model": "vsllm-claude/glm-5.2-anthropic",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "variant": "xhigh"
     },
     "hephaestus": {
       "model": "vsllm-openai/gpt-5.5-pro20x",
@@ -116,10 +106,6 @@
         },
         {
           "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
       ]
