@@ -439,7 +439,7 @@
       "npm": "@ai-sdk/openai",
       "name": "PQAPI",
       "options": {
-        "baseURL": "https://www.pqapi.store/v1",
+        "baseURL": "https://www.pqapi.space/v1",
         "apiKey": "{file:~/.config/opencode/keys/pqapi.key}",
         "enableMeta": true,
         "setCacheKey": true
