@@ -104,8 +104,6 @@
         "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
         "enableMeta": true,
         "setCacheKey": true,
-        "timeout": 600000,
-        "chunkTimeout": 300000
       },
       "models": {
         "gpt-5.5-pro20x-openai-compact": {

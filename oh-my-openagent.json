@@ -25,12 +25,13 @@
       ]
     },
     "explore": {
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
-      "variant": "high",
+      "model": "vsllm-openai/gpt-5.4-mini",
       "fallback_models": [
-        "litellm-compate/mimo-v2.5-pro",
         "nvidia/minimaxai/minimax-m3",
-        "vsllm-openai/gpt-5.4-mini"
+        {
+          "model": "nvidia/stepfun-ai/step-3.7-flash",
+          "variant": "high"
+        }
       ]
     },
     "multimodal-looker": {
