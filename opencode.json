@@ -103,29 +103,9 @@
         "baseURL": "https://vsllm.com/v1",
         "apiKey": "{file:~/.config/opencode/keys/vsllm.key}",
         "enableMeta": true,
-        "setCacheKey": true,
+        "setCacheKey": true
       },
       "models": {
-        "gpt-5.5-pro20x-openai-compact": {
-          "name": "gpt-5.5-compact",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
         "gpt-5.5-pro20x": {
           "name": "gpt-5.5-pro",
           "variants": {
@@ -148,26 +128,6 @@
         },
         "gpt-5.5": {
           "name": "gpt-5.5",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "gpt-5.4-pro20x-openai-compact": {
-          "name": "gpt-5.4-compact",
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -366,9 +326,6 @@
         "claude-haiku-4-5-20251001": {
           "name": "claude-haiku-4-5-20251001"
         },
-        "kimi-k2.6": {
-          "name": "kimi-k2.6"
-        },
         "kimi-k2.7-code": {
           "name": "kimi-k2.7"
         },
@@ -433,9 +390,9 @@
         }
       }
     },
-    "pqapi": {
+    "pqapi-openai": {
       "npm": "@ai-sdk/openai",
-      "name": "PQAPI",
+      "name": "PQAPI-OpenAI",
       "options": {
         "baseURL": "https://www.pqapi.space/v1",
         "apiKey": "{file:~/.config/opencode/keys/pqapi.key}",
@@ -462,6 +419,124 @@
               "reasoningSummary": "auto"
             }
           }
+        },
+        "gpt-5.4": {
+          "name": "gpt-5.4",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "gpt-5.4-mini": {
+          "name": "gpt-5.4-mini"
+        }
+      }
+    },
+    "pqapi-claude": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "PQAPI-Claude",
+      "options": {
+        "baseURL": "https://www.pqapi.space/v1",
+        "apiKey": "{file:~/.config/opencode/keys/pqapi.key}",
+        "enableMeta": true,
+        "setCacheKey": true
+      },
+      "models": {
+        "claude-opus-4-8": {
+          "name": "claude-opus-4-8",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-7": {
+          "name": "claude-opus-4-7",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-opus-4-6": {
+          "name": "claude-opus-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6",
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
+        "claude-haiku-4-5-20251001": {
+          "name": "claude-haiku-4-5-20251001"
         }
       }
     },
