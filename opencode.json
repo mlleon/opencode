@@ -7,6 +7,11 @@
       "extensions": [".md", ".markdown"]
     }
   },
+  "agent": {
+      "compaction": { "model": "vsllm-openai/gpt-5.5-openai-compact" },
+      "summary":    { "model": "vsllm-openai/gpt-5.4-pro20x" },
+      "title":      { "model": "vsllm-openai/gpt-5.4-mini" }
+  },
   "provider": {
     "agentrouter-openai": {
       "npm": "@ai-sdk/openai-compatible",
@@ -106,6 +111,26 @@
         "setCacheKey": true
       },
       "models": {
+        "gpt-5.5-openai-compact": {
+          "name": "gpt-5.5-compact",
+          "variants": {
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
+            "medium": {
+              "reasoningEffort": "medium",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            }
+          }
+        },
         "gpt-5.5-pro20x": {
           "name": "gpt-5.5-pro",
           "variants": {
