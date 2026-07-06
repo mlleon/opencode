@@ -7,11 +7,6 @@
       "extensions": [".md", ".markdown"]
     }
   },
-  "agent": {
-      "compaction": { "model": "vsllm-openai/gpt-5.4-pro20x" },
-      "summary":    { "model": "vsllm-openai/gpt-5.4-pro20x" },
-      "title":      { "model": "vsllm-openai/gpt-5.4-mini" }
-  },
   "compaction": {
     "auto": true,
     "prune": true,
