@@ -8,9 +8,15 @@
     }
   },
   "agent": {
-      "compaction": { "model": "vsllm-openai/gpt-5.5-openai-compact" },
+      "compaction": { "model": "vsllm-openai/gpt-5.4-pro20x" },
       "summary":    { "model": "vsllm-openai/gpt-5.4-pro20x" },
       "title":      { "model": "vsllm-openai/gpt-5.4-mini" }
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "tail_turns": 4,
+    "reserved": 30000
   },
   "provider": {
     "agentrouter-openai": {
@@ -133,6 +139,11 @@
         },
         "gpt-5.5-pro20x": {
           "name": "gpt-5.5-pro",
+          "limit": {
+            "context": 400000,
+            "input": 272000,
+            "output": 128000
+          },
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -153,6 +164,11 @@
         },
         "gpt-5.5": {
           "name": "gpt-5.5",
+          "limit": {
+            "context": 400000,
+            "input": 272000,
+            "output": 128000
+          },
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -173,6 +189,11 @@
         },
         "gpt-5.4-pro20x": {
           "name": "gpt-5.4-pro",
+          "limit": {
+            "context": 1050000,
+            "input": 922000,
+            "output": 128000
+          },
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -193,6 +214,11 @@
         },
         "gpt-5.4": {
           "name": "gpt-5.4",
+          "limit": {
+            "context": 1050000,
+            "input": 922000,
+            "output": 128000
+          },
           "variants": {
             "xhigh": {
               "reasoningEffort": "xhigh",
@@ -212,7 +238,12 @@
           }
         },
         "gpt-5.4-mini": {
-          "name": "gpt-5.4-mini"
+          "name": "gpt-5.4-mini",
+          "limit": {
+            "context": 400000,
+            "input": 272000,
+            "output": 128000
+          }
         }
       }
     },

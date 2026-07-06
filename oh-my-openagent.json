@@ -80,7 +80,7 @@
           "model": "vsllm-claude/claude-opus-4-6-antigravity",
           "variant": "max"
         },
-        "vsllm-claude/glm-5.2",
+        "vsllm-claude/glm-5.2-anthropic",
         "vsllm-claude/kimi-k2.7-code"
       ]
     },
@@ -177,5 +177,13 @@
     "cooldown_seconds": 120,
     "timeout_seconds": 60,
     "notify_on_fallback": true
+  },
+  "git_master": {
+    "commit_footer": true,
+    "include_co_authored_by": true,
+    "git_env_prefix": "GIT_MASTER=1"
+  },
+  "experimental": {
+    "preemptive_compaction": true
   }
 }
