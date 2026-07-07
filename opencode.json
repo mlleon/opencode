@@ -662,6 +662,11 @@
       "models": {
         "gpt-5.5": {
           "name": "gpt-5.5",
+          "limit": {
+            "context": 400000,
+            "input": 272000,
+            "output": 128000
+          },
           "variants": {
             "xhigh": { "reasoningEffort": "xhigh" },
             "high": { "reasoningEffort": "high" },
@@ -670,201 +675,23 @@
         },
         "gpt-5.4": {
           "name": "gpt-5.4",
+          "limit": {
+            "context": 1050000,
+            "input": 922000,
+            "output": 128000
+          },
           "variants": {
             "xhigh": { "reasoningEffort": "xhigh" },
             "high": { "reasoningEffort": "high" },
             "medium": { "reasoningEffort": "medium" }
           }
-        }
-      }
-    },
-    "litellm-compate": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "LiteLLM-ComPate",
-      "options": {
-        "baseURL": "http://127.0.0.1:4000/v1",
-        "apiKey": "{file:~/.config/opencode/keys/litellm.key}",
-        "enableMeta": true,
-        "setCacheKey": true
-      },
-      "models": {
-        "glm-4.7": {
-          "name": "glm-4.7"
         },
-        "glm-5.1": {
-          "name": "glm-5.1",
-          "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            }
-          }
-        },
-        "glm-5.2": {
-          "name": "glm-5.2",
-          "variants": {
-            "max": {
-              "reasoningEffort": "max"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            }
-          }
-        },
-        "mimo-v2.5-pro": {
-          "name": "mimo-v2.5-pro"
-        },
-        "minimax-m2.7": {
-          "name": "minimax-m2.7"
-        },
-        "minimax-m3": {
-          "name": "minimax-m3"
-        },
-        "deepseek-v4-flash": {
-          "name": "deepseek-v4-flash",
-          "variants": {
-            "max": { "reasoningEffort": "max" },
-            "high": { "reasoningEffort": "high" },
-            "medium": { "reasoningEffort": "medium" }
-          }
-        },
-        "deepseek-v4-pro": {
-          "name": "deepseek-v4-pro",
-          "variants": {
-            "max": { "reasoningEffort": "max" },
-            "high": { "reasoningEffort": "high" },
-            "medium": { "reasoningEffort": "medium" }
-          }
-        }
-      }
-    },
-    "deepseek-openai": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "DeepSeek-OpenAI",
-      "options": {
-        "baseURL": "https://api.deepseek.com/v1",
-        "apiKey": "{file:~/.config/opencode/keys/deepseek.key}",
-        "enableMeta": true,
-        "setCacheKey": true
-      },
-      "models": {
-        "deepseek-v4-flash": {
-          "name": "DeepSeek-V4-Flash",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "max",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "deepseek-v4-pro": {
-          "name": "DeepSeek-V4-Pro",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "max": {
-              "reasoningEffort": "max",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        }
-      }
-    },
-    "rcode-codex": {
-      "npm": "@ai-sdk/openai",
-      "name": "Rcode-Codex",
-      "options": {
-        "baseURL": "https://www.right.codes/codex/v1",
-        "apiKey": "{file:~/.config/opencode/keys/rcode.key}",
-        "enableMeta": true,
-        "setCacheKey": true
-      },
-      "models": {
         "gpt-5.4-mini": {
-          "name": "gpt-5.4-mini"
-        },
-        "gpt-5.4": {
-          "name": "gpt-5.4",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        },
-        "gpt-5.5": {
-          "name": "gpt-5.5",
-          "variants": {
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "textVerbosity": "medium",
-              "reasoningSummary": "auto"
-            }
-          }
-        }
-      }
-    },
-    "fox-gemini": {
-      "npm": "@ai-sdk/google",
-      "name": "Fox-Gemini",
-      "options": {
-        "baseURL": "https://code.newcli.com/gemini/v1beta",
-        "apiKey": "{file:~/.config/opencode/keys/fox.key}"
-      },
-      "models": {
-        "gemini-3.1-pro": {
-          "name": "gemini-3.1-pro",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
-          }
-        },
-        "gemini-3-flash": {
-          "name": "gemini-3-flash",
-          "variants": {
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            }
+          "name": "gpt-5.4-mini",
+          "limit": {
+            "context": 400000,
+            "input": 272000,
+            "output": 128000
           }
         }
       }
