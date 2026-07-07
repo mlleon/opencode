@@ -2,15 +2,21 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
-      "variant": "xhigh"
+      "model": "vsllm-claude/glm-5.2-anthropic",
+      "variant": "max",
+      "fallback_models": [
+        {
+          "model": "pqapi-openai/gpt-5.5",
+          "variant": "xhigh"
+        }
+      ]
     },
     "hephaestus": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "oracle": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "librarian": {
@@ -24,7 +30,8 @@
       ]
     },
     "explore": {
-      "model": "vsllm-openai/gpt-5.4-mini",
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh",
       "fallback_models": [
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
@@ -34,40 +41,27 @@
       ]
     },
     "multimodal-looker": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
-      "variant": "xhigh",
-      "fallback_models": [
-        "vsllm-claude/kimi-k2.7-code",
-        {
-          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-          "variant": "high"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "prometheus": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "metis": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "momus": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "atlas": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "sisyphus-junior": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     }
   },
@@ -76,20 +70,16 @@
       "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
       "variant": "high",
       "fallback_models": [
-        {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
-          "variant": "max"
-        },
-        "vsllm-claude/glm-5.2-anthropic",
+        "vsllm-claude/glm-5.2",
         "vsllm-claude/kimi-k2.7-code"
       ]
     },
     "ultrabrain": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "deep": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "artistry": {
@@ -97,47 +87,42 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "vsllm-claude/claude-opus-4-6-antigravity",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
+          "model": "pqapi-openai/gpt-5.5",
           "variant": "xhigh"
         }
       ]
     },
     "quick": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
-        "vsllm-openai/gpt-5.4-mini",
         {
-          "model": "vsllm-gemini/gemini-3.5-flash-antigravity-ultra",
-          "variant": "high"
+          "model": "pqapi-openai/gpt-5.4",
+          "variant": "xhigh"
         }
       ]
     },
     "unspecified-low": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-          "variant": "high"
+          "model": "pqapi-openai/gpt-5.4",
+          "variant": "xhigh"
         }
       ]
     },
     "unspecified-high": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh"
     },
     "writing": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "pqapi-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
-          "variant": "high"
+          "model": "pqapi-openai/gpt-5.4",
+          "variant": "xhigh"
         }
       ]
     },
