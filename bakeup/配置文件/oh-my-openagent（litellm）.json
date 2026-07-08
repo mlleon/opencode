@@ -1,105 +1,40 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
-  "claude_code": {
-    "skills": false,
-    "commands": false,
-    "plugins": false,
-    "agents": false,
-    "hooks": false,
-    "mcp": false
-  },
   "agents": {
     "sisyphus": {
-      "model": "litellm-claude/claude-opus-4-7",
+      "model": "vsllm-claude/glm-5.2-anthropic",
       "variant": "max",
       "fallback_models": [
         {
           "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
           "variant": "xhigh"
         }
       ]
     },
     "hephaestus": {
       "model": "litellm-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "oracle": {
       "model": "litellm-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "librarian": {
-      "model": "litellm-compate/minimax-m2.7",
+      "model": "nvidia/minimaxai/minimax-m2.7",
       "fallback_models": [
-        {
-          "model": "litellm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
-        "litellm-compate/mimo-v2.5-pro",
-        "nvidia/minimaxai/minimax-m2.7",
-        "vsllm-openai/gpt-5.4-mini"
-      ]
-    },
-    "explore": {  
-      "model": "litellm-compate/mimo-v2.5-pro",
-      "fallback_models": [
-        {
-          "model": "litellm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
-        "litellm-compate/minimax-m2.7",
-        "vsllm-openai/gpt-5.4-mini",
         {
           "model": "nvidia/stepfun-ai/step-3.7-flash",
           "variant": "high"
-        }
+        },
+        "vsllm-openai/gpt-5.4-mini"
+      ]
+    },
+    "explore": {
+      "model": "nvidia/stepfun-ai/step-3.7-flash",
+      "variant": "high",
+      "fallback_models": [
+        "nvidia/minimaxai/minimax-m3",
+        "vsllm-openai/gpt-5.4-mini"
       ]
     },
     "multimodal-looker": {
@@ -107,277 +42,93 @@
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.4",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.4",
-          "variant": "xhigh"
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
         }
       ]
     },
     "prometheus": {
-      "model": "litellm-claude/claude-opus-4-7",
-      "variant": "max",
-      "fallback_models": [
-        {
-          "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "litellm-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "metis": {
-      "model": "litellm-claude/claude-sonnet-4-6",
-      "variant": "max",
-      "fallback_models": [
-        {
-          "model": "litellm-claude/claude-opus-4-7",
-          "variant": "max"
-        },
-        {
-          "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-6",
-          "variant": "max"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        }
-      ]
+      "model": "litellm-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "momus": {
       "model": "litellm-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "litellm-claude/claude-opus-4-7",
-          "variant": "max"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "atlas": {
-      "model": "litellm-claude/claude-opus-4-6",
-      "variant": "max",
-      "fallback_models": [
-        {
-          "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "litellm-openai/gpt-5.4",
+      "variant": "xhigh"
     },
     "sisyphus-junior": {
-      "model": "vsllm-openai/gpt-5.4",
+      "model": "litellm-openai/gpt-5.4",
       "variant": "xhigh"
     }
   },
   "categories": {
     "visual-engineering": {
-      "model": "litellm-claude/claude-opus-4-7",
-      "variant": "max",
+      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+      "variant": "high",
       "fallback_models": [
         {
-          "model": "litellm-claude/claude-opus-4-8",
+          "model": "vsllm-claude/glm-5.2-anthropic",
           "variant": "max"
         },
-        {
-          "model": "litellm-claude/claude-opus-4-6",
-          "variant": "max"
-        },
-        "vsllm-claude/glm-5.2",
         "vsllm-claude/kimi-k2.7-code"
       ]
     },
     "ultrabrain": {
       "model": "litellm-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "litellm-claude/claude-opus-4-7",
-          "variant": "max"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "deep": {
       "model": "litellm-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "litellm-claude/claude-opus-4-7",
-          "variant": "max"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "artistry": {
-      "model": "litellm-claude/claude-opus-4-7",
-      "variant": "max",
+      "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+      "variant": "high",
       "fallback_models": [
         {
           "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-6",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         }
       ]
     },
     "quick": {
-      "model": "litellm-compate/mimo-v2.5-pro",
+      "model": "litellm-openai/gpt-5.4",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "litellm-claude/claude-sonnet-4-6",
-          "variant": "max"
-        },
-        "vsllm-openai/gpt-5.4-mini",
-        "vsllm-claude/claude-haiku-4-5-20251001"
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
+        }
       ]
     },
     "unspecified-low": {
-      "model": "litellm-claude/claude-sonnet-4-6",
-      "variant": "max",
+      "model": "litellm-openai/gpt-5.4",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-6",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
         }
       ]
     },
     "unspecified-high": {
-      "model": "litellm-claude/claude-opus-4-7",
-      "variant": "max",
-      "fallback_models": [
-        {
-          "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-8",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "litellm-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "writing": {
-      "model": "litellm-claude/claude-sonnet-4-6",
-      "variant": "max",
+      "model": "litellm-openai/gpt-5.4",
+      "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "litellm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "litellm-claude/claude-opus-4-6",
-          "variant": "max"
-        },
-        {
-          "model": "vsllm-openai/gpt-5.5",
-          "variant": "xhigh"
-        },
-        {
-          "model": "pqapi/gpt-5.5",
-          "variant": "xhigh"
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
         }
       ]
     },
@@ -394,13 +145,36 @@
       ]
     }
   },
+  "claude_code": {
+    "skills": false,
+    "commands": false,
+    "plugins": false,
+    "agents": false,
+    "hooks": false,
+    "mcp": false
+  },
   "auto_update": true,
   "runtime_fallback": {
     "enabled": true,
-    "retry_on_errors": [429, 500, 502, 503, 504],
+    "retry_on_errors": [
+      402,
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
     "max_fallback_attempts": 3,
     "cooldown_seconds": 120,
     "timeout_seconds": 60,
     "notify_on_fallback": true
+  },
+  "git_master": {
+    "commit_footer": true,
+    "include_co_authored_by": true,
+    "git_env_prefix": "GIT_MASTER=1"
+  },
+  "experimental": {
+    "preemptive_compaction": true
   }
 }
