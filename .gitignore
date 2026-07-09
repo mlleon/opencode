@@ -9,6 +9,7 @@
 
 !/.gitignore
 !/opencode.json
+!/oh-my-openagent.json
 
 !/bakeup/
 !/bakeup/**
