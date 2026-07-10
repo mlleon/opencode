@@ -115,8 +115,8 @@
         "gpt-5.6-sol-pro20x": {
           "name": "gpt-5.6-sol-pro",
           "limit": {
-            "context": 1050000,
-            "input": 922000,
+            "context": 500000,
+            "input": 372000,
             "output": 128000
           },
           "variants": {
@@ -140,8 +140,8 @@
         "gpt-5.6-sol": {
           "name": "gpt-5.6-sol",
           "limit": {
-            "context": 1050000,
-            "input": 922000,
+            "context": 500000,
+            "input": 372000,
             "output": 128000
           },
           "variants": {
@@ -165,8 +165,8 @@
         "gpt-5.6-terra-pro20x": {
           "name": "gpt-5.6-terra-pro",
           "limit": {
-            "context": 1050000,
-            "input": 922000,
+            "context": 500000,
+            "input": 372000,
             "output": 128000
           },
           "variants": {
@@ -190,8 +190,8 @@
         "gpt-5.6-terra": {
           "name": "gpt-5.6-terra",
           "limit": {
-            "context": 1050000,
-            "input": 922000,
+            "context": 500000,
+            "input": 372000,
             "output": 128000
           },
           "variants": {
@@ -215,8 +215,8 @@
         "gpt-5.6-luna-pro20x": {
           "name": "gpt-5.6-luna-pro",
           "limit": {
-            "context": 1050000,
-            "input": 922000,
+            "context": 500000,
+            "input": 372000,
             "output": 128000
           },
           "variants": {
@@ -240,8 +240,8 @@
         "gpt-5.6-luna": {
           "name": "gpt-5.6-luna",
           "limit": {
-            "context": 1050000,
-            "input": 922000,
+            "context": 500000,
+            "input": 372000,
             "output": 128000
           },
           "variants": {
