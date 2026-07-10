@@ -6,28 +6,34 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.6-terra",
+          "model": "vsllm-openai/gpt-5.6-sol-pro20x",
           "variant": "xhigh"
         },
         {
-          "model": "pqapi-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.6-sol",
           "variant": "xhigh"
         }
       ]
     },
     "hephaestus": {
-      "model": "pqapi-openai/gpt-5.5",
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.6-sol",
           "variant": "xhigh"
         }
       ]
     },
     "oracle": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
+          "variant": "xhigh"
+        }
+      ]
     },
     "librarian": {
       "model": "nvidia/minimaxai/minimax-m2.7",
@@ -47,40 +53,68 @@
       ]
     },
     "multimodal-looker": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.6-sol",
           "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
         }
       ]
     },
     "prometheus": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
-    },
-    "metis": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
-    },
-    "momus": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.6-sol",
+          "variant": "xhigh"
+        }
+      ]
+    },
+    "metis": {
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
+          "variant": "xhigh"
+        }
+      ]
+    },
+    "momus": {
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
           "variant": "xhigh"
         }
       ]
     },
     "atlas": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
+          "variant": "xhigh"
+        }
+      ]
     },
     "sisyphus-junior": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-terra",
+          "variant": "xhigh"
+        }
+      ]
     }
   },
   "categories": {
@@ -88,42 +122,97 @@
       "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
       "variant": "high",
       "fallback_models": [
-        "vsllm-claude/glm-5.2"
+        {
+          "model": "vsllm-claude/glm-5.2-anthropic",
+          "variant": "max"
+        }
       ]
     },
     "ultrabrain": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
+          "variant": "xhigh"
+        }
+      ]
     },
     "deep": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
+          "variant": "xhigh"
+        }
+      ]
     },
     "artistry": {
       "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
       "variant": "high",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+          "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
           "variant": "xhigh"
         }
       ]
     },
     "quick": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-terra",
+          "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
+        }
+      ]
     },
     "unspecified-low": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-terra",
+          "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
+        }
+      ]
     },
     "unspecified-high": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-sol-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-sol",
+          "variant": "xhigh"
+        }
+      ]
     },
     "writing": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh"
+      "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+      "variant": "xhigh",
+      "fallback_models": [
+        {
+          "model": "vsllm-openai/gpt-5.6-terra",
+          "variant": "xhigh"
+        },
+        {
+          "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
+          "variant": "high"
+        }
+      ]
     },
     "git": {
       "model": "nvidia/stepfun-ai/step-3.5-flash",
