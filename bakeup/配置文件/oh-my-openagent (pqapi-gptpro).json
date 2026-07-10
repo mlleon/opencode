@@ -54,11 +54,11 @@
       "variant": "xhigh"
     },
     "atlas": {
-      "model": "pqapi-openai/gpt-5.5",
+      "model": "pqapi-openai/gpt-5.6-terra",
       "variant": "xhigh"
     },
     "sisyphus-junior": {
-      "model": "pqapi-openai/gpt-5.5",
+      "model": "pqapi-openai/gpt-5.6-terra",
       "variant": "xhigh"
     }
   },
