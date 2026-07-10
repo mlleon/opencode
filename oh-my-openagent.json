@@ -111,23 +111,11 @@
     },
     "quick": {
       "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "unspecified-low": {
       "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "unspecified-high": {
       "model": "pqapi-openai/gpt-5.6-terra",
@@ -135,13 +123,7 @@
     },
     "writing": {
       "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "git": {
       "model": "nvidia/stepfun-ai/step-3.5-flash",
