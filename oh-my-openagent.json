@@ -107,11 +107,11 @@
       ]
     },
     "sisyphus-junior": {
-      "model": "vsllm-openai/gpt-5.6-terra",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         }
       ]
@@ -163,11 +163,11 @@
       ]
     },
     "quick": {
-      "model": "vsllm-openai/gpt-5.6-terra",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         },
         {
@@ -177,11 +177,11 @@
       ]
     },
     "unspecified-low": {
-      "model": "vsllm-openai/gpt-5.6-terra",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         },
         {
@@ -201,11 +201,11 @@
       ]
     },
     "writing": {
-      "model": "vsllm-openai/gpt-5.6-terra",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.6-terra-pro20x",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         },
         {
