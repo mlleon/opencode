@@ -13,23 +13,11 @@
     },
     "hephaestus": {
       "model": "pqapi-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "oracle": {
       "model": "pqapi-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "librarian": {
       "model": "nvidia/minimaxai/minimax-m2.7",
@@ -50,63 +38,27 @@
     },
     "multimodal-looker": {
       "model": "pqapi-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "prometheus": {
       "model": "pqapi-openai/gpt-5.5",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "variant": "xhigh"
     },
     "metis": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "momus": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "atlas": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.4",
+      "variant": "xhigh"
     },
     "sisyphus-junior": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     }
   },
   "categories": {
@@ -118,74 +70,38 @@
       ]
     },
     "ultrabrain": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "deep": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "artistry": {
       "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
       "variant": "high",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.6-terra",
+          "model": "pqapi-openai/gpt-5.5",
           "variant": "xhigh"
         }
       ]
     },
     "quick": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "unspecified-low": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "unspecified-high": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "writing": {
-      "model": "pqapi-openai/gpt-5.6-terra",
-      "variant": "xhigh",
-      "fallback_models": [
-        {
-          "model": "pqapi-openai/gpt-5.5",
-          "variant": "xhigh"
-        }
-      ]
+      "model": "pqapi-openai/gpt-5.5",
+      "variant": "xhigh"
     },
     "git": {
       "model": "nvidia/stepfun-ai/step-3.5-flash",
