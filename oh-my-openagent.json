@@ -6,31 +6,31 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "hephaestus": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "oracle": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
@@ -53,11 +53,11 @@
       ]
     },
     "multimodal-looker": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         },
         {
@@ -67,51 +67,51 @@
       ]
     },
     "prometheus": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "metis": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "momus": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "atlas": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "sisyphus-junior": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         }
       ]
@@ -130,21 +130,21 @@
       ]
     },
     "ultrabrain": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "deep": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
@@ -154,21 +154,21 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5-pro20x",
+          "model": "vsllm-openai/gpt-5.5",
           "variant": "xhigh"
         },
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "quick": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
-      "variant": "xhigh",
+      "model": "vsllm-openai/gpt-5.4",
+      "variant": "xhigh", 
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         },
         {
@@ -178,11 +178,11 @@
       ]
     },
     "unspecified-low": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         },
         {
@@ -192,21 +192,21 @@
       ]
     },
     "unspecified-high": {
-      "model": "vsllm-openai/gpt-5.5-pro20x",
+      "model": "vsllm-openai/gpt-5.5",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.5",
+          "model": "vsllm-openai/gpt-5.5-pro20x",
           "variant": "xhigh"
         }
       ]
     },
     "writing": {
-      "model": "vsllm-openai/gpt-5.4-pro20x",
+      "model": "vsllm-openai/gpt-5.4",
       "variant": "xhigh",
       "fallback_models": [
         {
-          "model": "vsllm-openai/gpt-5.4",
+          "model": "vsllm-openai/gpt-5.4-pro20x",
           "variant": "xhigh"
         },
         {
