@@ -120,6 +120,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -145,6 +150,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -170,6 +180,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -195,6 +210,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -220,6 +240,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -245,6 +270,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -589,6 +619,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -614,6 +649,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
@@ -639,6 +679,11 @@
             "output": 128000
           },
           "variants": {
+            "max": {
+              "reasoningEffort": "max",
+              "textVerbosity": "medium",
+              "reasoningSummary": "auto"
+            },
             "xhigh": {
               "reasoningEffort": "xhigh",
               "textVerbosity": "medium",
