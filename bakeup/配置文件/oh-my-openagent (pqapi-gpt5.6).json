@@ -6,17 +6,17 @@
       "variant": "max",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.6-terra",
+          "model": "pqapi-openai/gpt-5.6-sol",
           "variant": "max"
         }
       ]
     },
     "hephaestus": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "oracle": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "librarian": {
@@ -41,27 +41,27 @@
       ]
     },
     "multimodal-looker": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "prometheus": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "metis": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "momus": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "atlas": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "sisyphus-junior": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     }
   },
@@ -70,15 +70,18 @@
       "model": "vsllm-gemini/gemini-3.1-pro-antigravity-ultra",
       "variant": "high",
       "fallback_models": [
-        "vsllm-claude/glm-5.2-anthropic"
+        {
+          "model": "pqapi-openai/gpt-5.6-sol",
+          "variant": "max"
+        }
       ]
     },
     "ultrabrain": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "deep": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "artistry": {
@@ -86,25 +89,25 @@
       "variant": "high",
       "fallback_models": [
         {
-          "model": "pqapi-openai/gpt-5.6-terra",
+          "model": "pqapi-openai/gpt-5.6-sol",
           "variant": "max"
         }
       ]
     },
     "quick": {
-      "model": "pqapi-openai/gpt-5.6-luna",
+      "model": "pqapi-openai/gpt-5.6-terra",
       "variant": "max"
     },
     "unspecified-low": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "unspecified-high": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "writing": {
-      "model": "pqapi-openai/gpt-5.6-terra",
+      "model": "pqapi-openai/gpt-5.6-sol",
       "variant": "max"
     },
     "git": {
