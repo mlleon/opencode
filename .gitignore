@@ -13,6 +13,9 @@
 !/bakeup/
 !/bakeup/**
 
+!/dotfiles/
+!/dotfiles/**
+
 !/skills/
 !/skills/**
 
