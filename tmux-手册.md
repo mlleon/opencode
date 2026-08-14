@@ -2,7 +2,7 @@
 
 > **适用环境**：WSL2（Ubuntu 等）· Linux · Windows Terminal（作为 WSL 前端）· OpenCode · Codex CLI · Claude Code
 >
-> 本手册讲 tmux 基础操作、配置、以及「手机 SSH 远程」场景下的滚动与复制。**手机远程连接 WSL 的部署见 [Termux-手册.md](Termux-手册.md)。** Windows Terminal 与 VS Code Remote-WSL 仅作为访问 WSL 的前端工具说明，不展开其他操作系统。
+> 本手册讲 tmux 基础操作、配置、以及「手机 SSH 远程」场景下的滚动与复制。**手机远程连接 WSL 的部署见 [termux-手册.md](termux-手册.md)。** Windows Terminal 与 VS Code Remote-WSL 仅作为访问 WSL 的前端工具说明，不展开其他操作系统。
 
 ---
 

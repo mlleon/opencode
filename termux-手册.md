@@ -1,6 +1,6 @@
 # 手机 Termux SSH 连 WSL 部署手册
 
-> **目标**：手机通过  claude（SSH）连 WSL 里的 tmux，原生选中/复制终端长输出，粘贴到任意位置。
+> **目标**：手机通过 Termux（SSH）连 WSL 里的 tmux，原生选中/复制终端长输出，粘贴到任意位置。
 >
 > **替代方案**：取代向日葵远程桌面（拖图像选文字极难用）。
 >
@@ -176,7 +176,7 @@ netstat -ano | findstr ":2222"
 
 ---
 
-## 第六步：手机 Termux 连接 📱 [你操作]
+## 第六步：手机 Termux 基础配置 📱 [你操作]
 
 ### 1. 装 openssh 客户端
 
@@ -198,7 +198,7 @@ ipconfig | findstr IPv4
 
 取 `192.168.x.x` 那个（局域网 IP，不是 `172.x.x.x` 的 WSL 虚拟网卡地址）。
 
-### 3. SSH 连接
+### 3. 首次 SSH 连接测试
 
 Termux 跑（IP 换成上一步拿到的）：
 
@@ -211,7 +211,101 @@ ssh -p 2222 你的WSL用户名@192.168.0.100
 
 连上看到 WSL 提示符（如 `mleon@hostname:~$`）就是成功。
 
-### 4. 进 tmux
+---
+
+## 第七步：配置自动连接（核心优化）📱 [你操作]
+
+> **目标**：打开 Termux 自动探测网络、自动选 IP、免密连接、自动进 WSL。
+
+### 7.1 创建智能连接脚本
+
+在 Termux 里执行（逐行粘贴）：
+
+```bash
+mkdir -p ~/bin
+echo '#!/bin/bash' > ~/bin/connect.sh
+echo 'HOME_IP="192.168.0.100"' >> ~/bin/connect.sh
+echo 'PGY_IP="172.16.2.86"' >> ~/bin/connect.sh
+echo 'PORT="2222"' >> ~/bin/connect.sh
+echo 'USER="mleon"' >> ~/bin/connect.sh
+echo '' >> ~/bin/connect.sh
+echo 'can_reach() { ping -c 1 -W 2 "$1" &>/dev/null; }' >> ~/bin/connect.sh
+echo '' >> ~/bin/connect.sh
+echo 'if can_reach "$HOME_IP"; then' >> ~/bin/connect.sh
+echo '  TARGET="$HOME_IP"; echo "[家中WiFi] 连接 $TARGET ..."' >> ~/bin/connect.sh
+echo '  ssh -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET"' >> ~/bin/connect.sh
+echo 'else' >> ~/bin/connect.sh
+echo '  echo "[外网模式] 尝试蒲公英..."' >> ~/bin/connect.sh
+echo '  if can_reach "$PGY_IP"; then' >> ~/bin/connect.sh
+echo '    TARGET="$PGY_IP"; echo "[蒲公英已连接] 连接 $TARGET ..."' >> ~/bin/connect.sh
+echo '    ssh -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET"' >> ~/bin/connect.sh
+echo '  else' >> ~/bin/connect.sh
+echo '    echo "请手动打开蒲公英 App（60秒内）..."' >> ~/bin/connect.sh
+echo '    count=0' >> ~/bin/connect.sh
+echo '    while [ $count -lt 30 ]; do' >> ~/bin/connect.sh
+echo '      if can_reach "$PGY_IP"; then break; fi' >> ~/bin/connect.sh
+echo '      sleep 2; count=$((count + 1)); echo "等待... ($((count * 2))s)"' >> ~/bin/connect.sh
+echo '    done' >> ~/bin/connect.sh
+echo '    if can_reach "$PGY_IP"; then' >> ~/bin/connect.sh
+echo '      TARGET="$PGY_IP"; echo "[蒲公英已连接] 连接 $TARGET ..."' >> ~/bin/connect.sh
+echo '      ssh -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET"' >> ~/bin/connect.sh
+echo '    else' >> ~/bin/connect.sh
+echo '      echo "❌ 蒲公英连接超时（60秒）"' >> ~/bin/connect.sh
+echo '    fi' >> ~/bin/connect.sh
+echo '  fi' >> ~/bin/connect.sh
+echo 'fi' >> ~/bin/connect.sh
+chmod +x ~/bin/connect.sh
+```
+
+> **参数说明**：`HOME_IP` 和 `PGY_IP` 换成你的实际 IP（见「关键参数模板」章节）。
+
+### 7.2 配置 SSH 免密
+
+```bash
+# 生成密钥（一路回车，不设密码）
+ssh-keygen -t ed25519 -N ""
+
+# 传公钥到 WSL（要输一次 WSL 密码）
+ssh-copy-id -p 2222 mleon@192.168.0.100
+```
+
+> 如果当前在外网（用蒲公英），把 IP 换成 `172.16.2.86`。
+
+### 7.3 打开 Termux 自动触发
+
+```bash
+echo 'source ~/bin/connect.sh' >> ~/.bashrc
+```
+
+### 7.4 验证
+
+```bash
+# 手动跑一次测试
+source ~/bin/connect.sh
+```
+
+看到 `[家中WiFi] 连接 ...` 或 `[外网模式] 尝试蒲公英...` 然后进入 WSL 即成功。
+
+### 7.5 自动连接逻辑说明
+
+```
+打开 Termux
+  → 检测 192.168.0.100（家里 Windows IP）
+    → 通 → SSH 直连
+    → 不通 → 检测 172.16.2.86（蒲公英虚拟 IP）
+      → 通 → SSH 直连
+      → 不通 → 提示"请手动打开蒲公英 App（60秒内）"
+        → 等待 60 秒（每 2 秒检测一次）
+        → 期间手动打开蒲公英 App
+        → 通了 → 自动 SSH 连接
+        → 超时 → 提示失败，留在 Termux 本地
+```
+
+> **设计说明**：蒲公英 App 无法被脚本自动拉起（Android 系统限制），所以采用"提示 + 等待"策略，用户在 60 秒内手动打开即可。
+
+---
+
+## 第八步：进 tmux 工作区 📱 [你操作]
 
 连上 SSH 后，进入或创建工作区（按项目名）：
 
@@ -226,7 +320,9 @@ tmux new -s llm-broker    # Session 不存在 → 新建（单窗口，需手动
 
 > 建议按项目名命名 Session（如 `llm-broker`、`router-api`），一个项目一个 Session，切换项目 = 切换 Session。
 
-### 5. 复制文本
+---
+
+## 第九步：复制文本 📱 [你操作]
 
 手机端复制分两种场景：
 
@@ -283,9 +379,10 @@ ping -c 4 192.168.0.100
 | `ssh localhost` 报 Host key verification | 首次连接 host key 没加         | `ssh-keyscan -H localhost >> ~/.ssh/known_hosts` 或用 `StrictHostKeyChecking=accept-new`           |
 | 外网（4G）连不上                           | 蒲公英客户端没在线 / 没组网    | 打开蒲公英 App 确认两端在线、同一组网网络                                                              |
 | 蒲公英 IP ping 不通                        | 客户端掉线                     | 重开手机蒲公英 App，确认在线                                                                           |
-| 切 WiFi/4G 后 ssh 断开                     | 网络切换断连                   | 重新`ssh -p 2222 mleon@...` + `entry <项目名>`（或 `tmux a -t <项目名>`），程序没丢（tmux 保持） |
+| 切 WiFi/4G 后 ssh 断开                     | 网络切换断连                   | 重新打开 Termux（自动连接脚本会处理）                                                                  |
 | 手机长按选不中文字                         | tmux 鼠标开着拦截触屏          | 先按`Ctrl+b m` 关鼠标再选                                                                            |
 | 电脑端 tmux 右侧大片空白                   | 手机同时连同一 Window 拖累宽度 | 错峰使用，或两端看不同 Window                                                                          |
+| 自动连接脚本没触发                         | `.bashrc` 没配置或脚本路径错   | 检查 `grep connect ~/.bashrc` 是否有输出；确认 `~/bin/connect.sh` 存在且可执行                          |
 
 ---
 
@@ -380,7 +477,8 @@ ssh -p 2222 mleon@172.16.2.86
 ### 重连步骤
 
 ```bash
-# 1. 手机 Termux 重新连
+# 1. 手机 Termux 重新打开（自动连接脚本会处理）
+# 或手动：
 ssh -p 2222 mleon@172.16.2.86        # 外网
 # 或
 ssh -p 2222 mleon@192.168.0.100       # 家里 WiFi
@@ -465,24 +563,13 @@ netsh interface portproxy add v4tov4 listenport=2222 listenaddress=0.0.0.0 conne
 
 > 让 AI 帮你生成完整脚本和注册命令。
 
-### 2. SSH 免密登录 🤖 [AI 操作]
+### 2. SSH 免密登录 ✅ 已完成
 
-每次输密码麻烦，配密钥免密。
+见「第七步：配置自动连接」的 7.2 节。配好后打开 Termux 自动连接，无需输密码。
 
-**交付给 AI 的指令**：
+### 3. Termux 连接别名（可选）
 
-> 帮我配 Termux 到 WSL 的 SSH 密钥免密登录
-
-Termux 端生成密钥并传到 WSL：
-
-```bash
-ssh-keygen -t ed25519        # 一路回车
-ssh-copy-id -p 2222 mleon@192.168.0.100
-```
-
-之后 `ssh -p 2222 mleon@192.168.0.100` 不用输密码。
-
-### 3. Termux 连接别名 📱 [你操作]
+如果不用自动连接脚本，也可以配别名手动连：
 
 Termux 里 `~/.ssh/config` 加：
 
@@ -491,9 +578,14 @@ host wsl
    HostName 192.168.0.100
 	Port 2222
 	User mleon
+
+host wsl-out
+   HostName 172.16.2.86
+	Port 2222
+	User mleon
 ```
 
-之后直接 `ssh wsl` 即可。
+之后 `ssh wsl`（家里）或 `ssh wsl-out`（外网）即可。
 
 ### 4. 向日葵方案的 tmux 配置清理 ✅ 已完成
 
@@ -507,21 +599,24 @@ host wsl
 
 ## 完整连接速查（配好后日常用）
 
-### 在家（同一 WiFi）
+### 自动模式（推荐）
+
+**打开 Termux 即可**，脚本自动处理：
+
+- 在家 → 自动连 `192.168.0.100`
+- 外出 → 自动检测蒲公英，通了就连，不通提示你打开 App
+
+### 手动模式（调试用）
 
 ```bash
+# 在家
 ssh -p 2222 mleon@192.168.0.100
-```
 
-### 外出（4G/5G，经蒲公英）
-
-```bash
+# 外出（蒲公英已开）
 ssh -p 2222 mleon@172.16.2.86
 ```
 
-> 配了 SSH 别名就是 `ssh wsl`（家里）/ `ssh wsl-out`（外网），见「遗留优化」第 3 条。
-
-连上后进工作区：
+### 进工作区
 
 ```bash
 entry llm-broker          # 推荐（装了脚本）：自动创建/attach
@@ -529,8 +624,10 @@ entry llm-broker          # 推荐（装了脚本）：自动创建/attach
 tmux a -t llm-broker      # 通用：attach 已有 Session
 ```
 
-复制短内容：`Ctrl+b m` 关鼠标 → 长按选文字 → 复制 → `Ctrl+b m` 开回来。
-复制长内容（跨屏）：滑动 → 方向键微调 → `Space` → 滚动 → `Enter`。
+### 复制
+
+- 短内容：`Ctrl+b m` 关鼠标 → 长按选文字 → 复制 → `Ctrl+b m` 开回来
+- 长内容（跨屏）：滑动 → 方向键微调 → `Space` → 滚动 → `Enter`
 
 ---
 
