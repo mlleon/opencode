@@ -215,7 +215,7 @@ ssh -p 2222 你的WSL用户名@192.168.0.100
 
 ## 第七步：配置自动连接（核心优化）📱 [你操作]
 
-> **目标**：打开 Termux 自动探测网络、自动选 IP、免密连接、自动进 WSL。
+> **目标**：打开 Termux 自动探测网络、自动选 IP、免密连接、**自动进默认项目的 tmux**。
 
 ### 7.1 创建智能连接脚本
 
@@ -228,17 +228,20 @@ echo 'HOME_IP="192.168.0.100"' >> ~/bin/connect.sh
 echo 'PGY_IP="172.16.2.86"' >> ~/bin/connect.sh
 echo 'PORT="2222"' >> ~/bin/connect.sh
 echo 'USER="mleon"' >> ~/bin/connect.sh
+echo 'DEFAULT_PROJECT="openspec-dual-runtime-bridge"' >> ~/bin/connect.sh
 echo '' >> ~/bin/connect.sh
 echo 'can_reach() { ping -c 1 -W 2 "$1" &>/dev/null; }' >> ~/bin/connect.sh
 echo '' >> ~/bin/connect.sh
 echo 'if can_reach "$HOME_IP"; then' >> ~/bin/connect.sh
 echo '  TARGET="$HOME_IP"; echo "[家中WiFi] 连接 $TARGET ..."' >> ~/bin/connect.sh
-echo '  ssh -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET"' >> ~/bin/connect.sh
+echo '  ssh -tt -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET" \' >> ~/bin/connect.sh
+echo '    "bash ~/scripts/new-project.sh $DEFAULT_PROJECT"' >> ~/bin/connect.sh
 echo 'else' >> ~/bin/connect.sh
 echo '  echo "[外网模式] 尝试蒲公英..."' >> ~/bin/connect.sh
 echo '  if can_reach "$PGY_IP"; then' >> ~/bin/connect.sh
 echo '    TARGET="$PGY_IP"; echo "[蒲公英已连接] 连接 $TARGET ..."' >> ~/bin/connect.sh
-echo '    ssh -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET"' >> ~/bin/connect.sh
+echo '    ssh -tt -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET" \' >> ~/bin/connect.sh
+echo '      "bash ~/scripts/new-project.sh $DEFAULT_PROJECT"' >> ~/bin/connect.sh
 echo '  else' >> ~/bin/connect.sh
 echo '    echo "请手动打开蒲公英 App（60秒内）..."' >> ~/bin/connect.sh
 echo '    count=0' >> ~/bin/connect.sh
@@ -248,7 +251,8 @@ echo '      sleep 2; count=$((count + 1)); echo "等待... ($((count * 2))s)"' >
 echo '    done' >> ~/bin/connect.sh
 echo '    if can_reach "$PGY_IP"; then' >> ~/bin/connect.sh
 echo '      TARGET="$PGY_IP"; echo "[蒲公英已连接] 连接 $TARGET ..."' >> ~/bin/connect.sh
-echo '      ssh -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET"' >> ~/bin/connect.sh
+echo '      ssh -tt -p "$PORT" -o ConnectTimeout=5 "$USER@$TARGET" \' >> ~/bin/connect.sh
+echo '        "bash ~/scripts/new-project.sh $DEFAULT_PROJECT"' >> ~/bin/connect.sh
 echo '    else' >> ~/bin/connect.sh
 echo '      echo "❌ 蒲公英连接超时（60秒）"' >> ~/bin/connect.sh
 echo '    fi' >> ~/bin/connect.sh
@@ -257,7 +261,16 @@ echo 'fi' >> ~/bin/connect.sh
 chmod +x ~/bin/connect.sh
 ```
 
-> **参数说明**：`HOME_IP` 和 `PGY_IP` 换成你的实际 IP（见「关键参数模板」章节）。
+> **参数说明**：
+>
+> - `HOME_IP` 和 `PGY_IP` 换成你的实际 IP（见「关键参数模板」章节）
+> - `DEFAULT_PROJECT` 是打开 Termux 自动进入的默认项目名（session 存在则 attach，不存在则建四窗口）。换默认项目改这一行即可
+
+> **⚠️ 关键经验：长行必须用 `\` 续行拆短**
+>
+> Termux 粘贴**长命令行会自动折行**，导致 echo 字符串被断成两段、重定向 `>>` 漏到下一行，脚本结构损坏（症状：`source` 后只 echo 不连接、或 `syntax error: unexpected end of file`）。
+>
+> 上面的三处 ssh 行较长，已用 bash 行尾 `\` 续行拆成两短行（每段 < 70 字符）。**重建脚本时务必保留 `\`**，不要合并成单行。其他行都很短，不受影响。
 
 ### 7.2 配置 SSH 免密
 
@@ -284,7 +297,9 @@ echo 'source ~/bin/connect.sh' >> ~/.bashrc
 source ~/bin/connect.sh
 ```
 
-看到 `[家中WiFi] 连接 ...` 或 `[外网模式] 尝试蒲公英...` 然后进入 WSL 即成功。
+看到 `[家中WiFi] 连接 ...` 或 `[外网模式] 尝试蒲公英...` 然后**直接进入默认项目的 tmux**（`openspec-dual-runtime-bridge`）即成功。
+
+> 连上后直接 attach 在 tmux 里，键盘输入发给当前 window 的前台进程，不在 WSL shell。要敲 WSL 命令切到 Window 0（Shell）：`Ctrl+b 0`。`Ctrl+b d` detach 后会退回 Termux 本地（ssh 远程命令结束，连接关闭），不是 WSL shell——日常无需 detach，多项目切换走 `Ctrl+b s`（见第八步）。
 
 ### 7.5 自动连接逻辑说明
 
@@ -299,6 +314,11 @@ source ~/bin/connect.sh
         → 期间手动打开蒲公英 App
         → 通了 → 自动 SSH 连接
         → 超时 → 提示失败，留在 Termux 本地
+
+连上后（三种分支都一样）：
+  → ssh -tt 执行 bash ~/scripts/new-project.sh $DEFAULT_PROJECT
+    → 默认项目 session 存在 → attach 进去
+    → 默认项目 session 不存在（WSL 重启过）→ 自动建四窗口工作区并 attach
 ```
 
 > **设计说明**：蒲公英 App 无法被脚本自动拉起（Android 系统限制），所以采用"提示 + 等待"策略，用户在 60 秒内手动打开即可。
@@ -307,7 +327,26 @@ source ~/bin/connect.sh
 
 ## 第八步：进 tmux 工作区 📱 [你操作]
 
-连上 SSH 后，进入或创建工作区（按项目名）：
+配置好第七步后，**打开 Termux 即自动进入默认项目**（`openspec-dual-runtime-bridge`），无需手动敲命令。
+
+只有以下情况需要手动操作：
+
+```bash
+# 改默认项目：编辑 ~/bin/connect.sh 顶部的 DEFAULT_PROJECT 变量
+# 手动连（不用自动脚本）：第七步速查里的手动模式
+```
+
+### 切换到其他项目（tmux 内）
+
+连上后已经在 tmux 里，**切换已有项目用 `Ctrl+b s`**：
+
+1. 按 `Ctrl+b` 松开，再按 `s`
+2. 弹出所有 Session（项目）列表，方向键上下选
+3. 选中目标项目按回车 → 切过去
+
+> `Ctrl+b s` 是 tmux 原生功能，在 tmux 内部切换 Session，不退出、不重连。新项目需先在**电脑端** `entry <项目名>` 建好（手机端只切不建），建好后手机 `Ctrl+b s` 即可看到并切换。
+
+### 手动创建/进入工作区（不用自动脚本时）
 
 ```bash
 # 推荐：装了 entry 脚本的话（见 tmux 手册「一键创建工作区」），一条命令通吃
@@ -383,6 +422,8 @@ ping -c 4 192.168.0.100
 | 手机长按选不中文字                         | tmux 鼠标开着拦截触屏          | 先按`Ctrl+b m` 关鼠标再选                                                                            |
 | 电脑端 tmux 右侧大片空白                   | 手机同时连同一 Window 拖累宽度 | 错峰使用，或两端看不同 Window                                                                          |
 | 自动连接脚本没触发                         | `.bashrc` 没配置或脚本路径错   | 检查 `grep connect ~/.bashrc` 是否有输出；确认 `~/bin/connect.sh` 存在且可执行                          |
+| `source` 后只 echo 不进 tmux，或 `syntax error: unexpected end of file` | Termux 粘贴长行折行，ssh 行被断开、重定向 `>>` 漏到下一行 | `grep -c "ssh -tt" ~/bin/connect.sh` 应为 3；不是就按 7.1 重建（保留 `\` 续行，勿合并单行） |
+| 连上后停在 WSL shell，没自动进项目         | 脚本是旧版（ssh 行无 `-tt` 和远程命令） | 按 7.1 重建脚本，确认三处 ssh 都带 `-tt ... "bash ~/scripts/new-project.sh $DEFAULT_PROJECT"` |
 
 ---
 
@@ -605,6 +646,7 @@ host wsl-out
 
 - 在家 → 自动连 `192.168.0.100`
 - 外出 → 自动检测蒲公英，通了就连，不通提示你打开 App
+- 连上后 → **自动进入默认项目 `openspec-dual-runtime-bridge` 的 tmux**（session 存在则 attach，不存在则建四窗口）
 
 ### 手动模式（调试用）
 
@@ -616,9 +658,14 @@ ssh -p 2222 mleon@192.168.0.100
 ssh -p 2222 mleon@172.16.2.86
 ```
 
-### 进工作区
+> 手动模式连上停在 WSL shell，需自己敲 `entry <项目名>` 进工作区（和自动模式不同）。
+
+### 进工作区 / 切换项目
 
 ```bash
+# 自动模式：打开 Termux 直接进默认项目，无需手动命令
+# 切换到其他已有项目（tmux 内）：Ctrl+b s → 方向键选 → 回车
+# 手动进工作区（手动模式连上后）：
 entry llm-broker          # 推荐（装了脚本）：自动创建/attach
 # 或
 tmux a -t llm-broker      # 通用：attach 已有 Session
@@ -643,3 +690,4 @@ tmux a -t llm-broker      # 通用：attach 已有 Session
 | Windows 蒲公英虚拟 IP（外网用） | 蒲公英客户端「本机虚拟 IP」           | `172.16.2.86`    |
 | 对外端口                        | 固定                                  | `2222`           |
 | WSL sshd 端口                   | 固定                                  | `22`             |
+| 默认项目名                      | `~/workspace` 下的目录名              | `openspec-dual-runtime-bridge` |
