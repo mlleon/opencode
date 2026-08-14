@@ -421,6 +421,7 @@ ping -c 4 192.168.0.100
 | 切 WiFi/4G 后 ssh 断开                     | 网络切换断连                   | 重新打开 Termux（自动连接脚本会处理）                                                                  |
 | 手机长按选不中文字                         | tmux 鼠标开着拦截触屏          | 先按`Ctrl+b m` 关鼠标再选                                                                            |
 | 电脑端 tmux 右侧大片空白                   | 手机同时连同一 Window 拖累宽度 | 错峰使用，或两端看不同 Window                                                                          |
+| 手机端 TUI 状态行显示不全（Codex 的 `Ready`/`Context` 等被截断，末尾出现 `…`） | Termux 字体过大 → 列数太窄（如 96 列） | 双指捏合缩小字体，列数变宽（120+），状态行完整显示；零配置，Termux 原生手势 |
 | 自动连接脚本没触发                         | `.bashrc` 没配置或脚本路径错   | 检查 `grep connect ~/.bashrc` 是否有输出；确认 `~/bin/connect.sh` 存在且可执行                          |
 | `source` 后只 echo 不进 tmux，或 `syntax error: unexpected end of file` | Termux 粘贴长行折行，ssh 行被断开、重定向 `>>` 漏到下一行 | `grep -c "ssh -tt" ~/bin/connect.sh` 应为 3；不是就按 7.1 重建（保留 `\` 续行，勿合并单行） |
 | 连上后停在 WSL shell，没自动进项目         | 脚本是旧版（ssh 行无 `-tt` 和远程命令） | 按 7.1 重建脚本，确认三处 ssh 都带 `-tt ... "bash ~/scripts/new-project.sh $DEFAULT_PROJECT"` |
