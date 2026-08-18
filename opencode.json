@@ -605,7 +605,7 @@
       "npm": "@ai-sdk/openai",
       "name": "PQAPI-OpenAI",
       "options": {
-        "baseURL": "https://www.pqapi.space/v1",
+        "baseURL": "https://api.pqapi.shop/v1",
         "apiKey": "{file:~/.config/opencode/keys/pqapi.key}",
         "enableMeta": true,
         "setCacheKey": true
@@ -765,7 +765,7 @@
       "npm": "@ai-sdk/anthropic",
       "name": "PQAPI-Claude",
       "options": {
-        "baseURL": "https://www.pqapi.space/v1",
+        "baseURL": "https://api.pqapi.shop/v1",
         "apiKey": "{file:~/.config/opencode/keys/pqapi.key}",
         "enableMeta": true,
         "setCacheKey": true
